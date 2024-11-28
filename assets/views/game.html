@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>*GameName*</title>
+    <link rel="stylesheet" href="/assets/css/game.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="logo"><a href="index.html">LOGO</a></div>
+
+        <nav class="nav">
+            <div class="search-container">
+              <input type="text" class="search-bar" placeholder="Search...">
+              <img src="/assets/images/search.png" alt="Search Icon" class="icon">
+            </div>
+            <span class="nav-item">PC</span>
+            <span class="nav-item">CONSOLE</span>
+            <span class="nav-item">MOBILE</span>
+          </nav>
+        <div class="account" onclick="openLoginModal()">
+          <img src="/assets/images/profile.png" alt="User Icon" class="icon">
+          <span>Sign in/Sign Up</span>
+        </div>
+        <div id="loginModal" class="modal">
+          <div class="forms-wrapper">
+             <!-- Quadro de sobreposição -->
+             
+        
+            <!-- Formulário de Registro -->
+            <form class="register-form" action="/php/register.php" method="POST">
+              <h5>WELCOME ADVENTURER</h5>
+              <p>Register now and begin tracking your epic journey</p>
+              <label for="text">Username</label>
+              <input type="text" class="userName" name="username" placeholder="Choose Your Hero Name" required>
+              <label for="email">Email:</label>
+              <input type="email" class="email" name="email" placeholder="Enter your email" required>
+              <label for="password">Password:</label>
+              <input type="password" class="password" name="password" placeholder="Enter your password" required>
+              <input type="password" class="password" name="repeatPassword" placeholder="Repeat your password" required>
+              <div class="checkbox-container">
+                <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+                <label for="agreeTerms">I agree with the <a href="#">Terms & Conditions</a></label>
+              </div>
+              <button type="submit" class="register-btn">Register</button>
+              <div class="social-buttons">
+                <button type="button" class="google-btn">Google</button>
+                <button type="button" class="facebook-btn">Facebook</button>
+              </div>
+              <p>Already have an account? <a href="#" class="switch-form-login" >Sign In</a></p>
+              <div class="overlay"></div>
+            </form>
+        
+            <!-- Formulário de Login -->
+            <form id="loginForm" action="login.php" method="POST">
+              <h5>WELCOME BACK ADVENTURER</h5>
+              <p>Enter your username and password to keep track of your journey</p>
+              <label for="email">Email:</label>
+              <input type="email" class="email" name="email" placeholder="Enter your email" required>
+              <label for="password">Password:</label>
+              <input type="password" class="password" name="password" placeholder="Enter your password" required>
+              <div class="checkbox-container">
+                <input type="checkbox" id="rememberMe" name="rememberMe">
+                <label for="rememberMe">Remember me</label>
+                <a href="#" class="forgot-password">Forgot password?</a>
+              </div>
+              <button type="submit" class="primary-btn">Login</button>
+              <div class="social-login">  
+                <p>Or log in with</p>
+                <div class="social-buttons">
+                  <button type="button" class="social-button google-btn">Google</button>
+                  <button type="button" class="social-button facebook-btn">Facebook</button>
+                </div>
+              </div>
+              <p>Don't have an account? <a href="#" class="switch-form-register">Register</a></p>
+            </form>
+          </div>
+        </div>
+</header>
+
+<main class="main-content">
+<article class="game-detail">
+        <header class="game-header">
+          <h1 class="game-title">Game Title</h1>
+        </header>
+      
+        <main class="main-content">
+          <section class="game-main">
+            <div class="game-media" aria-label="Game Media"></div>
+            <div class="game-thumbnails" aria-label="Screenshots">
+              <figure class="thumbnail"></figure>
+              <figure class="thumbnail"></figure>
+              <figure class="thumbnail"></figure>
+              <figure class="thumbnail"></figure>
+            </div>
+            <section class="game-description">
+              <h2>Description</h2>
+              <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+              <p>At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. </p>
+              <p>Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem.</p>
+            </section>
+          </section>
+      
+          <aside class="game-details">
+            <section class="game-stats" aria-labelledby="stats-heading">
+              <div class="stat-row">
+                <div>
+                  <dt>Popularity</dt>
+                  <dd>#1</dd>
+                </div>
+                <div>
+                  <dt>Score</dt>
+                  <dd>9.00</dd>
+                </div>
+                <div>
+                  <dt>Your Score</dt>
+                  <dd>
+                    <select aria-label="Your Score">
+                      <option value=none selected>--</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                    </select>
+                  </dd>
+                </div>
+              </div>
+              <div class="progress-section">
+                <dt>Your Progress</dt>
+                <dd>
+                  <p>Chapters Completed: 
+                    <select aria-label="Chapters Completed">
+                      <option value="1">1</option>
+                      <option value="5">5</option>
+                      <option value="10" >10</option>
+                      <option value="15">15</option>
+                      <option value="20">20</option>
+                      <option value="30">30</option>
+                    </select>
+                    /30
+                  </p>
+                  <div class="progress-bar-wrapper">
+                    <div class="progress-bar" style="width: 33%;"></div>
+                  </div>
+                  <p>Bosses Defeated: 
+                    <select aria-label="Bosses Defeated">
+                      <option value="0" >0</option>
+                      <option value="10">10</option>
+                      <option value="25">25</option>
+                      <option value="50">50</option>
+                    </select>
+                    /150
+                  </p>
+                  <div class="progress-bar-wrapper">
+                    <div class="progress-bar" style="width: 0%;"></div>
+                  </div>
+                </dd>
+              </div>
+              
+            </section>
+            
+            <section class="game-info" aria-labelledby="info-heading">
+              <dl>
+                <div>
+                  <dt>Release Date:</dt>
+                  <dd>...</dd>
+                </div>
+                <div>
+                  <dt>Developer:</dt>
+                  <dd>...</dd>
+                </div>
+                <div>
+                  <dt>Publisher:</dt>
+                  <dd>...</dd>
+                </div>
+                <div>
+                  <dt>Category/Genre</dt>
+                  <dd>
+                    <ul class="tags">
+                      <li>Action</li>
+                      <li>Fantasy</li>
+                      <li>Adventure</li>
+                      <li>First Person</li>
+                    </ul>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Game Mode</dt>
+                  <dd><i class="fas fa-users"></i> Multiplayer</dd>
+                </div>
+                <div>
+                  <dt>Languages</dt>
+                  <dd>
+                    <div class="languages-section">
+                      <div class="languages-header">
+                        <i class="fas fa-volume-up"></i>
+                        <i class="fas fa-desktop"></i>
+                        <i class="fas fa-keyboard"></i>
+                      </div>
+                      <div class="languages-content">
+                        <div class="language-row">
+                          <span>English</span>
+                          <i class="fas fa-check-circle"></i>
+                          <i class="fas fa-check-circle"></i>
+                          <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="language-row">
+                          <span>Portuguese</span>
+                          <i class="fas fa-check-circle"></i>
+                          <i class="fas fa-check-circle"></i>
+                          <i class="fas fa-check-circle"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </dd>
+                </div>
+                
+              </dl>
+            </section>              
+          </aside>          
+        </main>
+        <div class="req-wrapper">
+          <div class="system-requirements">
+            <h1>SYSTEM REQUIREMENTS</h1>
+            <div class="requirements">
+              <div class="requirement">
+                <h2>MINIMUM:</h2>
+                <ul>
+                  <li><strong>OS:</strong></li>
+                  <li><strong>Processor:</strong></li>
+                  <li><strong>Graphics:</strong></li>
+                  <li><strong>Memory:</strong></li>
+                  <li><strong>Storage:</strong></li>
+                  <li><strong>Additional Notes:</strong> Stay Hydrated</li>
+                </ul>
+              </div>
+              <div class="requirement">
+                <h2>RECOMMENDED:</h2>
+                <ul>
+                  <li><strong>OS:</strong></li>
+                  <li><strong>Processor:</strong></li>
+                  <li><strong>Graphics:</strong></li>
+                  <li><strong>Memory:</strong></li>
+                  <li><strong>Storage:</strong></li>
+                  <li><strong>Additional Notes:</strong> Keep Hydrated</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr/>
+</article>
+</main>    
+
+
+<section class="more">
+  <div class="container">
+    <div class="more-header">
+      <h2 class="more-title">More from *DEVLOPER*</h2>
+    </div>
+    <div class="slider_more">
+      <div class="slider-wrapper">
+        <div class="slide slide-active">
+          <figure>
+            <img src="https://picsum.photos/id/777/1920/1080" width="1920" height="1080" alt="Image">
+            <figcaption>The Lorem Ipsum for photos.</figcaption>
+          </figure>
+          <div class="slider-content">
+            <h2>Lorem ipsum</h2>
+            <div class="paragraph-wrapper">
+              <div class="paragraphs">
+                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
+              </div>
+            </div>
+            <a href="#test" class="primary">Lorem ipsum</a>
+          </div>
+        </div>
+        <div class="slide">
+          <figure>
+            <img src="https://picsum.photos/id/654/1920/1080" width="1920" height="1080" alt="Image">
+            <figcaption>The Lorem Ipsum for photos.</figcaption>
+          </figure>
+          <div class="slider-content">
+            <h2>Lorem ipsum</h2>
+            <div class="paragraph-wrapper">
+              <div class="paragraphs">
+                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
+              </div>
+            </div>
+            <a href="#test" class="primary">Lorem ipsum</a>
+          </div>
+        </div>
+        <div class="slide">
+          <figure>
+            <img src="https://picsum.photos/id/523/1920/1080" width="1920" height="1080" alt="Image">
+            <figcaption>The Lorem Ipsum for photos.</figcaption>
+          </figure>
+          <div class="slider-content">
+            <h2>Lorem ipsum</h2>
+            <div class="paragraph-wrapper">
+              <div class="paragraphs">
+                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
+              </div>
+            </div>
+            <a href="#test" class="primary">Lorem ipsum</a>
+          </div>
+        </div>
+        <div class="slide">
+          <figure>
+            <img src="https://picsum.photos/id/423/1920/1080" width="1920" height="1080" alt="Image">
+            <figcaption>The Lorem Ipsum for photos.</figcaption>
+          </figure>
+          <div class="slider-content">
+            <h2>Lorem ipsum</h2>
+            <div class="paragraph-wrapper">
+              <div class="paragraphs">
+                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
+              </div>
+            </div>
+            <a href="#test" class="primary">Lorem ipsum</a>
+          </div>
+        </div>
+        <div class="slide">
+          <figure>
+            <img src="https://picsum.photos/id/423/1920/1080" width="1920" height="1080" alt="Image">
+            <figcaption>The Lorem Ipsum for photos.</figcaption>
+          </figure>
+          <div class="slider-content">
+            <h2>Lorem ipsum</h2>
+            <div class="paragraph-wrapper">
+              <div class="paragraphs">
+                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
+              </div>
+            </div>
+            <a href="#test" class="primary">Lorem ipsum</a>
+          </div>
+        </div>
+        <div class="slide slide-last">
+          <figure>
+            <img src="https://picsum.photos/id/510/1920/1080" width="1920" height="1080" alt="Image">
+            <figcaption>The Lorem Ipsum for photos.</figcaption>
+          </figure>
+          <div class="slider-content">
+            <h2>MORE</h2>
+          </div>
+        </div>
+      </div>
+      <div class="slider-controls">
+        <span class="slide-control-left">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff">
+            <path d="m432-480 156 156q11 11 11 28t-11 28q-11 11-28 11t-28-11L348-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l184-184q11-11 28-11t28 11q11 11 11 28t-11 28L432-480Z"></path>
+          </svg>
+        </span>
+        <span class="slide-control-right">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff">
+            <path d="M504-480 348-636q-11-11-11-28t11-28q11-11 28-11t28 11l184 184q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L404-268q-11 11-28 11t-28-11q-11-11-11-28t11-28l156-156Z"></path>
+          </svg>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<script src="/assets/js/game.js"></script>
+</body>
+</html>
