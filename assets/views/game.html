@@ -261,7 +261,7 @@
 </main>    
 
 
-<section class="more">
+<div class="more">
   <div class="container">
     <div class="more-header">
       <h2 class="more-title">More from *DEVLOPER*</h2>
@@ -367,8 +367,113 @@
       </div>
     </div>
   </div>
+</div>
+
+<section class="reviews">
+  <section class="review-summary-container">
+    <div class="write-review">
+      <button>+ &nbsp;Write Review</button>
+    </div>
+
+    <section class="review-summary">
+      <div class="labels">
+        <span>Recommended</span>
+        <span>Not Recommended</span>
+      </div>
+      <div class="progress-bar">
+        <div class="bar recommended" aria-label="60% Recommended"></div>
+        <div class="bar not-recommended" aria-label="40% Not Recommended"></div>
+      </div>
+    </section>
+
+    <div class="total-reviews">
+       Reviews: (99+)
+    </div>
+  </section>
+
+  <article class="review">
+    <div class="review-header">
+      <div class="user-info">
+        <div class="avatar" aria-hidden="true"></div>
+        <div class="user-details">
+          <h4 class="username">Username</h4>
+          <span class="recommend-status">Recommended</span>
+          <h3 class="review-title">Awesome but was expecting more</h3>
+        </div>
+      </div>
+      <span class="review-score">
+        <strong>8</strong>
+        <span class="out-of">of 10</span>
+      </span>
+    </div>
+
+    <section class="review-body">
+      <p class="review-text">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus malesuada eget eros a tincidunt. Etiam vehicula quam ac lorem sodales, non interdum justo porttitor. Integer euismod neque non nisi euismod, eu dignissim risus posuere. Curabitur vehicula orci non urna sollicitudin tristique. Donec maximus dolor ac lectus malesuada, sed tincidunt sem facilisis. Morbi pharetra fringilla metus, eget efficitur ex elementum ut. Suspendisse sed augue vel lectus condimentum fermentum. Phasellus vestibulum lacinia nisi, eu facilisis metus ultricies id. Vivamus id urna sit amet nulla scelerisque elementum. Aliquam erat volutpat. Donec aliquam lorem in magna posuere, nec elementum velit dignissim. Suspendisse potenti. Integer vitae elit nisi. Nulla facilisi.
+      </p>
+      <span class="expand-button" onclick="toggleReviewText()">Read more...</span>
+    </section>
+
+    <div class="review-feedback">
+      <p>What did you think of this review?</p>
+      <div class="feedback-options-container">
+        <button aria-label="Nice: 3">Nice 👍 <span>0</span></button>
+        <button aria-label="Funny: 3">Funny 😂 <span>0</span></button>
+        <button aria-label="Loved it: 1">Loved it ❤️ <span>0</span></button>
+        <button aria-label="Informative: 3">Informative 💡 <span>0</span></button>
+        <button aria-label="Well Written: 3">Well Written ✍️ <span>0</span></button>
+        <button aria-label="Confusing: 3">Confusing 🤔 <span>0</span></button>
+      </div>
+    </div>
+  </article>
 </section>
 
+
+
+<footer>
+  <div class="footer-container">
+    <div class="social-media">
+      <h4>Social Media</h4>
+      <ul>
+        <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+        <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+        <li><a href="#"><i class="fab fa-twitch"></i></a></li>
+        <li><a href="#"><i class="fab fa-discord"></i></a></li>
+        <li><a href="#"><i class="fab fa-tiktok"></i></a></li>
+        <li><a href="#"><i class="fab fa-snapchat"></i></a></li>
+      </ul>
+      <div class="language">
+        <label for="language-select">🌐</label>
+        <select id="language-select">
+          <option value="en">English</option>
+          <option value="pt">Português</option>
+          <option value="es">Spanish</option>
+        </select>
+      </div>
+    </div>
+    <div class="institutional">
+      <h4>Institutional</h4>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Career</a></li>
+        <li><a href="#">Your Game with us</a></li>
+        <li><a href="#">Security</a></li>
+      </ul>
+    </div>
+    <div class="help">
+      <h4>Help</h4>
+      <ul>
+        <li><a href="#">Support</a></li>
+        <li><a href="#">Terms of Use</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>LOGO © 2011 - 2024</p>
+  </div>
+</footer>
 
 <script src="/assets/js/game.js"></script>
 </body>

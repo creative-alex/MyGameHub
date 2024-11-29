@@ -161,6 +161,16 @@ function main() {
   }
   main();
 
-  
+  function toggleReviewText() {
+    const reviewBody = document.querySelector('.review-body');
+    const expandButton = document.querySelector('.expand-button');
+    reviewBody.classList.toggle('expanded');
+    
+    if (reviewBody.classList.contains('expanded')) {
+      expandButton.textContent = 'Read less...';
+    } else {
+      expandButton.textContent = 'Read more...';
+    }
+  }
 
 

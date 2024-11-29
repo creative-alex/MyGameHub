@@ -15,6 +15,9 @@ h1{
     font-weight: 400;
 }
 @media (max-width:767px) {
+  body{
+    overflow-x: none;
+  }
   h1{
     font-size: 3rem;
   }
@@ -1239,6 +1242,132 @@ input[type="password"] {
     box-shadow: 0 0 0 2px rgba(100, 150, 210, 0.25);
   }
   
+  
+  
+.reviews {
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+ }
+  
+  .write-review button {
+    background-color: #3c40c6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .write-review button:hover {
+    background-color: #575fcf;
+  }
+  
+  .review-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 0;
+  }
+  
+  .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: #555;
+    margin: 0 10px;
+    position: relative;
+  }
+  
+  .progress-bar .bar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+  }
+  
+  .progress-bar .recommended {
+    background-color: #33d9b2;
+    width: 60%;
+  }
+  
+  .progress-bar .not-recommended {
+    background-color: #ff4757;
+    width: 40%;
+    right: 0;
+  }
+  
+  .review {
+    background: #3d3d70;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+  }
+  
+  .review-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+  
+  .user-info h4 {
+    margin: 0;
+    font-size: 18px;
+  }
+  
+  .recommend-status {
+    color: #33d9b2;
+    font-size: 14px;
+  }
+  
+  .review-score {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .review-body h3 {
+    margin-top: 10px;
+    font-size: 20px;
+    color: #ffd32a;
+  }
+  
+  .review-body p {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  .review-feedback p {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
+  .feedback-options button {
+    background: #575fcf;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    margin: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .feedback-options button:hover {
+    background: #40407a;
+  }
+  
+  .feedback-options span {
+    margin-left: 5px;
+  }
+  
+
+
+
+
+
 
 
  
