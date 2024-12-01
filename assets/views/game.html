@@ -78,7 +78,7 @@
             </form>
           </div>
         </div>
-</header>
+    </header>
 
 <main class="main-content">
 <article class="game-detail">
@@ -403,6 +403,42 @@
       </div>
       <span class="review-score">
         <strong>8</strong>
+        <span class="out-of">of 10</span>
+      </span>
+    </div>
+
+    <section class="review-body">
+      <p class="review-text">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus malesuada eget eros a tincidunt. Etiam vehicula quam ac lorem sodales, non interdum justo porttitor. Integer euismod neque non nisi euismod, eu dignissim risus posuere. Curabitur vehicula orci non urna sollicitudin tristique. Donec maximus dolor ac lectus malesuada, sed tincidunt sem facilisis. Morbi pharetra fringilla metus, eget efficitur ex elementum ut. Suspendisse sed augue vel lectus condimentum fermentum. Phasellus vestibulum lacinia nisi, eu facilisis metus ultricies id. Vivamus id urna sit amet nulla scelerisque elementum. Aliquam erat volutpat. Donec aliquam lorem in magna posuere, nec elementum velit dignissim. Suspendisse potenti. Integer vitae elit nisi. Nulla facilisi.
+      </p>
+      <span class="expand-button" onclick="toggleReviewText()">Read more...</span>
+    </section>
+
+    <div class="review-feedback">
+      <p>What did you think of this review?</p>
+      <div class="feedback-options-container">
+        <button aria-label="Nice: 3">Nice 👍 <span>0</span></button>
+        <button aria-label="Funny: 3">Funny 😂 <span>0</span></button>
+        <button aria-label="Loved it: 1">Loved it ❤️ <span>0</span></button>
+        <button aria-label="Informative: 3">Informative 💡 <span>0</span></button>
+        <button aria-label="Well Written: 3">Well Written ✍️ <span>0</span></button>
+        <button aria-label="Confusing: 3">Confusing 🤔 <span>0</span></button>
+      </div>
+    </div>
+  </article>
+
+  <article class="review">
+    <div class="review-header">
+      <div class="user-info">
+        <div class="avatar" aria-hidden="true"></div>
+        <div class="user-details">
+          <h4 class="username">Username</h4>
+          <span class="not-recommend-status">Not Recommended</span>
+          <h3 class="review-title">Awesome but was expecting more</h3>
+        </div>
+      </div>
+      <span class="review-score">
+        <strong>2</strong>
         <span class="out-of">of 10</span>
       </span>
     </div>

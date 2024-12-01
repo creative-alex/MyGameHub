@@ -3,7 +3,7 @@
 
 body {
     background: linear-gradient(#0F0D23, #2A2263);
-    min-height: 2500px;
+    min-height: 3000px;
     margin: 0;     
     justify-content: center;
 }
@@ -1073,6 +1073,11 @@ i{
 
 .recommend-status {
   color: #33d9b2;
+  font-size: 14px;
+}
+
+.not-recommend-status {
+  color: #690000;
   font-size: 14px;
 }
 
