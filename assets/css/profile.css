@@ -8,13 +8,6 @@ body {
     justify-content: center;
 }
 
-h1{
-    font-size: 6rem;
-    text-align: center;
-    color: #EDE8EC;
-    font-family: "Orbitron", sans-serif;
-    font-weight: 400;
-}
 
 h2{
     font-family: "Orbitron", sans-serif;
@@ -365,17 +358,191 @@ form#loginForm {
 
 
 main {
-  background: white;
+  background: linear-gradient(#3B3E86, #362A56);
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  width: clamp(15vw, 75vw, 60vw); /* Responsivo, mais largo */
-  height: clamp(20vh, 80vh, 40vh); /* Responsivo, adicionando altura */
-  text-align: center;
-
-  /* Centralização sem o uso do body */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  width: clamp(15vw, 70vw, 75vw);
+  height: clamp(70vh, 150vh, 200vh); 
+  display: grid;
+  margin: 5vh auto; 
 }
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 10px;
+}
+
+.avatar {
+  width: 15vw;
+  height: 15vw;
+  background-color: #EDEDED;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.user-info {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.user-info h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.user-info p {
+  font-size: 1rem;
+  color: #BBBBBB;
+  margin: 5px 0 0;
+}
+
+.edit-profile {
+  padding: 20px 20px;
+  background-color: transparent;
+  color: #FFFFFF;
+  border: 2px solid #FFFFFF;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.edit-profile:hover {
+  background-color: #FFFFFF;
+  color: #2B2D68;
+}
+.game-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 50px; 
+  justify-self: flex-end;
+  margin-right: 45px;
+  transform: translateY(-30vh); 
+
+}
+.statistics {
+  background-color: #2A2263;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  width: clamp(5vw,20vw,30vw);
+}
+
+
+
+.statistics h2 {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 15px;  
+}
+
+.stats-bar {
+  width: 100%;
+  height: 25px;
+  background-color: #FFFFFF;
+  border-radius: 3px;
+  margin-bottom: 15px;
+}
+
+.stats-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 1rem;
+  color: #FFFFFF;
+}
+
+.stats-list li {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.stats-list .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.stats-list .playing { background-color: #24574B; }
+.stats-list .completed { background-color: #3B3E86; }
+.stats-list .on-hold { background-color: #EBA627; }
+.stats-list .dropped { background-color: #690000; }
+.stats-list .plan-to-play { background-color: #888888; }
+
+
+.last-completed {
+  background-color: #2A2263; /* Fundo roxo escuro */
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: clamp(5vw,20vw,30vw);
+}
+
+
+
+
+/* Game Collection */
+.game-collection {
+  background-color: #2e2b59; /* Fundo roxo escuro */
+  color: white;
+  padding: 20px;
+  margin-left: 45px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: clamp(20vw,30vw,100vw);
+  transform: translateY(-60vh); 
+
+}
+
+/* Título principal */
+.game-collection h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  font-weight: normal;
+  color: #c4c6f3;
+}
+
+/* Resumo da coleção */
+.collection-summary {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.collection-summary article h3 {
+  font-size: 2rem;
+  margin: 0;
+  color: #ffffff; /* Texto branco */
+}
+
+.collection-summary article p {
+  font-size: 1rem;
+  color: #c4c6f3; /* Texto roxo claro */
+  margin: 5px 0 0;
+}
+
+/* Grade dos jogos */
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+  gap: 10px; /* Espaço entre os cards */
+}
+
+.game-card {
+  background-color: #928eb8; /* Fundo roxo claro */
+  height: 100px;
+  border-radius: 4px;
+}
+
+
+
+
