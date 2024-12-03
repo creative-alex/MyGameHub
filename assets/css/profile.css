@@ -51,7 +51,7 @@ h5{
   justify-self: center;
   justify-content: space-between;
   padding-top: 50px;
-  gap: 50px; /* Espaçamento exato entre nav e account */
+  gap: 50px; 
   margin-left: 19.5em;
   margin-right: 19.5em;
 }
@@ -59,7 +59,7 @@ h5{
 .header .logo {
   font-size: 1.5em;
   font-weight: light;
-  margin-right: auto; /* Alinha o logo à esquerda */
+  margin-right: auto; 
   color: #EDE8EC;
 }
 
@@ -77,7 +77,7 @@ h5{
 }
 
 .nav-item:hover {
-  color: #ccc; /* Cor ao passar o mouse */
+  color: #ccc; 
 }
 
 .account {
@@ -101,29 +101,28 @@ h5{
 .search-container {
   display: flex;
   align-items: center;
-  background-color: #ece9f1; /* Fundo claro */
-  border-radius: 10px; /* Bordas arredondadas */
-  border: none;
-  width: 200px; /* Largura da barra */
-  padding: 5px 10px; /* Espaço interno */
-  position: relative; /* Para posicionar o ícone */
+  background-color: #ece9f1; 
+  border-radius: 10px;
+  width: 200px; 
+  padding: 5px 10px; 
+  position: relative; 
 }
 
 .search-bar {
-  flex: 1; /* Ocupar espaço restante */
-  border: none; /* Remover bordas do input */
-  outline: none; /* Remover borda de foco */
-  background-color: transparent; /* Mesma cor do fundo */
+  flex: 1; 
+  border: none;
+  outline: none; 
+  background-color: transparent;
   color: #333;
-  font-size: 1rem; /* Tamanho do texto */
-  border-radius: 5px; /* Cantos arredondados */
-  padding: 0.5em; /* Espaçamento interno */
-  width: 100%; /* Adapta-se ao tamanho do contêiner pai */
-  max-width: 150px; /* Limite máximo de largura */
+  font-size: 1rem; 
+  border-radius: 5px; 
+  padding: 0.5em; 
+  width: 100%; 
+  max-width: 150px; 
 }
 
 .search-bar::placeholder {
-  color: #aaa; /* Cor do placeholder */
+  color: #aaa;
 }
 
 
@@ -135,8 +134,8 @@ h5{
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgb(0, 0, 0); /* Cor de fundo com transparência */
-  z-index: 2; /* Garante que a div de sobreposição fique acima do formulário */
+  background-color: rgb(0, 0, 0);
+  z-index: 2;
   border-radius: 5px; 
 }
 
@@ -540,7 +539,7 @@ main {
 
 /* Game Collection */
 .game-collection {
-  background-color: #2e2b59; /* Fundo roxo escuro */
+  background-color: #2e2b59;
   color: white;
   padding: 20px;
   margin-left: 45px;
@@ -570,24 +569,24 @@ main {
 .collection-summary article h3 {
   font-size: 2rem;
   margin: 0;
-  color: #ffffff; /* Texto branco */
+  color: #ffffff; 
 }
 
 .collection-summary article p {
   font-size: 1rem;
-  color: #c4c6f3; /* Texto roxo claro */
+  color: #c4c6f3; 
   margin: 5px 0 0;
 }
 
 /* Grade dos jogos */
 .collection-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 colunas */
-  gap: 10px; /* Espaço entre os cards */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px; 
 }
 
 .game-card {
-  background-color: #928eb8; /* Fundo roxo claro */
+  background-color: #928eb8; 
   height: 100px;
   border-radius: 4px;
 }
