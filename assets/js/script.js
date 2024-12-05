@@ -86,90 +86,26 @@ function main() {
 main();
 
 
+
 // Função para abrir o modal de login
-function openLoginModal() {
-  document.getElementById("loginModal").style.display = "flex";
+const iframe = document.getElementById('loginIframe');
+const accountDiv = document.querySelector('.account');
+
+// Função para abrir o iframe
+function showLogin() {
+    iframe.style.display = 'block';
 }
 
-// Função para fechar o modal de login
-function closeLoginModal() {
-  document.getElementById("loginModal").style.display = "none";
-}
+// Adiciona o evento de clique na conta (div inteira)
+accountDiv.addEventListener('click', showLogin);
 
-// Fechar o modal ao clicar fora da janela
-window.onclick = function(event) {
-  if (event.target == document.getElementById("loginModal")) {
-      closeLoginModal();
-  }
-}
-
-
-
-
-
-
-/// Seleciona o link "Register" no formulário de login
-const registerLink = document.querySelector('.switch-form-register');
-
-// Adiciona um ouvinte de evento para quando o link for clicado
-registerLink.addEventListener('click', function (event) {
-    event.preventDefault(); // Evita o comportamento padrão do link (recarregar a página)
-
-    // Seleciona os formulários
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.querySelector('.register-form');
-
-    // Remove o overlay existente do formulário de registro, se houver
-    const existingOverlayRegister = registerForm.querySelector('.overlay');
-    if (existingOverlayRegister) {
-        existingOverlayRegister.remove();
+// Fechar o iframe quando clicar fora dele
+window.addEventListener('click', function(event) {
+    // Verifica se o clique ocorreu fora do iframe e da conta
+    if (event.target !== iframe && !iframe.contains(event.target) && event.target !== accountDiv && !accountDiv.contains(event.target)) {
+        iframe.style.display = 'none';
     }
-
-    // Remove o overlay existente do formulário de login, se houver
-    const existingOverlayLogin = loginForm.querySelector('.overlay');
-    if (existingOverlayLogin) {
-        existingOverlayLogin.remove();
-    }
-
-    // Cria um novo div de sobreposição
-    const newOverlay = document.createElement('div');
-    newOverlay.classList.add('overlay');
-
-    // Adiciona o overlay ao formulário de login
-    loginForm.appendChild(newOverlay);
 });
-
-// Seleciona o link "Sign In" no formulário de registro
-const loginLink = document.querySelector('.switch-form-login');
-
-// Adiciona um ouvinte de evento para quando o link for clicado
-loginLink.addEventListener('click', function (event) {
-    event.preventDefault(); // Evita o comportamento padrão do link (recarregar a página)
-
-    // Seleciona os formulários
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.querySelector('.register-form');
-
-    // Remove o overlay existente do formulário de login, se houver
-    const existingOverlayLogin = loginForm.querySelector('.overlay');
-    if (existingOverlayLogin) {
-        existingOverlayLogin.remove();
-    }
-
-    // Remove o overlay existente do formulário de registro, se houver
-    const existingOverlayRegister = registerForm.querySelector('.overlay');
-    if (existingOverlayRegister) {
-        existingOverlayRegister.remove();
-    }
-
-    // Cria um novo div de sobreposição
-    const newOverlay = document.createElement('div');
-    newOverlay.classList.add('overlay');
-
-    // Adiciona o overlay ao formulário de registro
-    registerForm.appendChild(newOverlay);
-});
-
 
 
 
