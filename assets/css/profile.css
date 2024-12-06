@@ -363,7 +363,8 @@ main {
   width: clamp(15vw, 70vw, 75vw);
   height: clamp(70vh, 150vh, 200vh); 
   display: grid;
-  margin: 5vh auto; 
+  margin: 5vh auto;
+  position: relative  ; 
 }
 
 .profile-header {
@@ -372,6 +373,7 @@ main {
   align-items: center;
   margin-bottom: 30px;
   padding: 10px;
+  width: clamp(5vw,45vw,45vw);
 }
 
 .avatar {
@@ -408,6 +410,10 @@ main {
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
+  width: clamp(5vw, 20vw, 30vw);
+  position:absolute;
+  top: 45px;
+  right: 45px;
 }
 
 .edit-profile:hover {
@@ -483,6 +489,7 @@ main {
   background-color: #2A2263;
   padding: 20px;
   border-radius: 10px;
+  width: clamp(5vw, 20vw, 30vw);
 }
 
 .last-completed h2 {
@@ -654,4 +661,63 @@ main {
   font-size: 0.875rem;
   color: #d1c4e9;
   margin-top: 10px;
+}
+
+
+
+@media (min-width: 768px) and (max-width: 1024px) {
+
+main{
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-header{
+  padding: 0;
+}
+.avatar{
+  margin: auto 20px auto 0px; 
+}
+
+.game-overview{
+  transform: none;
+  margin: 0;
+  gap: 10px;
+}
+
+.edit-profile{
+  transform: translateX(10px);
+}
+
+  /* Reseta transformações problemáticas */
+.statistics {
+    display: flex;
+    flex-direction: column;
+    margin-right: 45px;
+    margin-bottom: 30px; 
+    width: 90%;
+
+}
+
+  .last-completed{
+    display: flex;
+    flex-direction: column;
+    margin-right: 45px;
+    transform: none; /* Remova o translateY */
+    margin-bottom: 30px; /* Adicione espaço entre os elementos */
+    width: 90%;
+    align-self: ;
+  }
+
+  .game-collection {
+    background-color: #2e2b59;
+    color: white;
+    padding: 20px;
+    margin-left: 45px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: clamp(20vw, 30vw, 100vw);
+    transform: none; /* Remova o translateY */
+    margin-top: 30px; /* Adicione espaço entre os elementos */
+  }
 }
