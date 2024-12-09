@@ -361,7 +361,7 @@ main {
   border-radius: 8px;
   padding: 20px;
   width: clamp(15vw, 70vw, 75vw);
-  height: clamp(70vh, 150vh, 200vh); 
+  height: clamp(150vh, 200vh, 300vh); 
   display: grid;
   margin: 5vh auto;
   position: relative  ; 
@@ -686,7 +686,7 @@ main{
 }
 
 .edit-profile{
-  transform: translateX(10px);
+  transform: translateX(10spx);
 }
 
   /* Reseta transformações problemáticas */
@@ -706,7 +706,6 @@ main{
     transform: none; /* Remova o translateY */
     margin-bottom: 30px; /* Adicione espaço entre os elementos */
     width: 90%;
-    align-self: ;
   }
 
   .game-collection {
