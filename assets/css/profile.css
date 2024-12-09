@@ -426,7 +426,7 @@ main {
   gap: 50px; 
   justify-self: flex-end;
   margin-right: 45px;
-  transform: translateY(-75vh); 
+  transform: translateY(-20vh); 
 
 }
 .statistics {
