@@ -4,83 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>*GameName*</title>
+    <!--CSS Global-->
+  <link rel="stylesheet" href="/assets/css/style.css">
+    <!--CSS Especifico-->
     <link rel="stylesheet" href="/assets/css/game.css">
+    <!--Icones-->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <header class="header">
-        <div class="logo"><a href="index.html">LOGO</a></div>
+        <div class="logo"><a href="/index.html">LOGO</a></div>
 
         <nav class="nav">
-            <div class="search-container">
-              <input type="text" class="search-bar" placeholder="Search...">
+            <div class="mini-search-container">
+              <input type="text" class="mini-search-bar" placeholder="Search...">
               <img src="/assets/images/search.png" alt="Search Icon" class="icon">
             </div>
             <span class="nav-item">PC</span>
             <span class="nav-item">CONSOLE</span>
             <span class="nav-item">MOBILE</span>
           </nav>
-        <div class="account" onclick="openLoginModal()">
+        <div class="account">
           <img src="/assets/images/profile.png" alt="User Icon" class="icon">
           <span>Sign in/Sign Up</span>
         </div>
-        <div id="loginModal" class="modal">
-          <div class="forms-wrapper">
-             <!-- Quadro de sobreposição -->
-             
-        
-            <!-- Formulário de Registro -->
-            <form class="register-form" action="/php/register.php" method="POST">
-              <h5>WELCOME ADVENTURER</h5>
-              <p>Register now and begin tracking your epic journey</p>
-              <label for="text">Username</label>
-              <input type="text" class="userName" name="username" placeholder="Choose Your Hero Name" required>
-              <label for="email">Email:</label>
-              <input type="email" class="email" name="email" placeholder="Enter your email" required>
-              <label for="password">Password:</label>
-              <input type="password" class="password" name="password" placeholder="Enter your password" required>
-              <input type="password" class="password" name="repeatPassword" placeholder="Repeat your password" required>
-              <div class="checkbox-container">
-                <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
-                <label for="agreeTerms">I agree with the <a href="#">Terms & Conditions</a></label>
-              </div>
-              <button type="submit" class="register-btn">Register</button>
-              <div class="social-buttons">
-                <button type="button" class="google-btn">Google</button>
-                <button type="button" class="facebook-btn">Facebook</button>
-              </div>
-              <p>Already have an account? <a href="#" class="switch-form-login" >Sign In</a></p>
-              <div class="overlay"></div>
-            </form>
-        
-            <!-- Formulário de Login -->
-            <form id="loginForm" action="login.php" method="POST">
-              <h5>WELCOME BACK ADVENTURER</h5>
-              <p>Enter your username and password to keep track of your journey</p>
-              <label for="email">Email:</label>
-              <input type="email" class="email" name="email" placeholder="Enter your email" required>
-              <label for="password">Password:</label>
-              <input type="password" class="password" name="password" placeholder="Enter your password" required>
-              <div class="checkbox-container">
-                <input type="checkbox" id="rememberMe" name="rememberMe">
-                <label for="rememberMe">Remember me</label>
-                <a href="#" class="forgot-password">Forgot password?</a>
-              </div>
-              <button type="submit" class="primary-btn">Login</button>
-              <div class="social-login">  
-                <p>Or log in with</p>
-                <div class="social-buttons">
-                  <button type="button" class="social-button google-btn">Google</button>
-                  <button type="button" class="social-button facebook-btn">Facebook</button>
-                </div>
-              </div>
-              <p>Don't have an account? <a href="#" class="switch-form-register">Register</a></p>
-            </form>
-          </div>
-        </div>
+        <iframe 
+        id="loginIframe" 
+        src="/assets/views/login.html" 
+        style="display: none; position: absolute; top: 15%; left: 25%; width: 1000px; height: 700px; z-index: 1000; border: none;">
+        </iframe>
     </header>
 
-<main class="main-content">
+<main class="main-outer-content">
 <article class="game-detail">
         <header class="game-header">
           <h1 class="game-title">Game Title</h1>
@@ -136,29 +91,19 @@
               <div class="progress-section">
                 <dt>Your Progress</dt>
                 <dd>
-                  <p>Chapters Completed: 
-                    <select aria-label="Chapters Completed">
-                      <option value="1">1</option>
-                      <option value="5">5</option>
-                      <option value="10" >10</option>
-                      <option value="15">15</option>
-                      <option value="20">20</option>
-                      <option value="30">30</option>
-                    </select>
-                    /30
+                  <p>Bosses Defeated: 
+                    <input type="number" id="bossesDefeated" value="0" min="0" max="150" aria-label="Bosses Defeated" style="width: 50px;" />
+                    /150
+                    <button id="incrementBosses">+</button>
+
                   </p>
                   <div class="progress-bar-wrapper">
-                    <div class="progress-bar" style="width: 33%;"></div>
                   </div>
-                  <p>Bosses Defeated: 
-                    <select aria-label="Bosses Defeated">
-                      <option value="0" >0</option>
-                      <option value="10">10</option>
-                      <option value="25">25</option>
-                      <option value="50">50</option>
-                    </select>
-                    /150
-                  </p>
+                     <p>Chapters Completed: 
+                     <input type="number" id="chaptersCompleted" value="1" min="1" max="30" aria-label="Chapters Completed" style="width: 50px;" />
+                      /30
+                      <button id="incrementChapters">+</button>
+                      </p>
                   <div class="progress-bar-wrapper">
                     <div class="progress-bar" style="width: 0%;"></div>
                   </div>
@@ -372,9 +317,12 @@
 <section class="reviews">
   <section class="review-summary-container">
     <div class="write-review">
-      <button>+ &nbsp;Write Review</button>
+      <button>
+        <span class="plus-sign">+</span> 
+        <span class="write-text">Write Review</span>
+      </button>
     </div>
-
+  
     <section class="review-summary">
       <div class="labels">
         <span>Recommended</span>
@@ -385,11 +333,12 @@
         <div class="bar not-recommended" aria-label="40% Not Recommended"></div>
       </div>
     </section>
-
+  
     <div class="total-reviews">
-       Reviews: (99+)
+      Reviews: (99+)
     </div>
   </section>
+  
 
   <article class="review">
     <div class="review-header">
@@ -453,12 +402,12 @@
     <div class="review-feedback">
       <p>What did you think of this review?</p>
       <div class="feedback-options-container">
-        <button aria-label="Nice: 3">Nice 👍 <span>0</span></button>
-        <button aria-label="Funny: 3">Funny 😂 <span>0</span></button>
-        <button aria-label="Loved it: 1">Loved it ❤️ <span>0</span></button>
-        <button aria-label="Informative: 3">Informative 💡 <span>0</span></button>
-        <button aria-label="Well Written: 3">Well Written ✍️ <span>0</span></button>
-        <button aria-label="Confusing: 3">Confusing 🤔 <span>0</span></button>
+        <button aria-label="Nice:">Nice 👍 <span>0</span></button>
+        <button aria-label="Funny:">Funny 😂 <span>0</span></button>
+        <button aria-label="Loved it:">Loved it ❤️ <span>0</span></button>
+        <button aria-label="Informative:">Informative 💡 <span>0</span></button>
+        <button aria-label="Well Written:">Well Written ✍️ <span>0</span></button>
+        <button aria-label="Confusing:">Confusing 🤔 <span>0</span></button>
       </div>
     </div>
   </article>
@@ -511,6 +460,9 @@
   </div>
 </footer>
 
+<!--JS Global-->
+<script src="/assets/js/script.js"></script>
+<!--JS Especifico-->
 <script src="/assets/js/game.js"></script>
 </body>
 </html>
