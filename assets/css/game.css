@@ -95,6 +95,13 @@
   box-sizing: border-box; 
 }
 
+.thumbnail img {
+  width: 100%;   /* Ajusta a largura da imagem para 100% da largura do contêiner */
+  height: auto;  /* Mantém a proporção da imagem */
+  object-fit: cover;  /* Faz a imagem cobrir toda a área do contêiner sem distorcer */
+}
+
+
 
 
 
@@ -282,87 +289,6 @@ i{
 .language-row i {
   color: #5a4f89;
   font-size: 14px;
-}
-
-
-  
-.req-wrapper {
-  display: flex;
-  justify-content: center;  
-  padding: 0 5%; 
-  box-sizing: border-box;
-}
-
-.system-requirements {
-  text-align: center;
-}
-
-.system-requirements h1 {
-  margin-bottom: 20px;
-  font-size: 2rem; 
-}
-
-.requirements {
-  display: flex;
-  justify-content: space-between;
-  gap: 5%;  
-  width: 100%; 
-}
-
-.requirement {
-  flex: 1;
-  text-align: left;
-  white-space: normal;
-  color: #EDE8EC;
-  min-width: 250px; 
-}
-
-.requirement h2 {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-}
-
-.requirement ul {
-  list-style: none;
-  padding: 0;
-}
-
-.requirement li {
-  margin-bottom: 5px;
-  font-size: 1rem;
-}
-
-.requirement strong {
-  color: #9a9cae;
-}
-
-/* Regras para dispositivos com max-width de 425px */
-@media (max-width: 425px) {
-  .req-wrapper{
-    margin-top: 50vh;
-  }
-
-
-  .requirements {
-    flex-direction: column; 
-    gap: 15px; 
-  }
-
-  .requirement {
-    width: 100%; 
-  }
-
-  .system-requirements h1 {
-    font-size: 1.5rem;
-  }
-
-  .requirement h2 {
-    font-size: 1.2rem; 
-  }
-
-  ul {
-    padding-left: 20px; 
-  }
 }
 
 

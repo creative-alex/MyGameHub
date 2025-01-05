@@ -732,7 +732,6 @@
   
   .slider-wrapper .slide-last {
     display: none;
-    background: linear-gradient(var(--black), var(--primary));
   }
   
   @media (min-width: 768px) {
@@ -755,12 +754,12 @@
   .slider-wrapper .slide .slider-content {
     position: relative;
     z-index: 2;
-    color: var(--font);
+    color: #EDE8EC;
   }
   
   .slider-wrapper .slide .slider-content h2 {
     font-size: 20px;
-    color: var(--font);
+    color: #EDE8EC;
   }
   
   .slider-transitions .slider-wrapper .slide .slider-content h2 {
@@ -790,8 +789,7 @@
     display: grid;
     width: fit-content;
     padding: 6px 12px;
-    color: var(--font);
-    background: var(--primary);
+    color: #EDE8EC;
     border-radius: 6px;
     text-decoration: none;
     font-weight: 500;
@@ -862,7 +860,6 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: var(--primary);
     box-shadow: 0 0 0 2px rgba(100, 150, 210, 0.25), 0 0 12px rgba(0, 0, 0, 0.25);
     transition: box-shadow 0.25s;
     z-index: 10;

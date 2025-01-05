@@ -40,4 +40,39 @@ document.querySelectorAll('.expand-button').forEach(button => {
 });
 
 
+// Salvar dados do jogo em localStorage
+document.addEventListener("DOMContentLoaded", function () {
+  const gameData = JSON.parse(localStorage.getItem('gameData')) || {
+      // Dados de fallback para teste, caso localStorage esteja vazio
+      name: "If My Heart Had Wings",
+      summary: "Aoi Minase returns with shattered dreams to his wind-swept hometown of Kazegaura...",
+      cover: "co97o9",
+      screenshots: [
+          "scgjm2",
+          "scgjm3",
+          "scgjm4",
+          "scgjm5"
+      ]
+  };
 
+  // Preencher a mídia principal (capa)
+  const gameMediaDiv = document.querySelector('.game-media');
+  const coverImage = gameData.cover
+      ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${gameData.cover}.jpg`
+      : 'https://via.placeholder.com/300x400?text=Imagem+não+disponível';
+  gameMediaDiv.innerHTML = `<img src="${coverImage}" alt="Game Cover">`;
+
+  // Preencher as screenshots
+  const thumbnailsContainer = document.querySelector('.game-thumbnails');
+  const screenshots = gameData.screenshots || [];
+  const thumbnailsHTML = screenshots.map((sc, index) => `
+      <div class="thumbnail">
+          <img src="https://images.igdb.com/igdb/image/upload/t_screenshot_huge/${sc}.jpg" alt="Screenshot ${index + 1}">
+      </div>
+  `).join('');
+  thumbnailsContainer.innerHTML = thumbnailsHTML;
+
+  // Preencher a descrição do jogo
+  const descriptionElement = document.querySelector('#description-text');
+  descriptionElement.textContent = gameData.summary || 'Descrição não disponível.';
+});

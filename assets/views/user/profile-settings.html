@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings</title>
+    <!--CSS Global-->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <!--CSS Especifico-->
+    <link rel="stylesheet" href="/assets/css/user-css/settings.css"> 
+</head>
+<body>
+    <header class="header">
+        <div class="logo" href><img src="/assets/images/logo.png.png" id="logo"></div>
+
+        <nav class="nav">
+            <div class="mini-search-container">
+              <input type="text" class="mini-search-bar" placeholder="Search...">
+              <img src="/assets/images/search.png" alt="Search Icon" class="icon">
+            </div>
+            <span class="nav-item">PC</span>
+            <span class="nav-item">CONSOLE</span>
+            <span class="nav-item">MOBILE</span>
+          </nav>
+        <div class="account">
+          <img src="/assets/images/profile.png" alt="User Icon" class="icon">
+          <span>Sign in/Sign Up</span>
+        </div>
+    </header>
+
+    
+ <main class="parent">
+  <h2>Profile Settings</h2>
+  <button id="back" type="button" onclick="window.location.href='profile.html'">Back to Profile</button>
+  <aside class="menu">
+    <ul>
+      <li class="active">About</li>
+      <li onclick="window.location.href='profile-picture.html'" >Avatar</li>
+      <li onclick="window.location.href='privacy-settings.html'">Privacy</li>
+    </ul>
+  </aside>
+  <section class="form-section">
+    <h2 class="form-title">General</h2>
+    <form class="form-content">
+      <div class="form-group">
+        <label for="profile-name" class="form-label">Profile name:</label>
+        <input type="text" id="profile-name" name="profile-name" class="form-input">
+      </div>
+      <div class="form-group">
+        <label for="real-name" class="form-label">Real name:</label>
+        <input type="text" id="real-name" name="real-name" class="form-input">
+      </div>
+      <div class="form-group">
+        <label for="username" class="form-label">Username:</label>
+        <input type="text" id="username" name="username" class="form-input">
+      </div>
+      <div class="form-group">
+        <label for="bio" class="form-label">Bio</label>
+        <textarea id="bio" name="bio" class="form-textarea"></textarea>
+      </div>
+    </form>
+  </section>
+  <section class="location-section">
+    <h2 class="location-title">Location</h2>
+    <form class="location-form">
+      <div class="form-group">
+        <label for="country" class="form-label">Country</label>
+        <select id="country" name="country" class="form-select">
+          <option value="Portugal" selected>Portugal</option>
+          <option value="Brazil">Brazil</option>
+          <option value="Angola">Angola</option>
+          <option value="Mozambique">Mozambique</option>
+          <option value="United States">United States</option>
+          <option value="United Kingdom">United Kingdom</option>
+          <option value="Canada">Canada</option>
+          <option value="Australia">Australia</option>
+          <option value="Spain">Spain</option>
+          <option value="Mexico">Mexico</option>
+          <option value="Argentina">Argentina</option>
+          <option value="Colombia">Colombia</option>
+        </select>        
+      </div>
+    </form>
+  </section>
+  <section class="adult-section">
+    <h2 class="adult-title">Settings</h2>
+    <div class="adult-wrapper">
+        <label for="adult" class="adult-label">Hide Adult Content</label>
+        <label class="switch">
+            <input type="checkbox" id="adult">
+            <span class="slider round"></span>
+        </label>
+    </div>
+</section>
+<button type="reset" id="cancel" form="location-form">Cancel</button>
+<button type="submit" id="save" form="location-form">Save</button>
+
+
+
+          
+  </main>
+  <footer>
+    <div class="footer-container">
+      <div class="social-media">
+        <h4>Social Media</h4>
+        <ul>
+          <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+          <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+          <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+          <li><a href="#"><i class="fab fa-twitch"></i></a></li>
+          <li><a href="#"><i class="fab fa-discord"></i></a></li>
+          <li><a href="#"><i class="fab fa-tiktok"></i></a></li>
+          <li><a href="#"><i class="fab fa-snapchat"></i></a></li>
+        </ul>
+        <div class="language">
+          <label for="language-select">🌐</label>
+          <select id="language-select">
+            <option value="en">English</option>
+            <option value="pt">Português</option>
+            <option value="es">Spanish</option>
+          </select>
+        </div>
+      </div>
+      <div class="institutional">
+        <h4>Institutional</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Career</a></li>
+          <li><a href="#">Your Game with us</a></li>
+          <li><a href="#">Security</a></li>
+        </ul>
+      </div>
+      <div class="help">
+        <h4>Help</h4>
+        <ul>
+          <li><a href="#">Support</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>LOGO © 2011 - 2024</p>
+    </div>
+  </footer>
+
+
+</body>
+</html>

@@ -1,0 +1,243 @@
+.logo{
+    cursor: pointer;
+}
+
+
+/*Barra de Pesquisa*/
+.search-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 50px;
+    margin-top: 20px;
+}
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: #ece9f1;
+    padding: 10px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 57.5em;
+    max-height: 70px;
+}
+  
+#search-input {
+    flex: 1;
+    border: none;
+    background-color: transparent;
+    font-size: 1em;
+    color: #333;
+    outline: none;
+    padding-left: 10px;
+    margin-bottom: 0;
+}
+  
+.select-container {
+    position: relative;
+    display: inline-block;
+}
+
+@media (max-width: 767px) {
+    .search-bar {
+        padding: 10px 20px; 
+        margin-top: 15px;
+    }
+
+    .search-container {
+        flex-direction: row; 
+        justify-content: space-between; 
+        padding: 10px 15px;
+        max-height: auto; 
+    }
+
+    .search-input {
+        font-size: 0.9em; 
+        padding-left: 8px; 
+    }
+
+
+}
+
+
+
+  
+.select-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none; 
+}
+
+.search-select {
+    background-color: #ece9f1; 
+    color: #333; 
+    border: none;
+    border-radius: 5px;
+    padding: 5px 30px;
+    font-size: 1em;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none; 
+    outline: none; 
+}  
+  /* Estilo das opções */
+.search-select option {
+    background-color: #ffffff;
+    color: #333;
+}
+
+
+
+main {
+    border-radius: 8px;
+    width: clamp(15vw, 60vw, 75vw);
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(15, 10vh);
+    gap: 10px;
+    margin: 5vh auto;
+    position: relative;
+}
+
+
+main h2 {
+    grid-column: 1 / span 2;
+    grid-row: 1 / span 1;
+    text-align: center;
+    color: #EDE8EC;
+}
+
+.table-wrapper {
+    grid-column: 1 / span 12;
+    grid-row: 2 / span 13;
+    overflow: auto;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+/* Estilo da tabela */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+ 
+
+th {
+    padding: 15px;
+    text-align: center;
+    color:#EDE8EC;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 100;
+
+}
+
+td {
+    padding: 15px;
+    text-align: left;
+}
+
+tr:is(:nth-child(even)) {
+    background-color: #0F0D23; /* Linhas pares */
+}
+
+tr:is(:nth-child(odd)) {
+    background-color: transparent; /* Linhas pares */
+}
+
+tr {
+    display: grid;
+    grid-template-columns: 0.5fr 3fr 1fr 1fr 1fr;
+    align-items: center;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+tbody tr:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.rank {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 2vw;
+    text-align: center;
+    font-weight: bold;
+    color: #EDE8EC;
+}
+
+.details {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.thumbnail {
+    width: 50px;
+    height: 70px;
+    background-color: #7f7f9c;
+    border-radius: 4px;
+}
+
+.details h3 {
+    font-size: 16px;
+    margin: 0;
+    color: #fff;
+}
+
+.details p {
+    margin: 2px 0;
+    font-size: 12px;
+    color: #b3b3cc;
+}
+
+.score, .user-score {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 14px;
+}
+
+.star {
+    color: #f8d64e;
+}
+
+#game-status-select {
+    background-color: #2c2c54;
+    color: #fff;
+    border: none; /* Remove a borda */
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    -webkit-appearance: none; /* Remove a seta no Chrome, Safari e Opera */
+    -moz-appearance: none; /* Remove a seta no Firefox */
+    appearance: none; /* Remove a seta no Edge */
+    background-image: none; /* Remove a seta no IE */
+    width: 100%; /* Define a largura como 100% */
+    text-align: center; /* Centraliza o texto */
+}
+
+#game-status-select:focus {
+    outline: none; /* Remove a borda quando em foco */
+}
+
+#game-status-select option {
+    background-color: #2c2c54;
+    color: #fff;
+}
+
+
+
+@media screen and (max-width: 768px) {
+    .parent {
+        width: 100%;
+    }
+
+    .table-wrapper {
+        grid-row: 2 / span 14;
+    }
+    
+}

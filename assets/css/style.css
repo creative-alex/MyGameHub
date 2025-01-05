@@ -52,6 +52,11 @@ h5{
 
 }
 
+#logo{
+  width:15vh;
+  height:10vh;
+}
+
 /*Header*/
 .header {
   display: flex;
