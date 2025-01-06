@@ -13,7 +13,7 @@
 </head>
 <body>
     <header class="header">
-        <div class="logo"><a href="index.html">LOGO</a></div>
+      <a class="logo" href="/index.html"><img src="/assets/images/logo.png" id="logo"></a>
 
         <nav class="nav">
             <div class="mini-search-container">
@@ -30,21 +30,16 @@
         </div>
       
     </header>
-
-<main class="main-outer-content">
-<article class="game-detail">
-        <header class="game-header">
-          <h1 class="game-title">Game Title</h1>
-        </header>
       
         <main class="main-content">
+          <h2 class="game-name">Game Name</h2>
             <div class="game-media" aria-label="Game Media"></div>
               <div class="thumbnail"></div>
               <div class="thumbnail"></div>
               <div class="thumbnail"></div>
+              <!-- <div class="thumbnail"></div>
               <div class="thumbnail"></div>
-              <div class="thumbnail"></div>
-              <div class="thumbnail"></div>
+              <div class="thumbnail"></div> -->
 
             <section class="game-description">
               <h2>Description</h2>
@@ -59,11 +54,11 @@
               <div class="stat-row">
                 <div>
                   <dt>Popularity</dt>
-                  <dd>#1</dd>
+                  <dd>#--</dd>
                 </div>
                 <div>
                   <dt>Score</dt>
-                  <dd>9.00</dd>
+                  <dd>---</dd>
                 </div>
                 <div>
                   <dt>Your Score</dt>
@@ -89,15 +84,15 @@
                 <dd>
                   <p>Bosses Defeated: 
                     <input type="number" id="bossesDefeated" value="0" min="0" max="150" aria-label="Bosses Defeated" style="width: 50px;" />
-                    /150
+                    /---
                     <button id="incrementBosses">+</button>
 
                   </p>
                   <div class="progress-bar-wrapper">
                   </div>
                      <p>Chapters Completed: 
-                     <input type="number" id="chaptersCompleted" value="1" min="1" max="30" aria-label="Chapters Completed" style="width: 50px;" />
-                      /30
+                     <input type="number" id="chaptersCompleted" value="0" min="0" max="30" aria-label="Chapters Completed" style="width: 50px;" />
+                      /---
                       <button id="incrementChapters">+</button>
                       </p>
                   <div class="progress-bar-wrapper">
@@ -112,30 +107,30 @@
               <dl>
                 <div>
                   <dt>Release Date:</dt>
-                  <dd>...</dd>
+                  <dd class="release-date">...</dd>
                 </div>
                 <div>
                   <dt>Developer:</dt>
-                  <dd>...</dd>
+                  <dd class="developer">...</dd>
                 </div>
                 <div>
                   <dt>Publisher:</dt>
-                  <dd>...</dd>
+                  <dd class="publisher">...</dd>
                 </div>
                 <div>
                   <dt>Category/Genre</dt>
                   <dd>
                     <ul class="tags">
-                      <li>Action</li>
-                      <li>Fantasy</li>
-                      <li>Adventure</li>
-                      <li>First Person</li>
                     </ul>
                   </dd>
                 </div>
                 <div>
                   <dt>Game Mode</dt>
-                  <dd><i class="fas fa-users"></i> Multiplayer</dd>
+                  <dd>
+                    <i class="fas fa-users"></i>
+                    <a class="game-modes">Game Modes</a>
+                  </dd>
+                  
                 </div>
                 <div>
                   <dt>Languages</dt>
@@ -159,6 +154,12 @@
                           <i class="fas fa-check-circle"></i>
                           <i class="fas fa-check-circle"></i>
                         </div>
+                        <div class="language-row">
+                          <span>Spanish</span>
+                          <i class="fas fa-check-circle"></i>
+                          <i class="fas fa-check-circle"></i>
+                          <i class="fas fa-check-circle"></i>
+                        </div>
                       </div>
                     </div>
                   </dd>
@@ -168,119 +169,109 @@
             </section>              
         </main>
         
-        <hr/>
-</article>
-</main>    
 
 
-<div class="more">
-  <div class="container">
-    <div class="more-header">
-      <h2 class="more-title">More from *DEVLOPER*</h2>
-    </div>
-    <div class="slider_more">
-      <div class="slider-wrapper">
-        <div class="slide slide-active">
-          <figure>
-            <img src="https://picsum.photos/id/777/1920/1080" width="1920" height="1080" alt="Image">
-            <figcaption>The Lorem Ipsum for photos.</figcaption>
-          </figure>
-          <div class="slider-content">
-            <h2>Lorem ipsum</h2>
-            <div class="paragraph-wrapper">
-              <div class="paragraphs">
-                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
+        <section class="popular">
+          <div class="container">
+            <div class="popular-header">
+              <h2 class="popular-title">Popular This Week</h2>
+            </div>
+            <div class="slider_popular">
+              <div class="slider-wrapper">
+                <div class="slide slide-active">
+                  <figure>
+                    <img src="https://picsum.photos/id/777/1920/1080" width="1920" height="1080" alt="Image">
+                  </figure>
+                  <div class="slider-content">
+                    <h2>Lorem ipsum</h2>
+                    <div class="paragraph-wrapper">
+                      <div class="paragraphs">
+                        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
+                      </div>
+                    </div>
+                    <a href="#test" class="primary">Lorem ipsum</a>
+                  </div>
+                </div>
+                <div class="slide">
+                  <figure>
+                    <img src="https://picsum.photos/id/654/1920/1080" width="1920" height="1080" alt="Image">
+                  </figure>
+                  <div class="slider-content">
+                    <h2>Lorem ipsum</h2>
+                    <div class="paragraph-wrapper">
+                      <div class="paragraphs">
+                        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
+                      </div>
+                    </div>
+                    <a href="#test" class="primary">Lorem ipsum</a>
+                  </div>
+                </div>
+                <div class="slide">
+                  <figure>
+                    <img src="https://picsum.photos/id/523/1920/1080" width="1920" height="1080" alt="Image">
+                  </figure>
+                  <div class="slider-content">
+                    <h2>Lorem ipsum</h2>
+                    <div class="paragraph-wrapper">
+                      <div class="paragraphs">
+                        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
+                      </div>
+                    </div>
+                    <a href="#test" class="primary">Lorem ipsum</a>
+                  </div>
+                </div>
+                <div class="slide">
+                  <figure>
+                    <img src="https://picsum.photos/id/423/1920/1080" width="1920" height="1080" alt="Image">
+                  </figure>
+                  <div class="slider-content">
+                    <h2>Lorem ipsum</h2>
+                    <div class="paragraph-wrapper">
+                      <div class="paragraphs">
+                        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
+                      </div>
+                    </div>
+                    <a href="#test" class="primary">Lorem ipsum</a>
+                  </div>
+                </div>
+                <div class="slide">
+                  <figure>
+                    <img src="https://picsum.photos/id/423/1920/1080" width="1920" height="1080" alt="Image">
+                  </figure>
+                  <div class="slider-content">
+                    <h2>Lorem ipsum</h2>
+                    <div class="paragraph-wrapper">
+                      <div class="paragraphs">
+                        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
+                      </div>
+                    </div>
+                    <a href="#test" class="primary">Lorem ipsum</a>
+                  </div>
+                </div>
+                <div class="slide slide-last">
+                  <figure>
+                    <img src="https://picsum.photos/id/510/1920/1080" width="1920" height="1080" alt="Image">
+                  </figure>
+                  <div class="slider-content">
+                    <h2>MORE</h2>
+                  </div>
+                </div>
+              </div>
+              <div class="slider-controls">
+                <span class="slide-control-left">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff">
+                    <path d="m432-480 156 156q11 11 11 28t-11 28q-11 11-28 11t-28-11L348-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l184-184q11-11 28-11t28 11q11 11 11 28t-11 28L432-480Z"></path>
+                  </svg>
+                </span>
+                <span class="slide-control-right">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff">
+                    <path d="M504-480 348-636q-11-11-11-28t11-28q11-11 28-11t28 11l184 184q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L404-268q-11 11-28 11t-28-11q-11-11-11-28t11-28l156-156Z"></path>
+                  </svg>
+                </span>
               </div>
             </div>
-            <a href="#test" class="primary">Lorem ipsum</a>
           </div>
-        </div>
-        <div class="slide">
-          <figure>
-            <img src="https://picsum.photos/id/654/1920/1080" width="1920" height="1080" alt="Image">
-            <figcaption>The Lorem Ipsum for photos.</figcaption>
-          </figure>
-          <div class="slider-content">
-            <h2>Lorem ipsum</h2>
-            <div class="paragraph-wrapper">
-              <div class="paragraphs">
-                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
-              </div>
-            </div>
-            <a href="#test" class="primary">Lorem ipsum</a>
-          </div>
-        </div>
-        <div class="slide">
-          <figure>
-            <img src="https://picsum.photos/id/523/1920/1080" width="1920" height="1080" alt="Image">
-            <figcaption>The Lorem Ipsum for photos.</figcaption>
-          </figure>
-          <div class="slider-content">
-            <h2>Lorem ipsum</h2>
-            <div class="paragraph-wrapper">
-              <div class="paragraphs">
-                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
-              </div>
-            </div>
-            <a href="#test" class="primary">Lorem ipsum</a>
-          </div>
-        </div>
-        <div class="slide">
-          <figure>
-            <img src="https://picsum.photos/id/423/1920/1080" width="1920" height="1080" alt="Image">
-            <figcaption>The Lorem Ipsum for photos.</figcaption>
-          </figure>
-          <div class="slider-content">
-            <h2>Lorem ipsum</h2>
-            <div class="paragraph-wrapper">
-              <div class="paragraphs">
-                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
-              </div>
-            </div>
-            <a href="#test" class="primary">Lorem ipsum</a>
-          </div>
-        </div>
-        <div class="slide">
-          <figure>
-            <img src="https://picsum.photos/id/423/1920/1080" width="1920" height="1080" alt="Image">
-            <figcaption>The Lorem Ipsum for photos.</figcaption>
-          </figure>
-          <div class="slider-content">
-            <h2>Lorem ipsum</h2>
-            <div class="paragraph-wrapper">
-              <div class="paragraphs">
-                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
-              </div>
-            </div>
-            <a href="#test" class="primary">Lorem ipsum</a>
-          </div>
-        </div>
-        <div class="slide slide-last">
-          <figure>
-            <img src="https://picsum.photos/id/510/1920/1080" width="1920" height="1080" alt="Image">
-            <figcaption>The Lorem Ipsum for photos.</figcaption>
-          </figure>
-          <div class="slider-content">
-            <h2>MORE</h2>
-          </div>
-        </div>
-      </div>
-      <div class="slider-controls">
-        <span class="slide-control-left">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff">
-            <path d="m432-480 156 156q11 11 11 28t-11 28q-11 11-28 11t-28-11L348-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l184-184q11-11 28-11t28 11q11 11 11 28t-11 28L432-480Z"></path>
-          </svg>
-        </span>
-        <span class="slide-control-right">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff">
-            <path d="M504-480 348-636q-11-11-11-28t11-28q11-11 28-11t28 11l184 184q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L404-268q-11 11-28 11t-28-11q-11-11-11-28t11-28l156-156Z"></path>
-          </svg>
-        </span>
-      </div>
-    </div>
-  </div>
-</div>
-
+        </section> 
 <section class="reviews">
   <section class="review-summary-container">
     <div class="write-review">

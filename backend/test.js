@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 const PORT = 3000;
 
-const IGDB_BASE_URL = 'https://api.igdb.com/v4/language_supports'; // Corrigido o endpoint
+const IGDB_BASE_URL = 'https://api.igdb.com/v4/artworks'; // Corrigido o endpoint
 const CLIENT_ID = '0h4zi8h0yj07toculmixdhyhbij8p2'; // Substituir pelo teu Client ID
 const AUTH_TOKEN = 'rmnpkjiczadvnn0807c1e5is3rvsjm'; // Substituir pelo teu Access Token
 
@@ -16,7 +16,7 @@ app.get('/languages', async (req, res) => {
   try {
     const response = await axios.post(
       IGDB_BASE_URL,
-      'fields game,language,language_support_type; limit 500; where language = (7, 8, 9, 10, 20, 21);', // Limite aumentado para 500
+      'fields alpha_channel,animated,checksum,game,height,image_id,url,width; limit 500; ', // Limite aumentado para 500
       {
         headers: {
           'Client-ID': CLIENT_ID,
