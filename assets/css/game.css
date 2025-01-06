@@ -1,34 +1,11 @@
 
 .main-content {
-    justify-content: center;
-    max-height: 820px;
-    margin-bottom: 25vh; 
+    display: grid;
+    grid-template-columns: repeat(12, 10vh);
+    grid-template-rows: repeat(12, 10vh);
+    gap: 8px;
   }
-  @media (max-width: 425px) {
-    
-    .game-title{
-      border-bottom: -10vh;
-    }
-    .main-outer-content{
-      margin-top: 65vh;
-    }
 
-    .game-header{
-      position: absolute;
-      top: 7vh;
-    }
-
-   
-  
-    .main-content{
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 10vh;
-  }
-  
-}
 .game-detail {
     width: 80%; 
     max-width: 1200px; 
@@ -58,23 +35,19 @@
   display: flex;
   justify-content: center;
 }
-  
-.main-content {
-    grid-column: 1 / span 2;
-    display: flex;
-    gap: 20px;
-}
-  
-.game-main {
-    flex: 2;
-}
+    
+
 .game-media {
-  width: 100%; 
-  max-width: 50rem; 
-  aspect-ratio: 47 / 26; 
+  grid-column: 1 / span 4;
+  grid-row: 2 /span 6;
   background-color: #ece9f1;
   border-radius: 10px;
-  margin-bottom: 20px;
+}
+
+.game-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 
@@ -86,20 +59,57 @@
 }
 
 .thumbnail {
-  flex: 1 1 auto; 
-  max-width: 10rem; 
-  height: auto; 
-  aspect-ratio: 11 / 6; 
   background-color: white;
   border-radius: 5px;
   box-sizing: border-box; 
 }
+
+.thumbnail:nth-child(2) {
+  background-color: lightblue; /* Exemplo */
+  grid-column: 5 / span 2;
+  grid-row: 2 / span 2;
+}
+
+.thumbnail:nth-child(3) {
+  background-color: lightgreen; /* Exemplo */
+  grid-column: 7 / span 2;
+  grid-row: 2 / span 2;
+}
+
+.thumbnail:nth-child(4) {
+  background-color: lightcoral; /* Exemplo */
+  grid-column: 5 / span 2;
+  grid-row: 4 / span 2;
+}
+
+.thumbnail:nth-child(5) {
+  background-color: lightsalmon; /* Exemplo */
+  grid-column: 7 /span 2;
+  grid-row: 4 /span 2;
+}
+
+.thumbnail:nth-child(6) {
+  background-color: lightpink; /* Exemplo */
+  grid-column: 5 / span 2;
+  grid-row: 6 / span 2;
+}
+
+.thumbnail:nth-child(7) {
+  background-color: lightgray; /* Exemplo */
+  grid-column: 7 /span 2;
+  grid-row: 6 / span 2;
+}
+
+
 
 .thumbnail img {
   width: 100%;   /* Ajusta a largura da imagem para 100% da largura do contêiner */
   height: auto;  /* Mantém a proporção da imagem */
   object-fit: cover;  /* Faz a imagem cobrir toda a área do contêiner sem distorcer */
 }
+
+
+
 
 
 
@@ -113,16 +123,15 @@ figure{
 .game-description {
     color: #EDE8EC;
     padding: 10px;
+    grid-column: 1 / span 8;
+    grid-row: 8 / span 3 ;
 }
 
 /* Estrutura principal */
-.game-details {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
+
 .game-stats {
+  grid-column: 9 /span 4;
+  grid-row: 2 / span 3;
   background-color: #f2edf9;
   padding: 20px;
   border-radius: 10px;
@@ -207,6 +216,8 @@ dd{
 
 
 .game-info {
+  grid-column: 9 / span 4;
+  grid-row: 5 / span 5;
   background-color: #f5f3fa;
   border-radius: 12px;
   padding: 20px;
