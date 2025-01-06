@@ -1,176 +1,78 @@
-// Função para abrir o modal de login
-function openLoginModal() {
-  document.getElementById("loginModal").style.display = "flex";
-}
+// Lógica para "Bosses Defeated"
+const bossesInput = document.getElementById("bossesDefeated");
+const bossesButton = document.getElementById("incrementBosses");
 
-// Função para fechar o modal de login
-function closeLoginModal() {
-  document.getElementById("loginModal").style.display = "none";
-}
-
-// Fechar o modal ao clicar fora da janela
-window.onclick = function(event) {
-  if (event.target == document.getElementById("loginModal")) {
-      closeLoginModal();
+bossesButton.addEventListener("click", () => {
+  let currentValue = parseInt(bossesInput.value, 10) || 0;
+  if (currentValue < 150) {
+    bossesInput.value = currentValue + 1;
   }
-}
-
-
-
-
-/// Seleciona o link "Register" no formulário de login
-const registerLink = document.querySelector('.switch-form-register');
-
-// Adiciona um ouvinte de evento para quando o link for clicado
-registerLink.addEventListener('click', function (event) {
-    event.preventDefault(); // Evita o comportamento padrão do link (recarregar a página)
-
-    // Seleciona os formulários
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.querySelector('.register-form');
-
-    // Remove o overlay existente do formulário de registro, se houver
-    const existingOverlayRegister = registerForm.querySelector('.overlay');
-    if (existingOverlayRegister) {
-        existingOverlayRegister.remove();
-    }
-
-    // Remove o overlay existente do formulário de login, se houver
-    const existingOverlayLogin = loginForm.querySelector('.overlay');
-    if (existingOverlayLogin) {
-        existingOverlayLogin.remove();
-    }
-
-    // Cria um novo div de sobreposição
-    const newOverlay = document.createElement('div');
-    newOverlay.classList.add('overlay');
-
-    // Adiciona o overlay ao formulário de login
-    loginForm.appendChild(newOverlay);
 });
 
-// Seleciona o link "Sign In" no formulário de registro
-const loginLink = document.querySelector('.switch-form-login');
+// Lógica para "Chapters Completed"
+const chaptersInput = document.getElementById("chaptersCompleted");
+const chaptersButton = document.getElementById("incrementChapters");
 
-// Adiciona um ouvinte de evento para quando o link for clicado
-loginLink.addEventListener('click', function (event) {
-    event.preventDefault(); // Evita o comportamento padrão do link (recarregar a página)
-
-    // Seleciona os formulários
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.querySelector('.register-form');
-
-    // Remove o overlay existente do formulário de login, se houver
-    const existingOverlayLogin = loginForm.querySelector('.overlay');
-    if (existingOverlayLogin) {
-        existingOverlayLogin.remove();
-    }
-
-    // Remove o overlay existente do formulário de registro, se houver
-    const existingOverlayRegister = registerForm.querySelector('.overlay');
-    if (existingOverlayRegister) {
-        existingOverlayRegister.remove();
-    }
-
-    // Cria um novo div de sobreposição
-    const newOverlay = document.createElement('div');
-    newOverlay.classList.add('overlay');
-
-    // Adiciona o overlay ao formulário de registro
-    registerForm.appendChild(newOverlay);
+chaptersButton.addEventListener("click", () => {
+  let currentValue = parseInt(chaptersInput.value, 10) || 1;
+  if (currentValue < 30) {
+    chaptersInput.value = currentValue + 1;
+  }
 });
 
-  
 
-
-function main() {
-    const sliders = document.querySelectorAll(".more"); // Alterado de ".slider_popular" para ".more"
+function toggleReviewText(event) {
+  const button = event.target; // Identifica o botão clicado
+  const reviewBody = button.closest('.review').querySelector('.review-body'); // Encontra o corpo do comentário correspondente
   
-    sliders.forEach((slider) => {
-      let index = 0;
-      const wrapper = slider.querySelector(".slider-wrapper");
-      const slides = slider.querySelectorAll(".slide");
-      const slidesControls = slider.querySelector(".slider-controls");
-      const leftBtn = slider.querySelector(".slide-control-left");
-      const rightBtn = slider.querySelector(".slide-control-right");
+  reviewBody.classList.toggle('expanded');
   
-      if (!slides) return;
-  
-      function controls() {
-        if (index === 0) {
-          leftBtn.classList.add("slide-control-disabled");
-        } else {
-          leftBtn.classList.remove("slide-control-disabled");
-        }
-  
-        if (index === slides.length - 2) {
-          rightBtn.classList.add("slide-control-disabled");
-        } else {
-          rightBtn.classList.remove("slide-control-disabled");
-        }
-      }
-  
-      function setSlides() {
-        slides.forEach((slide) => {
-          slide.style.left =
-            -(
-              slidesControls.clientWidth * index +
-              (window.innerWidth >= 768 ? 24 : 36) * index
-            ) + "px";
-          slide.classList.remove("slide-active");
-        });
-  
-        slides[index].classList.add("slide-active");
-      }
-  
-      if (leftBtn && rightBtn) {
-        leftBtn.addEventListener("click", () => {
-          if (index > 0 && index <= slides.length) {
-            index--;
-            setSlides();
-          }
-  
-          controls();
-        });
-  
-        rightBtn.addEventListener("click", () => {
-          if (index >= 0 && index < slides.length - 2) {
-            index++;
-            setSlides();
-          }
-  
-          controls();
-        });
-      }
-  
-      const resize = () => {
-        slider.classList.remove("slider-transitions");
-        setSlides();
-        slider.classList.add("slider-transitions");
-      };
-  
-      setSlides();
-      controls();
-      window.addEventListener("load", () => {
-        setTimeout(() => {
-          slider.classList.add("slider-transitions");
-        }, 1000);
-      });
-      window.addEventListener("resize", resize);
-    });
+  if (reviewBody.classList.contains('expanded')) {
+    button.textContent = 'Read less...';
+  } else {
+    button.textContent = 'Read more...';
   }
-  main();
+}
 
-  function toggleReviewText() {
-    const reviewBody = document.querySelector('.review-body');
-    const expandButton = document.querySelector('.expand-button');
-    reviewBody.classList.toggle('expanded');
-    
-    if (reviewBody.classList.contains('expanded')) {
-      expandButton.textContent = 'Read less...';
-    } else {
-      expandButton.textContent = 'Read more...';
-    }
-  }
+// Adiciona event listeners a todos os botões
+document.querySelectorAll('.expand-button').forEach(button => {
+  button.addEventListener('click', toggleReviewText);
+});
 
 
+// Salvar dados do jogo em localStorage
+document.addEventListener("DOMContentLoaded", function () {
+  const gameData = JSON.parse(localStorage.getItem('gameData')) || {
+      // Dados de fallback para teste, caso localStorage esteja vazio
+      name: "If My Heart Had Wings",
+      summary: "Aoi Minase returns with shattered dreams to his wind-swept hometown of Kazegaura...",
+      cover: "co97o9",
+      screenshots: [
+          "scgjm2",
+          "scgjm3",
+          "scgjm4",
+          "scgjm5"
+      ]
+  };
+
+  // Preencher a mídia principal (capa)
+  const gameMediaDiv = document.querySelector('.game-media');
+  const coverImage = gameData.cover
+      ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${gameData.cover}.jpg`
+      : 'https://via.placeholder.com/300x400?text=Imagem+não+disponível';
+  gameMediaDiv.innerHTML = `<img src="${coverImage}" alt="Game Cover">`;
+
+  // Preencher as screenshots
+  const thumbnailsContainer = document.querySelector('.game-thumbnails');
+  const screenshots = gameData.screenshots || [];
+  const thumbnailsHTML = screenshots.map((sc, index) => `
+      <div class="thumbnail">
+          <img src="https://images.igdb.com/igdb/image/upload/t_screenshot_huge/${sc}.jpg" alt="Screenshot ${index + 1}">
+      </div>
+  `).join('');
+  thumbnailsContainer.innerHTML = thumbnailsHTML;
+
+  // Preencher a descrição do jogo
+  const descriptionElement = document.querySelector('#description-text');
+  descriptionElement.textContent = gameData.summary || 'Descrição não disponível.';
+});

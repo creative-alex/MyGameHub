@@ -2,13 +2,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MyGameHub</title>
+  <!--CSS Global-->
   <link rel="stylesheet" href="/assets/css/style.css">
+  <!--CSS Especifico-->
+  <link rel="stylesheet" href="/assets/css/home.css">
+  <!--Icones-->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 </head>
-<body>
- 
+<body> 
 <header class="header">
-    <div class="logo">LOGO</div>
+    <div class="logo"><img src="/assets/images/logo.png.png" id="logo"></div>
     <nav class="nav">
       <span class="nav-item">PC</span>
       <span class="nav-item">CONSOLE</span>
@@ -20,8 +23,7 @@
   </div>
     <iframe 
     id="loginIframe" 
-    src="/assets/views/login.html" 
-    style="display: none; position: absolute; top: 15%; left: 25%; width: 1000px; height: 700px; z-index: 1000; border: none;">
+    src="/assets/views/login.html">
     </iframe>
 </header>
   <!-- Barra de Pesquisa -->
@@ -69,31 +71,13 @@
   </div>
 </div>
 
-<!-- Total Genres: 23
+<!-- Genres:
 [
-  { id: 2, name: 'Point-and-click' },
-  { id: 4, name: 'Fighting' },
   { id: 5, name: 'Shooter' },
-  { id: 7, name: 'Music' },
-  { id: 8, name: 'Platform' },
-  { id: 9, name: 'Puzzle' },
   { id: 10, name: 'Racing' },
-  { id: 11, name: 'Real Time Strategy (RTS)' },
   { id: 12, name: 'Role-playing (RPG)' },
-  { id: 13, name: 'Simulator' },
-  { id: 14, name: 'Sport' },
   { id: 15, name: 'Strategy' },
-  { id: 16, name: 'Turn-based strategy (TBS)' },
-  { id: 24, name: 'Tactical' },
-  { id: 25, name: "Hack and slash/Beat 'em up" },
-  { id: 26, name: 'Quiz/Trivia' },
-  { id: 30, name: 'Pinball' },
   { id: 31, name: 'Adventure' },
-  { id: 32, name: 'Indie' },
-  { id: 33, name: 'Arcade' },
-  { id: 34, name: 'Visual Novel' },
-  { id: 35, name: 'Card & Board Game' },
-  { id: 36, name: 'MOBA' }
 ] -->
 
 <article class="content-section">
@@ -118,7 +102,7 @@
   <h3 class="discover-title">DISCOVER</h3>
   <div class="button-group">
     <button class="discover-button">RECENTLY ADDED</button>
-    <button class="discover-button">SURPRISE ME</button>
+    <button class="discover-button" id="fetchRandomGame">SURPRISE ME</button>
     <button class="discover-button">UPCOMING RELEASES</button>
   </div>
 </div>
@@ -135,7 +119,6 @@
         <div class="slide slide-active">
           <figure>
             <img src="https://picsum.photos/id/777/1920/1080" width="1920" height="1080" alt="Image">
-            <figcaption>The Lorem Ipsum for photos.</figcaption>
           </figure>
           <div class="slider-content">
             <h2>Lorem ipsum</h2>
@@ -165,7 +148,6 @@
         <div class="slide">
           <figure>
             <img src="https://picsum.photos/id/523/1920/1080" width="1920" height="1080" alt="Image">
-            <figcaption>The Lorem Ipsum for photos.</figcaption>
           </figure>
           <div class="slider-content">
             <h2>Lorem ipsum</h2>
@@ -180,7 +162,6 @@
         <div class="slide">
           <figure>
             <img src="https://picsum.photos/id/423/1920/1080" width="1920" height="1080" alt="Image">
-            <figcaption>The Lorem Ipsum for photos.</figcaption>
           </figure>
           <div class="slider-content">
             <h2>Lorem ipsum</h2>
@@ -195,7 +176,6 @@
         <div class="slide">
           <figure>
             <img src="https://picsum.photos/id/423/1920/1080" width="1920" height="1080" alt="Image">
-            <figcaption>The Lorem Ipsum for photos.</figcaption>
           </figure>
           <div class="slider-content">
             <h2>Lorem ipsum</h2>
@@ -210,7 +190,6 @@
         <div class="slide slide-last">
           <figure>
             <img src="https://picsum.photos/id/510/1920/1080" width="1920" height="1080" alt="Image">
-            <figcaption>The Lorem Ipsum for photos.</figcaption>
           </figure>
           <div class="slider-content">
             <h2>MORE</h2>

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOP GAMES</title>
+    <!--CSS Global-->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <!--CSS Especifico-->
+    <link rel="stylesheet" href="/assets/css/top-games.css"> 
+</head>
+<body>
+    <header class="header">
+        <div class="logo" onclick="window.location.href='/index.html'"><img src="/assets/images/logo.png.png" id="logo"></div>
+        <nav class="nav">
+          <span class="nav-item">PC</span>
+          <span class="nav-item">CONSOLE</span>
+          <span class="nav-item">MOBILE</span>
+        </nav>
+        <div class="account">
+          <img src="/assets/images/profile.png" alt="User Icon" class="icon" >
+          <span>Sign in/Sign Up</span>
+      </div>
+    </header>
+      <!-- Barra de Pesquisa -->
+    <nav class="search-bar">
+        <div class="search-container">
+          <input type="text" id="search-input" placeholder="Search...">
+         <div class="select-container">
+           <select class="search-select">
+             <option>All</option> 
+             <option>PC</option>
+             <option>Console</option>
+             <option>Mobile</option>
+        
+            </select>
+          <img src="/assets/images/arrowDown.png" alt="Seta para baixo" class="select-icon icon">
+        </div>
+         
+          <img src="/assets/images/search.png" alt="Search Icon" class="icon">
+        </div>
+    </nav>
+    <main class="parent">
+        <h2>Top Games</h2>
+        <div class="table-wrapper">
+            <table>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Detalhes</th>
+                        <th>Score</th>
+                        <th>Your Score</th>
+                        <th>Status</th>
+                    </tr>
+                    <tr>
+                        <td class="rank">1</td>
+                        <td class="details">
+                            <div class="thumbnail"></div>
+                            <div>
+                                <h3>Game Name</h3>
+                                <p class="platform">PlayStation</p>
+                                <p>--- 202X</p>
+                                <p><span>---</span> members</p>
+                            </div>
+                        </td>
+                        <td class="score">
+                            <span class="star">⭐</span> --
+                        </td>
+                        <td class="user-score">
+                            <span class="star">⭐</span> 
+                            <select aria-label="Your Score">
+                                <option value=none selected>--</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                              </select>
+
+                        </td>
+                        <td class="status">
+                            <select aria-label="Game Status" id="game-status-select">
+                                <option value="none" selected>Add to List</option>
+                                <option value="playing">Playing</option>
+                                <option value="completed">Completed</option>
+                                <option value="on-hold">On-Hold</option>
+                                <option value="dropped">Dropped</option>
+                                <option value="plan-to-play">Plan to Play</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="rank">2</td>
+                        <td class="details">
+                            <div class="thumbnail"></div>
+                            <div>
+                                <h3>Game Name</h3>
+                                <p class="platform">PlayStation</p>
+                                <p>--- 202X</p>
+                                <p><span>---</span> members</p>
+                            </div>
+                        </td>
+                        <td class="score">
+                            <span class="star">⭐</span> --
+                        </td>
+                        <td class="user-score">
+                            <span class="star">⭐</span> 
+                            <select aria-label="Your Score">
+                                <option value=none selected>--</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                              </select>
+                        </td>
+                        <td class="status">
+                            <select aria-label="Game Status" id="game-status-select"> >
+                                <option value="none" selected>Add to List</option>
+                                <option value="playing">Playing</option>
+                                <option value="completed">Completed</option>
+                                <option value="on-hold">On-Hold</option>
+                                <option value="dropped">Dropped</option>
+                                <option value="plan-to-play">Plan to Play</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="rank">3</td>
+                        <td class="details">
+                            <div class="thumbnail"></div>
+                            <div>
+                                <h3>Game Name</h3>
+                                <p class="platform">PlayStation</p>
+                                <p>--- 202X</p>
+                                <p><span>---</span> members</p>
+                            </div>
+                        </td>
+                        <td class="score">
+                            <span class="star">⭐</span> --
+                        </td>
+                        <td class="user-score">
+                            <span class="star">⭐</span> 
+                            <select aria-label="Your Score">
+                                <option value=none selected>--</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                              </select>
+                        </td>
+                        <td class="status">
+                            <select aria-label="Game Status" id="game-status-select">
+                                <option value="none" selected>Add to List</option>
+                                <option value="playing">Playing</option>
+                                <option value="completed">Completed</option>
+                                <option value="on-hold">On-Hold</option>
+                                <option value="dropped">Dropped</option>
+                                <option value="plan-to-play">Plan to Play</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="rank">4</td>
+                        <td class="details">
+                            <div class="thumbnail"></div>
+                            <div>
+                                <h3>Game Name</h3>
+                                <p class="platform">PlayStation</p>
+                                <p>--- 202X</p>
+                                <p><span>---</span> members</p>
+                            </div>
+                        </td>
+                        <td class="score">
+                            <span class="star">⭐</span> --
+                        </td>
+                        <td class="user-score">
+                            <span class="star">⭐</span> 
+                            <select aria-label="Your Score">
+                                <option value=none selected>--</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                              </select>
+                        </td>
+                        <td class="status">
+                            <select aria-label="Game Status" id="game-status-select">
+                                <option value="none" selected>Add to List</option>
+                                <option value="playing">Playing</option>
+                                <option value="completed">Completed</option>
+                                <option value="on-hold">On-Hold</option>
+                                <option value="dropped">Dropped</option>
+                                <option value="plan-to-play">Plan to Play</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="rank">5</td>
+                        <td class="details">
+                            <div class="thumbnail"></div>
+                            <div>
+                                <h3>Game Name</h3>
+                                <p class="platform">PlayStation</p>
+                                <p>--- 202X</p>
+                                <p><span>---</span> members</p>
+                            </div>
+                        </td>
+                        <td class="score">
+                            <span class="star">⭐</span> --
+                        </td>
+                        <td class="user-score">
+                            <span class="star">⭐</span> 
+                            <select aria-label="Your Score">
+                                <option value=none selected>--</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                              </select>
+                        </td>
+                        <td class="status">
+                            <select aria-label="Game Status" id="game-status-select">
+                                <option value="none" selected>Add to List</option>
+                                <option value="playing">Playing</option>
+                                <option value="completed">Completed</option>
+                                <option value="on-hold">On-Hold</option>
+                                <option value="dropped">Dropped</option>
+                                <option value="plan-to-play">Plan to Play</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="rank">6</td>
+                        <td class="details">
+                            <div class="thumbnail"></div>
+                            <div>
+                                <h3>Game Name</h3>
+                                <p class="platform">PlayStation</p>
+                                <p>--- 202X</p>
+                                <p><span>---</span> members</p>
+                            </div>
+                        </td>
+                        <td class="score">
+                            <span class="star">⭐</span> --
+                        </td>
+                        <td class="user-score">
+                            <span class="star">⭐</span> 
+                            <select aria-label="Your Score">
+                                <option value=none selected>--</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                              </select>
+                        </td>
+                        <td class="status">
+                            <select aria-label="Game Status" id="game-status-select">
+                                <option value="none" selected>Add to List</option>
+                                <option value="playing">Playing</option>
+                                <option value="completed">Completed</option>
+                                <option value="on-hold">On-Hold</option>
+                                <option value="dropped">Dropped</option>
+                                <option value="plan-to-play">Plan to Play</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="rank">7</td>
+                        <td class="details">
+                            <div class="thumbnail"></div>
+                            <div>
+                                <h3>Game Name</h3>
+                                <p class="platform">PlayStation</p>
+                                <p>--- 202X</p>
+                                <p><span>---</span> members</p>
+                            </div>
+                        </td>
+                        <td class="score">
+                            <span class="star">⭐</span> --
+                        </td>
+                        <td class="user-score">
+                            <span class="star">⭐</span> 
+                            <select aria-label="Your Score">
+                                <option value=none selected>--</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                              </select>
+                        </td>
+                        <td class="status">
+                            <select aria-label="Game Status" id="game-status-select">
+                                <option value="none" selected>Add to List</option>
+                                <option value="playing">Playing</option>
+                                <option value="completed">Completed</option>
+                                <option value="on-hold">On-Hold</option>
+                                <option value="dropped">Dropped</option>
+                                <option value="plan-to-play">Plan to Play</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="rank">8</td>
+                        <td class="details">
+                            <div class="thumbnail"></div>
+                            <div>
+                                <h3>Game Name</h3>
+                                <p class="platform">PlayStation</p>
+                                <p>--- 202X</p>
+                                <p><span>---</span> members</p>
+                            </div>
+                        </td>
+                        <td class="score">
+                            <span class="star">⭐</span> --
+                        </td>
+                        <td class="user-score">
+                            <span class="star">⭐</span> 
+                            <select aria-label="Your Score">
+                                <option value=none selected>--</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                              </select>
+                        </td>
+                        <td class="status">
+                            <select aria-label="Game Status" id="game-status-select">
+                                <option value="none" selected>Add to List</option>
+                                <option value="playing">Playing</option>
+                                <option value="completed">Completed</option>
+                                <option value="on-hold">On-Hold</option>
+                                <option value="dropped">Dropped</option>
+                                <option value="plan-to-play">Plan to Play</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="rank">9</td>
+                        <td class="details">
+                            <div class="thumbnail"></div>
+                            <div>
+                                <h3>Game Name</h3>
+                                <p class="platform">PlayStation</p>
+                                <p>--- 202X</p>
+                                <p><span>---</span> members</p>
+                            </div>
+                        </td>
+                        <td class="score">
+                            <span class="star">⭐</span> --
+                        </td>
+                        <td class="user-score">
+                            <span class="star">⭐</span> 
+                            <select aria-label="Your Score">
+                                <option value=none selected>--</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                              </select>
+                        </td>
+                        <td class="status">
+                            <select aria-label="Game Status" id="game-status-select">
+                                <option value="none" selected>Add to List</option>
+                                <option value="playing">Playing</option>
+                                <option value="completed">Completed</option>
+                                <option value="on-hold">On-Hold</option>
+                                <option value="dropped">Dropped</option>
+                                <option value="plan-to-play">Plan to Play</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="rank">10</td>
+                        <td class="details">
+                            <div class="thumbnail"></div>
+                            <div>
+                                <h3>Game Name</h3>
+                                <p class="platform">PlayStation</p>
+                                <p>--- 202X</p>
+                                <p><span>---</span> members</p>
+                            </div>
+                        </td>
+                        <td class="score">
+                            <span class="star">⭐</span> --
+                        </td>
+                        <td class="user-score">
+                            <span class="star">⭐</span> 
+                            <select aria-label="Your Score">
+                                <option value=none selected>--</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                              </select>
+                        </td>
+                        <td class="status">
+                            <select aria-label="Game Status" id="game-status-select">
+                                <option value="none" selected>Add to List</option>
+                                <option value="playing">Playing</option>
+                                <option value="completed">Completed</option>
+                                <option value="on-hold">On-Hold</option>
+                                <option value="dropped">Dropped</option>
+                                <option value="plan-to-play">Plan to Play</option>
+                            </select>
+                        </td>
+                    </tr>
+            </table>
+                       
+        </div>          
+    </main>
+  <footer>
+    <div class="footer-container">
+      <div class="social-media">
+        <h4>Social Media</h4>
+        <ul>
+          <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+          <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+          <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+          <li><a href="#"><i class="fab fa-twitch"></i></a></li>
+          <li><a href="#"><i class="fab fa-discord"></i></a></li>
+          <li><a href="#"><i class="fab fa-tiktok"></i></a></li>
+          <li><a href="#"><i class="fab fa-snapchat"></i></a></li>
+        </ul>
+        <div class="language">
+          <label for="language-select">🌐</label>
+          <select id="language-select">
+            <option value="en">English</option>
+            <option value="pt">Português</option>
+            <option value="es">Spanish</option>
+          </select>
+        </div>
+      </div>
+      <div class="institutional">
+        <h4>Institutional</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Career</a></li>
+          <li><a href="#">Your Game with us</a></li>
+          <li><a href="#">Security</a></li>
+        </ul>
+      </div>
+      <div class="help">
+        <h4>Help</h4>
+        <ul>
+          <li><a href="#">Support</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>LOGO © 2011 - 2024</p>
+    </div>
+  </footer>
+
+
+</body>
+</html>

@@ -1,0 +1,235 @@
+.container {
+	padding: 2rem;
+}
+
+.slider-wrapper {
+	position: relative;
+	max-width: 48rem;
+	margin: 0 auto;
+}
+
+.slider {
+	display: flex;
+	aspect-ratio: 16 / 9;
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	scroll-behavior: smooth;
+	box-shadow: 0 1.5rem 3rem -0.75rem hsla(0, 0%, 0%, 0.25);
+	border-radius: 0.5rem;
+	-ms-overflow-style: none; /* Hide scrollbar IE and Edge */
+	scrollbar-width: none; /* Hide scrollbar Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.slider::-webkit-scrollbar {
+	display: none;
+}
+
+.slider img {
+	flex: 1 0 100%;
+	scroll-snap-align: start;
+	object-fit: cover;
+}
+
+.slider-nav {
+	display: flex;
+	column-gap: 1rem;
+	position: absolute;
+	bottom: 1.25rem;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 1;
+}
+
+.slider-nav a {
+	width: 0.5rem;
+	height: 0.5rem;
+	border-radius: 50%;
+	background-color: #fff;
+	opacity: 0.75;
+	transition: opacity ease 250ms;
+}
+
+.slider-nav a:hover {
+	opacity: 1;
+}
+
+
+
+.centered-box {
+    max-width: 1170px; 
+    height: 200px;
+    background-color: #1a1036;
+    margin: 100px auto 0 auto; 
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    padding: 20px; 
+} 
+    
+.box-text {
+      color: #fff;
+      font-size: 1.2rem;
+      margin: 10px 0; 
+      text-align: center;
+}
+    
+.box-button {
+      background-color: #2A2263;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 10px 0; 
+}
+    
+.box-button:hover {
+      background-color: #0056b3; 
+}
+  
+.games-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 5vh 16vw;
+}
+.g{
+    background-color: pink;
+
+}
+
+.games-container h2 {
+    grid-column: 1 / span 3;
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(12, 1fr);
+    gap: 30px;
+}
+
+.pop-game-1{
+    grid-column: 1 / span 6;
+    grid-row: 2 / span 5;
+}
+
+.pop-game-2{
+    grid-column: 7 / span 6;
+    grid-row: 2 / span 5;
+}
+
+.pop-game-3{
+    grid-column: 1 / span 4;
+    grid-row: 7 / span 3;
+}
+
+.pop-game-4{
+    grid-column: 5 / span 4;
+    grid-row: 7 / span 3;
+}
+
+.pop-game-5{
+    grid-column: 9 / span 4;
+    grid-row: 7 / span 3;
+}
+
+.pop-game-6{
+    grid-column: 1 / span 3;
+    grid-row: 10 / span 3;
+}
+
+.pop-game-7{
+    grid-column: 4 / span 3;
+    grid-row: 10 / span 3;
+}
+
+.pop-game-8{
+    grid-column: 7 / span 3;
+    grid-row: 10 / span 3;
+}
+
+.pop-game-9{
+    grid-column: 10 / span 3;
+    grid-row: 10 / span 3;
+}
+
+.all-games-container{
+    margin: 10vh 16vw;
+}
+
+.game h3 {
+    grid-column: 8 / span 2;
+    white-space: nowrap;
+}
+
+.game{
+    display: grid;
+    grid-template-columns: repeat(16, 1fr);
+    grid-template-rows: repeat(4, 6vh);
+    gap: 10px;
+    background-color: pink;
+    padding: 10px;
+}
+.div1 {
+    grid-column: 1 / span 5;
+    grid-row: 1 / span 4;
+    background-color: powderblue;
+}
+
+.div2 {
+    grid-column: 6 / span 2;
+    background-color: purple;
+}
+
+.div3 {
+    grid-column: 6 / span 2;
+    grid-row-start: 2;
+    background-color: purple;
+}
+
+.div4 {
+    grid-column: span 2 / span 2;
+    grid-column-start: 6;
+    grid-row-start: 3;
+    background-color: purple;
+}
+
+.div5 {
+    grid-column: span 2 / span 2;
+    grid-column-start: 6;
+    grid-row-start: 4;
+    background-color: purple;
+}
+
+
+.tag-container {
+    grid-column: 8 / span 5;
+    grid-row-start: 2;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .tag {
+    padding: 8px 16px;
+    background-color: transparent; /* Fundo transparente */
+    color: #ffffff; /* Texto branco */
+    border: 1px solid #3f3f6f; /* Borda com cor semelhante */
+    border-radius: 5px; /* Bordas arredondadas */
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .tag:hover {
+    background-color: #3f3f6f;
+    transform: scale(1.05);
+  }
+  

@@ -1,0 +1,41 @@
+.profile-privacy {
+    width: 320px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #372d68;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  legend {
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .grid-container {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 15px 10px;
+  }
+  
+  label {
+    align-self: center;
+  }
+  
+  select {
+    width: 100px;
+    padding: 5px;
+    background-color: #2c2453;
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+  }

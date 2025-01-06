@@ -87,27 +87,32 @@ main();
 
 
 
-// Função para abrir o modal de login
-const iframe = document.getElementById('loginIframe');
-const accountDiv = document.querySelector('.account');
 
-// Função para abrir o iframe
-function showLogin() {
-    iframe.style.display = 'block';
+async function fetchRandomGame() {
+  const resultDiv = document.getElementById('result');
+
+  try {
+      const response = await fetch('http://localhost:3000/api/random-game');
+      const game = await response.json();
+
+      // Armazenar os dados no localStorage
+      localStorage.setItem('gameData', JSON.stringify(game));
+
+      // Redirecionar para a página game.html
+      window.location.href = 'assets/views/game.html';
+  } catch (error) {
+      console.error(error);
+      resultDiv.textContent = 'Erro ao buscar jogo!';
+  }
+  console.log(gameData.cover); // Verifique o conteúdo da capa
+
 }
 
-// Adiciona o evento de clique na conta (div inteira)
-accountDiv.addEventListener('click', showLogin);
-
-// Fechar o iframe quando clicar fora dele
-window.addEventListener('click', function(event) {
-    // Verifica se o clique ocorreu fora do iframe e da conta
-    if (event.target !== iframe && !iframe.contains(event.target) && event.target !== accountDiv && !accountDiv.contains(event.target)) {
-        iframe.style.display = 'none';
-    }
-});
+const gameData = JSON.parse(localStorage.getItem('gameData'));
+console.log('Dados carregados:', gameData);
+if (!gameData) {
+    console.error('Erro: Dados do jogo não encontrados no localStorage.');
+}
 
 
-
-
-
+document.getElementById('fetchRandomGame').addEventListener('click', fetchRandomGame);
