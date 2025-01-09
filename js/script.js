@@ -99,7 +99,7 @@ async function fetchRandomGame() {
       localStorage.setItem('gameData', JSON.stringify(game));
 
       // Redirecionar para a página game.html
-      window.location.href = 'assets/views/game.html';
+      window.location.href = 'game.html';
   } catch (error) {
       console.error(error);
       resultDiv.textContent = 'Erro ao buscar jogo!';

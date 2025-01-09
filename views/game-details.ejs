@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= game.name %></title>
+</head>
+<body>
+    <h1><%= game.name %></h1>
+    <p><%= game.summary %></p>
+    <img src="<%= game.cover %>" alt="Capa do jogo">
+    <p>Gêneros: <%= game.genres %></p>
+    <p>Plataformas: <%= game.platforms %></p>
+    <div>
+        <h3>Capturas de Tela:</h3>
+        <% game.screenshots.forEach(screenshot => { %>
+            <img src="<%= screenshot %>" alt="Screenshot do jogo">
+        <% }) %>
+    </div>
+</body>
+</html>
