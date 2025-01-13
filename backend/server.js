@@ -1,19 +1,29 @@
 const express = require('express');
 const axios = require('axios');
-const cors = require('cors'); // Importar o CORS
+const cors = require('cors');
+const session = require('express-session'); // Usar sessões para armazenar o jogo gerado
 
 const app = express();
 const PORT = 3000;
 
 const IGDB_BASE_URL = 'https://api.igdb.com/v4';
-const CLIENT_ID = '0h4zi8h0yj07toculmixdhyhbij8p2'; // Substituir pelo teu Client ID da IGDB
-const AUTH_TOKEN = 'rmnpkjiczadvnn0807c1e5is3rvsjm'; // Substituir pelo teu Access Token da IGDB
+const CLIENT_ID = '0h4zi8h0yj07toculmixdhyhbij8p2';
+const AUTH_TOKEN = 'rmnpkjiczadvnn0807c1e5is3rvsjm';
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Configurar sessão
+app.use(session({
+    secret: 'secret-key', 
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 }, // Sessão expira após 1 minuto (ajustável)
+}));
 
 app.set('view engine', 'ejs');
-app.set('views', './views'); // Certifique-se de que a pasta "views" contém os arquivos EJS
+app.set('views', './views');
 
 // Função genérica para buscar dados da API IGDB
 async function fetchFromIGDB(endpoint, fields, ids) {
@@ -52,7 +62,8 @@ app.get('/fetch-random-game', async (req, res) => {
                  sort created_at desc; 
                  where platforms = (6, 9, 12, 14, 34, 37, 39, 41, 48, 49, 130, 162, 163, 167, 169) 
                  & involved_companies != null 
-                 & category != (1,2,3,4,5,6,7,10,11,12); 
+                 & category != (1,2,3,4,5,6,7,10,11,12)
+                 & similar_games >= 5; 
                  limit 1; offset ${Math.floor(Math.random() * 10001)};`,
                 {
                     headers: {
@@ -69,11 +80,11 @@ app.get('/fetch-random-game', async (req, res) => {
             }
         }
 
-        const game = validGame;
-        const coverId = game.cover;
-        const genreIds = game.genres || [];
-        const platformIds = game.platforms || [];
-        const screenshotIds = game.screenshots || [];
+        // Detalhar o jogo
+        const coverId = validGame.cover;
+        const genreIds = validGame.genres || [];
+        const platformIds = validGame.platforms || [];
+        const screenshotIds = validGame.screenshots || [];
 
         const cover = coverId ? await fetchFromIGDB('covers', 'image_id', [coverId]) : [];
         const genres = genreIds.length ? await fetchFromIGDB('genres', 'name', genreIds) : [];
@@ -81,16 +92,16 @@ app.get('/fetch-random-game', async (req, res) => {
         const screenshots = screenshotIds.length ? await fetchFromIGDB('screenshots', 'image_id', screenshotIds) : [];
 
         const detailedGame = {
-            name: game.name || 'N/A',
-            first_release_date: game.first_release_date || 'N/A',
-            summary: game.summary || 'N/A',
+            name: validGame.name || 'N/A',
+            first_release_date: validGame.first_release_date || 'N/A',
+            summary: validGame.summary || 'N/A',
             cover: cover.length ? `https://images.igdb.com/igdb/image/upload/t_720p/${cover[0].image_id}.jpg` : null,
             genres: genres.map(g => g.name).join(', ') || 'N/A',
             platforms: platforms.map(p => p.name).join(', ') || 'N/A',
             screenshots: screenshots.map(sc => `https://images.igdb.com/igdb/image/upload/t_720p/${sc.image_id}.jpg`) || [],
         };
 
-        res.render('game-details', { game: detailedGame });
+        res.render('surprise-game', { game: detailedGame });
     } catch (error) {
         console.error('Erro ao buscar jogo:', error.message);
         res.status(error.response?.status || 500).send('Erro ao carregar jogo.');
