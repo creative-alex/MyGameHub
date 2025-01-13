@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataformas</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>Plataformas</h1>
+    <ul id="platforms-list"></ul>
+
+    <script>
+        // Função para carregar as plataformas
+        async function loadPlatforms() {
+            try {
+                const response = await axios.get('http://localhost:3000/platforms-data');
+                const platforms = response.data;
+
+                // Selecionar o elemento UL e limpar
+                const list = document.getElementById('platforms-list');
+                list.innerHTML = '';
+
+                // Adicionar as plataformas à lista
+                platforms.forEach(platform => {
+                    const li = document.createElement('li');
+                    li.textContent = `ID: ${platform.id}, Nome: ${platform.name}`;
+                    list.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar plataformas:', error);
+            }
+        }
+
+        // Carregar as plataformas assim que o documento for carregado
+        window.onload = loadPlatforms;
+    </script>
+</body>
+</html>
