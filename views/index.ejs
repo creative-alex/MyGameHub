@@ -10,35 +10,72 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 </head>
 <body> 
-<header class="header">
-  <a class="logo" href="/index.html"><img src="/images/logo.png" id="logo"></a>
+  <header class="header">
+    <a class="logo" href="/index.html">
+      <img src="/images/logo.png" id="logo" alt="Logo">
+    </a>
     <nav class="nav">
       <span class="nav-item">PC</span>
       <span class="nav-item">CONSOLE</span>
       <span class="nav-item">MOBILE</span>
     </nav>
-    <a href="/login" class="account">
+    <a class="account" id="toggle-button">
       <img src="/images/profile.png" alt="User Icon" class="icon">
       <span>Sign in/Sign Up</span>
-     </a>  
-</header>
+    </a>
+    <div class="forms-wrapper hidden">
+      <!-- Formulário de Registro -->
+      <form class="register-form active-form" id="registerForm">
+        <h5>WELCOME ADVENTURER</h5>
+        <p>Register now and begin tracking your epic journey</p>
+        <label for="username">Username</label>
+        <input type="text" name="username" placeholder="Choose Your Hero Name" required>
+        <label for="email">Email:</label>
+        <input type="email" name="email" placeholder="Enter your email" required>
+        <label for="password">Password:</label>
+        <input type="password" name="password" placeholder="Enter your password" required>
+        <input type="password" name="repeatPassword" placeholder="Repeat your password" required>
+        <button type="submit">Register</button>
+        <p>Already have an account? <span class="switch-form" data-target="loginForm">Sign In</span></p>
+        <p id="registerMessage" class="message"></p>
+      </form>
+    
+      <!-- Formulário de Login -->
+      <form class="login-form" id="loginForm">
+        <h5>WELCOME BACK ADVENTURER</h5>
+        <p>Enter your username and password to keep track of your journey</p>
+        <label for="email">Email:</label>
+        <input type="email" name="email" placeholder="Enter your email" required>
+        <label for="password">Password:</label>
+        <input type="password" name="password" placeholder="Enter your password" required>
+        <button type="submit">Login</button>
+        <p>Don't have an account? <span class="switch-form" data-target="registerForm">Register</span></p>
+        <p id="loginMessage" class="message"></p>
+      </form>
+    </div>
+    
+  </header>
+  
   <!-- Barra de Pesquisa -->
-<nav class="search-bar">
+  <nav class="search-bar">
     <div class="search-container">
       <input type="text" id="search-input" placeholder="Search...">
-     <div class="select-container">
-       <select class="search-select">
-         <option>All</option> 
-         <option>PC</option>
-         <option>Console</option>
-         <option>Mobile</option>    
+      <div class="select-container">
+        <select class="search-select">
+          <option>All</option> 
+          <option>PC</option>
+          <option>Console</option>
+          <option>Mobile</option>    
         </select>
-      <img src="/images/arrowDown.png" alt="Seta para baixo" class="select-icon icon">
-    </div>
-     
+        <img src="/images/arrowDown.png" alt="Seta para baixo" class="select-icon icon">
+      </div>
       <img src="/images/search.png" alt="Search Icon" class="icon">
     </div>
-</nav>
+  </nav>
+  
+  <!-- Contêiner para os resultados -->
+  <div id="results-container" class="results-container"></div>
+  
 
 <h1>Choose Your Adventure</h1>
 

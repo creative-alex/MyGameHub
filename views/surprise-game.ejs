@@ -9,23 +9,11 @@
     <img src="<%= game.cover %>" alt="Capa do jogo">
     <p>Gêneros: <%= game.genres %></p>
     <p>Plataformas: <%= game.platforms %></p>
-
     <div>
         <h3>Capturas de Tela:</h3>
         <% game.screenshots.forEach(screenshot => { %>
             <img src="<%= screenshot %>" alt="Screenshot do jogo">
         <% }) %>
-    </div>
-
-    <div>
-        <h3>Jogos Similares:</h3>
-        <% for (let i = 1; i <= 5; i++) { %>
-            <div>
-                <h4><%= game[`similarGameName${i}`] %></h4>
-                <img src="<%= game[`similarGameArtwork${i}`] %>" alt="Capa do jogo similar">
-                <p><%= game[`similarGameSummary${i}`] %></p>
-            </div>
-        <% } %>
     </div>
 </body>
 </html>
