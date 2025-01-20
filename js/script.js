@@ -3,86 +3,77 @@ document.addEventListener('DOMContentLoaded', () => {
   const formsWrapper = document.querySelector('.forms-wrapper');
   const switchForms = document.querySelectorAll('.switch-form');
   const loginForm = document.getElementById('loginForm');
+  const registerForm = document.getElementById('registerForm');
   const loginMessage = document.getElementById('loginMessage');
+  const registerMessage = document.getElementById('registerMessage');
   const accountSpan = document.querySelector('#toggle-button span');
   const dropdownMenu = document.createElement('div');
   const centerBox = document.querySelector('.centered-box');
   const button = document.querySelector('.box-button');
-  const searchInput = document.getElementById('search-input');
-  const resultsContainer = document.getElementById('results-container');
-  resultsContainer.classList.add('results-container');
-  const platformSelect = document.getElementById('platform-select');
+  
+  // Configuração do menu dropdown
+  dropdownMenu.className = 'dropdown-menu hidden';
+  dropdownMenu.innerHTML = `
+      <ul>
+          <li><a href="/user/profile">Profile</a></li>
+          <li><a href="/account-settings">Account Settings</a></li>
+          <li id="logoutButton">Logout</li>
+      </ul>
+  `;
+  toggleButton.parentNode.insertBefore(dropdownMenu, toggleButton.nextSibling);
   
   // Alterna exibição do wrapper de formulários
   toggleButton.addEventListener('click', () => {
-    formsWrapper.classList.toggle('hidden');
+      formsWrapper.classList.toggle('hidden');
   });
-
+  
   // Alterna entre login e registro
   switchForms.forEach((switchForm) => {
-    switchForm.addEventListener('click', (e) => {
-      const targetFormId = e.target.dataset.target;
-      document.querySelectorAll('.forms-wrapper form').forEach((form) => {
-        form.classList.remove('active-form');
+      switchForm.addEventListener('click', (e) => {
+          const targetFormId = e.target.dataset.target;
+          document.querySelectorAll('.forms-wrapper form').forEach((form) => {
+              form.classList.remove('active-form');
+          });
+          document.getElementById(targetFormId).classList.add('active-form');
       });
-      document.getElementById(targetFormId).classList.add('active-form');
-    });
   });
- 
-
-  // Manipular o envio do formulário de registro
+  
+  // Manipular envio do formulário de registro
   registerForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData(registerForm);
-    const data = Object.fromEntries(formData.entries());
-
-    console.log('Dados enviados:', data); // Log dos dados enviados
-
-    try {
-        const response = await fetch('/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-        });
-
-        const result = await response.json();
-
-        console.log('Resposta do servidor:', result); // Log da resposta do servidor
-
-        if (response.ok) {
-            registerMessage.textContent = result.message;
-            registerMessage.style.color = 'green';
-            registerForm.reset(); // Limpar o formulário após registro bem-sucedido
-        } else {
-            registerMessage.textContent = result.message;
-            registerMessage.style.color = 'red';
-        }
-    } catch (error) {
-        console.error('Erro ao enviar registro:', error); // Log do erro
-        registerMessage.textContent = 'Erro ao registrar. Tente novamente.';
-        registerMessage.style.color = 'red';
-    }
-});
-
-// Configuração do menu dropdown
-dropdownMenu.className = 'dropdown-menu hidden';
-dropdownMenu.innerHTML = `
-    <ul>
-        <li><a href="/user/profile">Profile</a></li>
-        <li><a href="/account-settings">Account Settings</a></li>
-        <li id="logoutButton">Logout</li>
-    </ul>
-`;
-toggleButton.parentNode.insertBefore(dropdownMenu, toggleButton.nextSibling);
-
-// Manipular o envio do formulário de login
-loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(registerForm);
+      const data = Object.fromEntries(formData.entries());
+  
+      try {
+          const response = await fetch('http://localhost:3000/register', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data),
+          });
+  
+          const result = await response.json();
+          if (response.ok) {
+              registerMessage.textContent = result.message;
+              registerMessage.style.color = 'green';
+              registerForm.reset();
+          } else {
+              registerMessage.textContent = result.message;
+              registerMessage.style.color = 'red';
+          }
+      } catch (error) {
+          registerMessage.textContent = 'Erro ao registrar. Tente novamente.';
+          registerMessage.style.color = 'red';
+      }
+  });
+  
+  // Manipular envio do formulário de login
+  loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(loginForm);
     const data = Object.fromEntries(formData.entries());
 
     try {
-        const response = await fetch('/login', {
+        const response = await fetch('http://localhost:3000/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
@@ -90,74 +81,61 @@ loginForm.addEventListener('submit', async (e) => {
 
         const result = await response.json();
         if (response.ok) {
+            // Exibir mensagem de sucesso
             loginMessage.textContent = result.message;
             loginMessage.style.color = 'green';
 
-            // Atualizar o texto do span com o nome de usuário
+            // Atualizar o texto do span com o nome do usuário
             accountSpan.textContent = result.username;
 
-            // Ocultar ou remover o forms-wrapper
+            // Ocultar o formulário e preparar o dropdown
             formsWrapper.remove();
             centerBox.remove();
+            localStorage.setItem('username', result.username);
 
-            // Tornar o dropdown funcional
+            // Configurar o botão de alternância
             toggleButton.addEventListener('click', () => {
                 dropdownMenu.classList.toggle('hidden');
             });
 
-            // Logout
+            // Configurar o botão de logout
             document.getElementById('logoutButton').addEventListener('click', () => {
                 localStorage.removeItem('username');
                 accountSpan.textContent = 'Sign In/Sign Up';
                 dropdownMenu.classList.add('hidden');
-
-                // Opcional: Exibir novamente os formulários
-                location.reload(); // ou recriar os formulários dinamicamente
+                location.reload();
             });
-
-            // Salvar o nome do usuário no localStorage
-            localStorage.setItem('username', result.username);
         } else {
+            // Exibir mensagem de erro
             loginMessage.textContent = result.message;
             loginMessage.style.color = 'red';
         }
     } catch (error) {
+        // Exibir erro de conexão
         loginMessage.textContent = 'Erro ao fazer login. Tente novamente.';
         loginMessage.style.color = 'red';
     }
 });
 
-// Carregar estado logado do usuário
-const savedUsername = localStorage.getItem('username');
-if (savedUsername) {
-    accountSpan.textContent = savedUsername;
-    formsWrapper.remove();
-
-    // Tornar o dropdown funcional
-    toggleButton.addEventListener('click', () => {
-        dropdownMenu.classList.toggle('hidden');
-    });
-
-    // Logout
-    document.getElementById('logoutButton').addEventListener('click', () => {
-        localStorage.removeItem('username');
-        accountSpan.textContent = 'Sign In/Sign Up';
-        dropdownMenu.classList.add('hidden');
-
-        // Opcional: Exibir novamente os formulários
-        location.reload(); // ou recriar os formulários dinamicamente
-    });
-}
-
- // Adiciona o evento de clique ao botão
- button.addEventListener('click', () => {
-  // Rola a página para o topo
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  // Remove a classe 'hidden' da div
-  formsWrapper.classList.remove('hidden');
-});
-
+  
+  // Verificar usuário logado
+  const savedUsername = localStorage.getItem('username');
+  if (savedUsername) {
+      accountSpan.textContent = savedUsername;
+      formsWrapper.remove();
+  
+      toggleButton.addEventListener('click', () => {
+          dropdownMenu.classList.toggle('hidden');
+      });
+  
+      document.getElementById('logoutButton').addEventListener('click', () => {
+          localStorage.removeItem('username');
+          accountSpan.textContent = 'Sign In/Sign Up';
+          dropdownMenu.classList.add('hidden');
+          location.reload();
+      });
+  }
+  
 
 
 searchInput.addEventListener('input', async () => {
@@ -229,7 +207,9 @@ function renderResults(games) {
   });
 }
 
-
+document.getElementById('randomGame').addEventListener('click', () => {
+  window.location.href = '/randomGame';
+});
   
 
   // Slider logic
@@ -321,33 +301,4 @@ function renderResults(games) {
 
   main();
 
-  // Fetch random game logic
-  async function fetchRandomGame() {
-    const resultDiv = document.getElementById('result');
-
-    try {
-      const response = await fetch('http://localhost:3000/api/random-game');
-      const game = await response.json();
-
-      // Store data in localStorage
-      localStorage.setItem('gameData', JSON.stringify(game));
-
-      // Redirect to game.html
-      window.location.href = 'game.html';
-    } catch (error) {
-      console.error(error);
-      resultDiv.textContent = 'Erro ao buscar jogo!';
-    }
-
-    const gameData = JSON.parse(localStorage.getItem('gameData'));
-    console.log('Game cover:', gameData.cover);
-  }
-
-  const gameData = JSON.parse(localStorage.getItem('gameData'));
-  console.log('Dados carregados:', gameData);
-  if (!gameData) {
-    console.error('Erro: Dados do jogo não encontrados no localStorage.');
-  }
-
-  document.getElementById('fetchRandomGame').addEventListener('click', fetchRandomGame);
 });

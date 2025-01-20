@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>*GameName*</title>
+    <title><%= game.name %></title>
     <!--CSS Global-->
   <link rel="stylesheet" href="/public/style.css">
     <!--CSS Especifico-->
@@ -31,247 +31,139 @@
       
     </header>
       
-        <main class="main-content">
-          <h2 class="game-name">Game Name</h2>
-            <div class="game-media" aria-label="Game Media"></div>
-              <div class="thumbnail"></div>
-              <div class="thumbnail"></div>
-              <div class="thumbnail"></div>
-              <!-- <div class="thumbnail"></div>
-              <div class="thumbnail"></div>
-              <div class="thumbnail"></div> -->
-
-            <section class="game-description">
-              <h2>Description</h2>
-              <span id="description-text">
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-              At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. 
-              Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem.
-              </span>
-            </section>
+   <main class="main-content">
+  <h2 class="game-name"><%= game.name %></h2>
+  
+  <div class="game-media" aria-label="Game Media">
+    <img src="<%= game.cover %>" alt="Game cover for <%= game.name %>" class="game-cover" />
+  </div>
+  
+  <div class="thumbnails">
+    <% game.screenshots.forEach(screenshot => { %>
+      <div class="thumbnail">
+        <img src="<%= screenshot %>" alt="Screenshot from <%= game.name %>" />
+      </div>
+    <% }) %>
+  </div>
+  
+  <section class="game-description">
+    <h2>Description</h2>
+    <span id="description-text">
+      <%= game.summary %>
+    </span>
+  </section>
+  
+  <section class="game-stats" aria-labelledby="stats-heading">
+    <div class="stat-row">
+      <div>
+        <dt>Popularity</dt>
+        <dd>#--</dd>
+      </div>
+      <div>
+        <dt>Score</dt>
+        <dd>---</dd>
+      </div>
+      <div>
+        <dt>Your Score</dt>
+        <dd>
+          <select aria-label="Your Score">
+            <option value=none selected>--</option>
+            <% for (let i = 1; i <= 10; i++) { %>
+              <option value="<%= i %>"><%= i %></option>
+            <% } %>
+          </select>
+        </dd>
+      </div>
+    </div>
+    <div class="button-section">
+      <button class="btn add-to-list" aria-label="Add to List">Add to List</button>
+      <button class="btn add-to-favorites" aria-label="Add to Favorites">Add to Favorites</button>
+    </div>
+  </section>
+  
+  
+  <section class="game-info" aria-labelledby="info-heading">
+    <dl>
+      <div>
+        <dt>Release Date:</dt>
+        <dd class="release-date"><%= game.first_release_date %></dd>
+      </div>
+      <div>
+        <dt>Developer:</dt>
+        <dd class="developer">
+          <% if (game.developers && game.developers.trim() !== '') { %>
+            <%= game.developers %>
+          <% } else { %>
+            N/A
+          <% } %>
+        </dd>
+      </div>
+      <div>
+        <dt>Publisher:</dt>
+        <dd class="publisher">
+          <% if (game.publishers && game.publishers.trim() !== '') { %>
+            <%= game.publishers %>
+          <% } else { %>
+            N/A
+          <% } %>
+        </dd>
+      </div>
       
-            <section class="game-stats" aria-labelledby="stats-heading">
-              <div class="stat-row">
-                <div>
-                  <dt>Popularity</dt>
-                  <dd>#--</dd>
-                </div>
-                <div>
-                  <dt>Score</dt>
-                  <dd>---</dd>
-                </div>
-                <div>
-                  <dt>Your Score</dt>
-                  <dd>
-                    <select aria-label="Your Score">
-                      <option value=none selected>--</option>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                      <option value="6">6</option>
-                      <option value="7">7</option>
-                      <option value="8">8</option>
-                      <option value="9">9</option>
-                      <option value="10">10</option>
-                    </select>
-                  </dd>
-                </div>
-              </div>
-              <div class="progress-section">
-                <dt>Your Progress</dt>
-                <dd>
-                  <p>Bosses Defeated: 
-                    <input type="number" id="bossesDefeated" value="0" min="0" max="150" aria-label="Bosses Defeated" style="width: 50px;" />
-                    /---
-                    <button id="incrementBosses">+</button>
-
-                  </p>
-                  <div class="progress-bar-wrapper">
-                  </div>
-                     <p>Chapters Completed: 
-                     <input type="number" id="chaptersCompleted" value="0" min="0" max="30" aria-label="Chapters Completed" style="width: 50px;" />
-                      /---
-                      <button id="incrementChapters">+</button>
-                      </p>
-                  <div class="progress-bar-wrapper">
-                    <div class="progress-bar" style="width: 0%;"></div>
-                  </div>
-                </dd>
-              </div>
-              
-            </section>
-            
-            <section class="game-info" aria-labelledby="info-heading">
-              <dl>
-                <div>
-                  <dt>Release Date:</dt>
-                  <dd class="release-date">...</dd>
-                </div>
-                <div>
-                  <dt>Developer:</dt>
-                  <dd class="developer">...</dd>
-                </div>
-                <div>
-                  <dt>Publisher:</dt>
-                  <dd class="publisher">...</dd>
-                </div>
-                <div>
-                  <dt>Category/Genre</dt>
-                  <dd>
-                    <ul class="tags">
-                    </ul>
-                  </dd>
-                </div>
-                <div>
-                  <dt>Game Mode</dt>
-                  <dd>
-                    <i class="fas fa-users"></i>
-                    <a class="game-modes">Game Modes</a>
-                  </dd>
-                  
-                </div>
-                <div>
-                  <dt>Languages</dt>
-                  <dd>
-                    <div class="languages-section">
-                      <div class="languages-header">
-                        <i class="fas fa-volume-up"></i>
-                        <i class="fas fa-desktop"></i>
-                        <i class="fas fa-keyboard"></i>
-                      </div>
-                      <div class="languages-content">
-                        <div class="language-row">
-                          <span>English</span>
-                          <i class="fas fa-check-circle"></i>
-                          <i class="fas fa-check-circle"></i>
-                          <i class="fas fa-check-circle"></i>
-                        </div>
-                        <div class="language-row">
-                          <span>Portuguese</span>
-                          <i class="fas fa-check-circle"></i>
-                          <i class="fas fa-check-circle"></i>
-                          <i class="fas fa-check-circle"></i>
-                        </div>
-                        <div class="language-row">
-                          <span>Spanish</span>
-                          <i class="fas fa-check-circle"></i>
-                          <i class="fas fa-check-circle"></i>
-                          <i class="fas fa-check-circle"></i>
-                        </div>
-                      </div>
-                    </div>
-                  </dd>
-                </div>
-                
-              </dl>
-            </section>              
-        </main>
-        
+      <div>
+        <dt>Category/Genre</dt>
+        <dd>
+          <ul class="tags">
+            <% game.genres.split(', ').forEach(genre => { %>
+              <li><%= genre %></li>
+            <% }) %>
+          </ul>
+        </dd>
+      </div>
+      <div>
+        <dt>Game Modes</dt>
+        <dd>
+          <i class="fas fa-users"></i>
+          <% if (game.game_modes && game.game_modes.length > 0) { %>
+            <% game.game_modes.split(', ').forEach(mode => { %>
+              <a class="game-modes"><%= mode %></a>
+            <% }) %>
+          <% } else { %>
+            <span>No game modes available</span>
+          <% } %>
+        </dd>
+      </div>  
+    </dl>
+  </section>
+</main>
 
 
-        <section class="popular">
-          <div class="container">
-            <div class="popular-header">
-              <h2 class="popular-title">Popular This Week</h2>
-            </div>
-            <div class="slider_popular">
-              <div class="slider-wrapper">
-                <div class="slide slide-active">
-                  <figure>
-                    <img src="https://picsum.photos/id/777/1920/1080" width="1920" height="1080" alt="Image">
-                  </figure>
-                  <div class="slider-content">
-                    <h2>Lorem ipsum</h2>
-                    <div class="paragraph-wrapper">
-                      <div class="paragraphs">
-                        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
-                      </div>
-                    </div>
-                    <a href="#test" class="primary">Lorem ipsum</a>
-                  </div>
-                </div>
-                <div class="slide">
-                  <figure>
-                    <img src="https://picsum.photos/id/654/1920/1080" width="1920" height="1080" alt="Image">
-                  </figure>
-                  <div class="slider-content">
-                    <h2>Lorem ipsum</h2>
-                    <div class="paragraph-wrapper">
-                      <div class="paragraphs">
-                        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
-                      </div>
-                    </div>
-                    <a href="#test" class="primary">Lorem ipsum</a>
-                  </div>
-                </div>
-                <div class="slide">
-                  <figure>
-                    <img src="https://picsum.photos/id/523/1920/1080" width="1920" height="1080" alt="Image">
-                  </figure>
-                  <div class="slider-content">
-                    <h2>Lorem ipsum</h2>
-                    <div class="paragraph-wrapper">
-                      <div class="paragraphs">
-                        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
-                      </div>
-                    </div>
-                    <a href="#test" class="primary">Lorem ipsum</a>
-                  </div>
-                </div>
-                <div class="slide">
-                  <figure>
-                    <img src="https://picsum.photos/id/423/1920/1080" width="1920" height="1080" alt="Image">
-                  </figure>
-                  <div class="slider-content">
-                    <h2>Lorem ipsum</h2>
-                    <div class="paragraph-wrapper">
-                      <div class="paragraphs">
-                        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
-                      </div>
-                    </div>
-                    <a href="#test" class="primary">Lorem ipsum</a>
-                  </div>
-                </div>
-                <div class="slide">
-                  <figure>
-                    <img src="https://picsum.photos/id/423/1920/1080" width="1920" height="1080" alt="Image">
-                  </figure>
-                  <div class="slider-content">
-                    <h2>Lorem ipsum</h2>
-                    <div class="paragraph-wrapper">
-                      <div class="paragraphs">
-                        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
-                      </div>
-                    </div>
-                    <a href="#test" class="primary">Lorem ipsum</a>
-                  </div>
-                </div>
-                <div class="slide slide-last">
-                  <figure>
-                    <img src="https://picsum.photos/id/510/1920/1080" width="1920" height="1080" alt="Image">
-                  </figure>
-                  <div class="slider-content">
-                    <h2>MORE</h2>
-                  </div>
-                </div>
-              </div>
-              <div class="slider-controls">
-                <span class="slide-control-left">
-                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff">
-                    <path d="m432-480 156 156q11 11 11 28t-11 28q-11 11-28 11t-28-11L348-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l184-184q11-11 28-11t28 11q11 11 11 28t-11 28L432-480Z"></path>
-                  </svg>
-                </span>
-                <span class="slide-control-right">
-                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff">
-                    <path d="M504-480 348-636q-11-11-11-28t11-28q11-11 28-11t28 11l184 184q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L404-268q-11 11-28 11t-28-11q-11-11-11-28t11-28l156-156Z"></path>
-                  </svg>
-                </span>
-              </div>
-            </div>
+<section class="games-container">        
+  <div class="games-grid">
+      <h2>SIMILAR GAMES</h2>
+      <% if (game.similar_games && game.similar_games.length > 0) { %>
+        <% game.similar_games.slice(0, 8).forEach(function(similarGame) { %>
+          <div class="g similar-game">
+            <h3 class="similar-title"><%= similarGame.name %></h3>
+            <p class="similar-description">
+              <%= similarGame.summary && similarGame.summary.length > 150 
+                  ? similarGame.summary.substring(0, 147) + '...' 
+                  : (similarGame.summary || 'No description available.') %>
+            </p>
+            <% if (similarGame.cover) { %>
+              <img class="similar-cover" src="<%= similarGame.cover %>" alt="<%= similarGame.name %> Cover">
+            <% } %>
           </div>
-        </section> 
+        <% }); %>
+      <% } else { %>
+        <p>No similar games available.</p>
+      <% } %>
+      
+
+  </div>
+</section>
+
+
+
 <section class="reviews">
   <section class="review-summary-container">
     <div class="write-review">
