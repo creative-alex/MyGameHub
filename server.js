@@ -6,17 +6,21 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const bodyParser = require('body-parser');
+require('dotenv').config();
 
 const app = express();
 const PORT = 3000;
-const SECRET_KEY = 'supersecretkey';
+const SECRET_KEY = process.env.SECRET_KEY || 'supersecretkey';
 
+// Configuração da API IGDB
 const IGDB_BASE_URL = 'https://api.igdb.com/v4';
-const CLIENT_ID = '0h4zi8h0yj07toculmixdhyhbij8p2'; // Substituir pelo teu Client ID da IGDB
-const AUTH_TOKEN = 'rmnpkjiczadvnn0807c1e5is3rvsjm'; // Substituir pelo teu Access Token da IGDB
+const CLIENT_ID = process.env.IGDB_CLIENT_ID || 'teu_client_id';
+const AUTH_TOKEN = process.env.IGDB_AUTH_TOKEN || 'teu_access_token';
 
+// Configuração do Express
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 app.use(express.json());
@@ -27,10 +31,10 @@ app.use('/js', express.static(path.join(__dirname, 'js')));
 
 // Configuração do banco de dados
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'game_platform',
+    host: 'sql7.freesqldatabase.com',
+    user: 'sql7758514',
+    password: 's9VaqTkalD',
+    database: 'sql7758514',
 });
 
 db.connect((err) => {
@@ -73,10 +77,54 @@ async function fetchFromIGDB(endpoint, fields, ids) {
     }
 }
 
+// Rota base
+app.get('/', (req, res) => {
+    res.render('index', { title: 'Bem-vindo à Plataforma de Jogos' });
+});
+
+app.get('/game', (req, res) => {
+    res.render('game');  // game.ejs será procurado dentro da pasta 'views'
+  });
+
 // Rotas relacionadas ao IGDB
 app.get('/random-game', (req, res) => {
     res.render('random-game');
 });
+
+app.get('/search', async (req, res) => {
+    const searchQuery = req.query.q;
+    if (!searchQuery) {
+        return res.status(400).json({ message: 'Por favor, insira um termo de pesquisa.' });
+    }
+
+    try {
+        const response = await axios.post(
+            `${IGDB_BASE_URL}/games`,
+            `fields name, cover, summary; search "${searchQuery}"; limit 10;`,
+            {
+                headers: {
+                    'Client-ID': CLIENT_ID,
+                    Authorization: `Bearer ${AUTH_TOKEN}`,
+                },
+            }
+        );
+
+        const games = response.data.map((game) => ({
+            id: game.id,
+            name: game.name,
+            summary: game.summary || 'Sem resumo disponível.',
+            cover: game.cover
+                ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`
+                : '/images/placeholder.png',
+        }));
+
+        res.json(games);
+    } catch (error) {
+        console.error('Erro ao buscar jogos:', error.message);
+        res.status(500).json({ message: 'Erro ao realizar a pesquisa.' });
+    }
+});
+
 
 app.get('/fetch-random-game', async (req, res) => {
     try {
@@ -107,15 +155,12 @@ app.get('/fetch-random-game', async (req, res) => {
         }
 
         const game = validGame;
-        const coverId = game.cover;
-        const genreIds = game.genres || [];
-        const platformIds = game.platforms || [];
-        const screenshotIds = game.screenshots || [];
-
-        const cover = coverId ? await fetchFromIGDB('covers', 'image_id', [coverId]) : [];
-        const genres = genreIds.length ? await fetchFromIGDB('genres', 'name', genreIds) : [];
-        const platforms = platformIds.length ? await fetchFromIGDB('platforms', 'name', platformIds) : [];
-        const screenshots = screenshotIds.length ? await fetchFromIGDB('screenshots', 'image_id', screenshotIds) : [];
+        const [cover, genres, platforms, screenshots] = await Promise.all([
+            game.cover ? fetchFromIGDB('covers', 'image_id', [game.cover]) : [],
+            game.genres ? fetchFromIGDB('genres', 'name', game.genres) : [],
+            game.platforms ? fetchFromIGDB('platforms', 'name', game.platforms) : [],
+            game.screenshots ? fetchFromIGDB('screenshots', 'image_id', game.screenshots) : [],
+        ]);
 
         const detailedGame = {
             name: game.name || 'N/A',
@@ -134,84 +179,71 @@ app.get('/fetch-random-game', async (req, res) => {
     }
 });
 
-// Rotas relacionadas a autenticação e usuário
-app.get('/', (req, res) => {
-    const authHeader = req.headers['authorization'];
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.render('index', { loggedIn: false });
+app.post('/register', async (req, res) => {
+    const { username, email, password, repeatPassword } = req.body;
+
+    // Validar campos obrigatórios
+    if (!username || !email || !password || !repeatPassword) {
+        return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
     }
 
-    const token = authHeader.split(' ')[1];
-    jwt.verify(token, SECRET_KEY, (err, user) => {
-        if (err) {
-            return res.render('index', { loggedIn: false });
+    // Validar se as senhas coincidem
+    if (password !== repeatPassword) {
+        return res.status(400).json({ message: 'As senhas não coincidem.' });
+    }
+
+    try {
+        // Verificar se o e-mail já está registrado
+        const [existingUser] = await db.promise().query('SELECT * FROM users WHERE email = ?', [email]);
+        if (existingUser.length > 0) {
+            return res.status(400).json({ message: 'E-mail já está registrado.' });
         }
-        res.render('index', { loggedIn: true, username: user.username });
-    });
+
+        // Criar hash da senha
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Inserir o usuário no banco de dados
+        await db.promise().query('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', [
+            username,
+            email,
+            hashedPassword,
+        ]);
+
+        return res.status(201).json({ message: 'Registro bem-sucedido! Você já pode fazer login.' });
+    } catch (error) {
+        console.error('Erro no registro:', error.message);
+        return res.status(500).json({ message: 'Erro no servidor. Tente novamente mais tarde.' });
+    }
 });
 
+<<<<<<< HEAD
 // Rota de login e registro
+=======
+
+>>>>>>> bf06253e761ae2b7f44e1e4681fd59209a72858f
 app.post('/login', async (req, res) => {
-    const { action, username, email, password, repeatPassword } = req.body;
+    const { email, password } = req.body;
 
-    if (!action || !['login', 'register'].includes(action)) {
-        return res.status(400).json({ message: 'Ação inválida. Use "login" ou "register".' });
-    }
-
-    if (action === 'register') {
-        // Lógica para registro
-        if (!username || !email || !password || !repeatPassword) {
-            return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
+    try {
+        const [user] = await db.promise().query('SELECT * FROM users WHERE email = ?', [email]);
+        if (user.length === 0) {
+            return res.status(400).json({ message: 'E-mail ou senha inválidos.' });
         }
 
-        if (password !== repeatPassword) {
-            return res.status(400).json({ message: 'As senhas não coincidem.' });
+        const foundUser = user[0];
+        const passwordMatch = await bcrypt.compare(password, foundUser.password);
+        if (!passwordMatch) {
+            return res.status(400).json({ message: 'E-mail ou senha inválidos.' });
         }
 
-        try {
-            const hashedPassword = await bcrypt.hash(password, 10);
-            const query = `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`;
-
-            db.query(query, [username, email, hashedPassword], (err) => {
-                if (err) {
-                    if (err.code === 'ER_DUP_ENTRY') {
-                        return res.status(400).json({ message: 'Email já está em uso.' });
-                    }
-                    return res.status(500).json({ message: 'Erro no servidor.' });
-                }
-                res.status(201).json({ message: 'Usuário registrado com sucesso!' });
-            });
-        } catch (error) {
-            res.status(500).json({ message: 'Erro ao registrar o usuário.' });
-        }
-    } else if (action === 'login') {
-        // Lógica para login
-        if (!email || !password) {
-            return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
-        }
-
-        const query = `SELECT * FROM users WHERE email = ?`;
-
-        db.query(query, [email], async (err, results) => {
-            if (err) return res.status(500).json({ message: 'Erro no servidor.' });
-            if (results.length === 0) return res.status(401).json({ message: 'Credenciais inválidas.' });
-
-            const user = results[0];
-            const isPasswordValid = await bcrypt.compare(password, user.password);
-
-            if (!isPasswordValid) return res.status(401).json({ message: 'Credenciais inválidas.' });
-
-            const token = jwt.sign(
-                { id: user.id, email: user.email, username: user.username },
-                SECRET_KEY,
-                { expiresIn: '1h' }
-            );
-
-            res.status(200).json({ message: 'Login bem-sucedido!', token });
-        });
+        // Retorna o nome de usuário junto com a mensagem de sucesso
+        res.status(200).json({ message: 'Login bem-sucedido!', username: foundUser.username });
+    } catch (err) {
+        res.status(500).json({ message: 'Erro ao realizar login.' });
     }
 });
 
+<<<<<<< HEAD
 app.get('/auth-status', authenticateToken, (req, res) => {
     res.status(200).json({ loggedIn: true, username: req.user.username });
 });
@@ -222,3 +254,11 @@ app.get('/dashboard', authenticateToken, (req, res) => {
 
 // Iniciar o servidor
 app
+=======
+
+
+// Iniciar o servidor
+app.listen(PORT, () => {
+    console.log(`Servidor iniciado em http://localhost:${PORT}`);
+});
+>>>>>>> bf06253e761ae2b7f44e1e4681fd59209a72858f
