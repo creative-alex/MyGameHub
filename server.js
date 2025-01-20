@@ -25,8 +25,6 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/js', express.static(path.join(__dirname, 'js')));
 
-
-
 // Configuração do banco de dados
 const db = mysql.createConnection({
     host: 'localhost',
@@ -152,11 +150,7 @@ app.get('/', (req, res) => {
     });
 });
 
-// Rota de login
-app.get('/login', (req, res) => {
-    res.render('user/login'); 
-});
-
+// Rota de login e registro
 app.post('/login', async (req, res) => {
     const { action, username, email, password, repeatPassword } = req.body;
 
@@ -218,7 +212,6 @@ app.post('/login', async (req, res) => {
     }
 });
 
-
 app.get('/auth-status', authenticateToken, (req, res) => {
     res.status(200).json({ loggedIn: true, username: req.user.username });
 });
@@ -228,6 +221,4 @@ app.get('/dashboard', authenticateToken, (req, res) => {
 });
 
 // Iniciar o servidor
-app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
-});
+app
