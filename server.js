@@ -79,7 +79,7 @@ async function fetchFromIGDB(endpoint, fields, ids) {
 
 // Rota base
 app.get('/', (req, res) => {
-    res.render('index', { title: 'Bem-vindo à Plataforma de Jogos' });
+    res.render('index');
 });
 
 app.get('/game', (req, res) => {
@@ -90,41 +90,6 @@ app.get('/game', (req, res) => {
 app.get('/random-game', (req, res) => {
     res.render('random-game');
 });
-
-app.get('/search', async (req, res) => {
-    const searchQuery = req.query.q;
-    if (!searchQuery) {
-        return res.status(400).json({ message: 'Por favor, insira um termo de pesquisa.' });
-    }
-
-    try {
-        const response = await axios.post(
-            `${IGDB_BASE_URL}/games`,
-            `fields name, cover, summary; search "${searchQuery}"; limit 10;`,
-            {
-                headers: {
-                    'Client-ID': CLIENT_ID,
-                    Authorization: `Bearer ${AUTH_TOKEN}`,
-                },
-            }
-        );
-
-        const games = response.data.map((game) => ({
-            id: game.id,
-            name: game.name,
-            summary: game.summary || 'Sem resumo disponível.',
-            cover: game.cover
-                ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`
-                : '/images/placeholder.png',
-        }));
-
-        res.json(games);
-    } catch (error) {
-        console.error('Erro ao buscar jogos:', error.message);
-        res.status(500).json({ message: 'Erro ao realizar a pesquisa.' });
-    }
-});
-
 
 app.get('/fetch-random-game', async (req, res) => {
     try {
@@ -137,7 +102,7 @@ app.get('/fetch-random-game', async (req, res) => {
                  sort created_at desc; 
                  where platforms = (6, 9, 12, 14, 34, 37, 39, 41, 48, 49, 130, 162, 163, 167, 169) 
                  & involved_companies != null 
-                 & category != (1,2,3,4,5,6,7,10,11,12); 
+                 & category != (1,2,3,4,5,6,7,10,11,12,13,14); 
                  limit 1; offset ${Math.floor(Math.random() * 10001)};`,
                 {
                     headers: {
@@ -179,6 +144,64 @@ app.get('/fetch-random-game', async (req, res) => {
     }
 });
 
+app.get('/search', async (req, res) => {
+    const searchQuery = req.query.q;
+    const platform = req.query.platform;
+  
+    // Verifica se o termo de pesquisa foi fornecido
+    if (!searchQuery) {
+      return res.status(400).json({ message: 'Por favor, insira um termo de pesquisa.' });
+    }
+  
+    // Mapeamento das plataformas para IDs do IGDB
+    const platformMap = {
+      pc: [6, 14, 162, 163], // IDs de PC
+      console: [9, 12, 48, 49, 167, 169, 41, 130, 37], // IDs de consoles
+      mobile: [34, 39], // IDs de Mobile
+    };
+  
+    const platformIds = platform && platformMap[platform] ? platformMap[platform] : null;
+  
+    try {
+      // Constrói o filtro de plataforma, se aplicável
+      const platformFilter = platformIds ? `& platforms = (${platformIds.join(',')})` : '';
+  
+      // Faz a solicitação para o IGDB
+      const response = await axios.post(
+        `${IGDB_BASE_URL}/games`,
+        `fields name, cover.image_id, summary, alternative_names.name; 
+         search "${searchQuery}"; 
+         where cover != null & summary != null ${platformFilter}
+           & category != (1,2,3,4,5,6,7,10,11,12,13,14) 
+           & involved_companies != null; 
+         limit 10;`,
+        {
+          headers: {
+            'Client-ID': CLIENT_ID,
+            Authorization: `Bearer ${AUTH_TOKEN}`,
+          },
+        }
+      );
+  
+      // Mapeia os resultados
+      const games = response.data.map((game) => ({
+        id: game.id,
+        name: game.name,
+        alternativeNames: game.alternative_names?.map((name) => name.name) || [],
+        summary: game.summary,
+        cover: game.cover
+          ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`
+          : '/images/placeholder.png',
+      }));
+  
+      res.json(games);
+    } catch (error) {
+      console.error('Erro ao buscar jogos:', error.message);
+      res.status(500).json({ message: 'Erro ao realizar a pesquisa.' });
+    }
+  });
+  
+
 app.post('/register', async (req, res) => {
     const { username, email, password, repeatPassword } = req.body;
 
@@ -216,11 +239,6 @@ app.post('/register', async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
-// Rota de login e registro
-=======
-
->>>>>>> bf06253e761ae2b7f44e1e4681fd59209a72858f
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -243,22 +261,9 @@ app.post('/login', async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
-app.get('/auth-status', authenticateToken, (req, res) => {
-    res.status(200).json({ loggedIn: true, username: req.user.username });
-});
-
-app.get('/dashboard', authenticateToken, (req, res) => {
-    res.render('dashboard', { username: req.user.username });
-});
-
-// Iniciar o servidor
-app
-=======
 
 
 // Iniciar o servidor
 app.listen(PORT, () => {
     console.log(`Servidor iniciado em http://localhost:${PORT}`);
 });
->>>>>>> bf06253e761ae2b7f44e1e4681fd59209a72858f

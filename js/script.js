@@ -9,10 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const centerBox = document.querySelector('.centered-box');
   const button = document.querySelector('.box-button');
   const searchInput = document.getElementById('search-input');
-  const searchContainer = document.querySelector('.search-container');
   const resultsContainer = document.getElementById('results-container');
   resultsContainer.classList.add('results-container');
-  searchContainer.appendChild(resultsContainer);
+  const platformSelect = document.getElementById('platform-select');
   
   // Alterna exibição do wrapper de formulários
   toggleButton.addEventListener('click', () => {
@@ -163,43 +162,70 @@ if (savedUsername) {
 
 searchInput.addEventListener('input', async () => {
   const query = searchInput.value.trim();
+  const platform = platformSelect.value; // Obtém o valor do filtro selecionado
+
   if (query.length === 0) {
-      resultsContainer.innerHTML = ''; // Limpa os resultados.
-      return;
+    resultsContainer.innerHTML = ''; // Limpa os resultados
+    resultsContainer.style.display = 'none'; // Esconde o contêiner de resultados
+    return;
   }
 
   try {
-      const response = await fetch(`/search?q=${encodeURIComponent(query)}`);
-      if (!response.ok) {
-          throw new Error('Erro ao buscar os jogos.');
-      }
-
-      const games = await response.json();
-      renderResults(games);
+    const response = await fetch(`/search?q=${encodeURIComponent(query)}&platform=${platform}`);
+    const games = await response.json();
+    renderResults(games);
   } catch (error) {
-      console.error('Erro ao buscar jogos:', error.message);
+    console.error('Erro ao buscar jogos:', error.message);
   }
 });
 
+// Função para buscar jogos com base no input e no filtro
+async function fetchAndRenderResults() {
+  const query = searchInput.value.trim(); // Valor do input
+  const platform = platformSelect.value; // Valor do filtro
+
+  if (query.length === 0) {
+    resultsContainer.innerHTML = ''; // Limpa os resultados
+    resultsContainer.style.display = 'none'; // Esconde o contêiner
+    return;
+  }
+
+  try {
+    const response = await fetch(`/search?q=${encodeURIComponent(query)}&platform=${platform}`);
+    const games = await response.json();
+    renderResults(games);
+  } catch (error) {
+    console.error('Erro ao buscar jogos:', error.message);
+  }
+}
+
+// Adiciona evento ao campo de busca
+searchInput.addEventListener('input', fetchAndRenderResults);
+
+// Adiciona evento ao filtro de plataforma
+platformSelect.addEventListener('change', fetchAndRenderResults);
+
+// Renderiza os resultados no contêiner
 function renderResults(games) {
-  resultsContainer.innerHTML = ''; // Limpa os resultados antigos.
+  resultsContainer.innerHTML = ''; // Limpa os resultados antigos
+  resultsContainer.style.display = 'block'; // Exibe o contêiner
 
   if (games.length === 0) {
-      resultsContainer.innerHTML = '<p>Nenhum jogo encontrado.</p>';
-      return;
+    resultsContainer.innerHTML = '<p>Nenhum jogo encontrado.</p>';
+    return;
   }
 
   games.forEach((game) => {
-      const gameElement = document.createElement('div');
-      gameElement.classList.add('game-result');
-      gameElement.innerHTML = `
-          <img src="${game.cover}" alt="${game.name} cover" />
-          <div class="game-info">
-              <h3>${game.name}</h3>
-              <p>${game.summary}</p>
-          </div>
-      `;
-      resultsContainer.appendChild(gameElement); // Adiciona o jogo ao contêiner correto.
+    const gameElement = document.createElement('div');
+    gameElement.classList.add('game-result');
+    gameElement.innerHTML = `
+      <img src="${game.cover}" alt="${game.name} cover" />
+      <div class="game-info">
+        <h3>${game.name}</h3>
+        <p>${game.summary}</p>
+      </div>
+    `;
+    resultsContainer.appendChild(gameElement);
   });
 }
 

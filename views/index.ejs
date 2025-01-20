@@ -11,7 +11,7 @@
 </head>
 <body> 
   <header class="header">
-    <a class="logo" href="/index.html">
+    <a class="logo" onclick="location.reload();">
       <img src="/images/logo.png" id="logo" alt="Logo">
     </a>
     <nav class="nav">
@@ -61,12 +61,12 @@
     <div class="search-container">
       <input type="text" id="search-input" placeholder="Search...">
       <div class="select-container">
-        <select class="search-select">
-          <option>All</option> 
-          <option>PC</option>
-          <option>Console</option>
-          <option>Mobile</option>    
-        </select>
+        <select id="platform-select" class="search-select">
+          <option value="all">All</option> 
+          <option value="pc">PC</option>
+          <option value="console">Console</option>
+          <option value="mobile">Mobile</option>
+        </select>      
         <img src="/images/arrowDown.png" alt="Seta para baixo" class="select-icon icon">
       </div>
       <img src="/images/search.png" alt="Search Icon" class="icon">
