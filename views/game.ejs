@@ -143,8 +143,8 @@
       <% if (game.similar_games && game.similar_games.length > 0) { %>
         <% game.similar_games.slice(0, 8).forEach(function(similarGame) { %>
           <div class="g similar-game">
-            <h3 class="similar-title"><%= similarGame.name %></h3>
-            <p class="similar-description">
+            <h3 class="similar-title hidden"><%= similarGame.name %></h3>
+            <p class="similar-description hidden">
               <%= similarGame.summary && similarGame.summary.length > 150 
                   ? similarGame.summary.substring(0, 147) + '...' 
                   : (similarGame.summary || 'No description available.') %>
