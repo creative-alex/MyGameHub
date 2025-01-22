@@ -1,70 +1,77 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Seleciona todas as classes 'similar-game'
-    const similarGames = document.querySelectorAll('.similar-game');
+// Seleciona todas as classes 'similar-game'
+const similarGames = document.querySelectorAll('.similar-game');
   
-    // Adiciona os ouvintes de evento
-    similarGames.forEach((similarGame) => {
-      similarGame.addEventListener('mouseenter', () => {
-        // Seleciona apenas os elementos dentro do similar-game atual
-        const title = similarGame.querySelector('.similar-title');
-        const description = similarGame.querySelector('.similar-description');
-  
-        if (title) title.classList.remove('hidden');
-        if (description) description.classList.remove('hidden');
-      });
-  
-      similarGame.addEventListener('mouseleave', () => {
-        // Seleciona apenas os elementos dentro do similar-game atual
-        const title = similarGame.querySelector('.similar-title');
-        const description = similarGame.querySelector('.similar-description');
-  
-        if (title) title.classList.add('hidden');
-        if (description) description.classList.add('hidden');
-      });
-    });
+// Adiciona os ouvintes de evento
+similarGames.forEach((similarGame) => {
+  similarGame.addEventListener('mouseenter', () => {
+    // Seleciona apenas os elementos dentro do similar-game atual
+    const title = similarGame.querySelector('.similar-title');
+    const description = similarGame.querySelector('.similar-description');
 
-    const addToListButton = document.querySelector('.add-to-list');
-    const addToFavoritesButton = document.querySelector('.add-to-favorites');
+    if (title) title.classList.remove('hidden');
+    if (description) description.classList.remove('hidden');
+  });
 
-    // Evento para "Add to List"
-    addToListButton.addEventListener('click', async () => {
-      try {
-        const response = await fetch('/add-to-list', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ userId }),
-        });
+  similarGame.addEventListener('mouseleave', () => {
+    // Seleciona apenas os elementos dentro do similar-game atual
+    const title = similarGame.querySelector('.similar-title');
+    const description = similarGame.querySelector('.similar-description');
 
-        const result = await response.json();
-        if (response.ok) {
-          alert(result.message);
-        } else {
-          alert(result.message || 'Erro ao adicionar à lista.');
-        }
-      } catch (error) {
-        console.error('Erro:', error);
-        alert('Ocorreu um erro ao processar sua solicitação.');
+    if (title) title.classList.add('hidden');
+    if (description) description.classList.add('hidden');
+  });
+});
+
+// Recupera o token do localStorage
+const token = localStorage.getItem('jwtToken');
+
+// Verifica se o token existe
+if (!token) {
+  console.warn('Token JWT não encontrado no localStorage. O usuário pode não estar logado.');
+}
+
+
+
+
+
+
+
+  // Função para verificar se o token JWT está armazenado
+  const isLoggedIn = () => {
+    const token = localStorage.getItem('jwtToken');
+    return token !== null;
+  };
+
+  // Função para obter o token JWT
+  const getToken = () => localStorage.getItem('jwtToken');
+
+  // Evento para "Add to List"
+  document.querySelectorAll('.add-to-list').forEach((button) => {
+    button.addEventListener('click', async () => {
+      if (!isLoggedIn()) {
+        alert('Você precisa estar logado para adicionar jogos à sua lista.');
+        return;
       }
-    });
 
-    // Evento para "Add to Favorites"
-    addToFavoritesButton.addEventListener('click', async () => {
+      const gameId = button.getAttribute('data-game-id');
+      const token = getToken();
+
       try {
-        const response = await fetch('/add-to-favorites', {
+        const response = await fetch('http://localhost:3000/add-to-list', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, // Adiciona o token no cabeçalho
           },
-          body: JSON.stringify({ userId }),
+          body: JSON.stringify({ gameId }),
         });
 
         const result = await response.json();
         if (response.ok) {
-          alert(result.message);
+          alert(result.message || 'Jogo adicionado à lista com sucesso!');
         } else {
-          alert(result.message || 'Erro ao adicionar aos favoritos.');
+          alert(result.message || 'Erro ao adicionar o jogo à lista.');
         }
       } catch (error) {
         console.error('Erro:', error);
@@ -72,16 +79,38 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
-  
-  addToListButton.addEventListener('click', async () => {
-    const gameId = addToListButton.getAttribute('data-game-id');
-    const response = await fetch('/add-to-list', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ userId, gameId }),
+
+  // Evento para "Add to Favorites"
+  document.querySelectorAll('.add-to-favorites').forEach((button) => {
+    button.addEventListener('click', async () => {
+      if (!isLoggedIn()) {
+        alert('Você precisa estar logado para adicionar jogos aos favoritos.');
+        return;
+      }
+
+      const gameId = button.getAttribute('data-game-id');
+      const token = getToken();
+
+      try {
+        const response = await fetch('http://localhost:3000/add-to-favorites', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, // Adiciona o token no cabeçalho
+          },
+          body: JSON.stringify({ gameId }),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          alert(result.message || 'Jogo adicionado aos favoritos com sucesso!');
+        } else {
+          alert(result.message || 'Erro ao adicionar o jogo aos favoritos.');
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        alert('Ocorreu um erro ao processar sua solicitação.');
+      }
     });
-    // Resto do código...
   });
-  
+});

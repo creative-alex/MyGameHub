@@ -67,54 +67,62 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   
   // Manipular envio do formulário de login
-  loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData(loginForm);
-    const data = Object.fromEntries(formData.entries());
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
 
-    try {
-        const response = await fetch('http://localhost:3000/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-        });
+  const formData = new FormData(loginForm);
+  const data = Object.fromEntries(formData.entries());
 
-        const result = await response.json();
-        if (response.ok) {
-            // Exibir mensagem de sucesso
-            loginMessage.textContent = result.message;
-            loginMessage.style.color = 'green';
+  try {
+    const response = await fetch('http://localhost:3000/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
 
-            // Atualizar o texto do span com o nome do usuário
-            accountSpan.textContent = result.username;
+    const result = await response.json();
 
-            // Ocultar o formulário e preparar o dropdown
-            formsWrapper.remove();
-            centerBox.remove();
-            localStorage.setItem('username', result.username);
+    if (response.ok) {
+      // Exibir mensagem de sucesso
+      loginMessage.textContent = result.message;
+      loginMessage.style.color = 'green';
 
-            // Configurar o botão de alternância
-            toggleButton.addEventListener('click', () => {
-                dropdownMenu.classList.toggle('hidden');
-            });
+      // Atualizar o texto do span com o nome do usuário
+      accountSpan.textContent = result.username;
 
-            // Configurar o botão de logout
-            document.getElementById('logoutButton').addEventListener('click', () => {
-                localStorage.removeItem('username');
-                accountSpan.textContent = 'Sign In/Sign Up';
-                dropdownMenu.classList.add('hidden');
-                location.reload();
-            });
-        } else {
-            // Exibir mensagem de erro
-            loginMessage.textContent = result.message;
-            loginMessage.style.color = 'red';
-        }
-    } catch (error) {
-        // Exibir erro de conexão
-        loginMessage.textContent = 'Erro ao fazer login. Tente novamente.';
-        loginMessage.style.color = 'red';
+      // Ocultar o formulário e preparar o dropdown
+      formsWrapper.remove();
+      centerBox.remove();
+
+      // Armazenar o token JWT e o nome do usuário no localStorage
+      localStorage.setItem('jwtToken', result.token);
+      localStorage.setItem('username', result.username);
+      console.log('Token salvo no localStorage:', result.token);
+
+
+      // Configurar o botão de alternância
+      toggleButton.addEventListener('click', () => {
+        dropdownMenu.classList.toggle('hidden');
+      });
+
+      // Configurar o botão de logout
+      document.getElementById('logoutButton').addEventListener('click', () => {
+        localStorage.removeItem('jwtToken'); // Remover o token JWT
+        localStorage.removeItem('username');
+        accountSpan.textContent = 'Sign In/Sign Up';
+        dropdownMenu.classList.add('hidden');
+        location.reload();
+      });
+    } else {
+      // Exibir mensagem de erro
+      loginMessage.textContent = result.message;
+      loginMessage.style.color = 'red';
     }
+  } catch (error) {
+    // Exibir erro de conexão
+    loginMessage.textContent = 'Erro ao fazer login. Tente novamente.';
+    loginMessage.style.color = 'red';
+  }
 });
 
   
