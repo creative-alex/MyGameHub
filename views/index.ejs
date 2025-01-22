@@ -2,12 +2,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MyGameHub</title>
+  <!--CSS Bibliotecas-->
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css'>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css'>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.css'>
   <!--CSS Global-->
   <link rel="stylesheet" href="/public/style.css">
   <!--CSS Especifico-->
   <link rel="stylesheet" href="/public/home.css">
   <!--Icones-->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">  
 </head>
 <body> 
   <header class="header">
@@ -134,116 +138,61 @@
   <h3 class="discover-title">DISCOVER</h3>
   <div class="button-group">
     <button class="discover-button">RECENTLY ADDED</button>
-    <button class="discover-button" id="randomGame">SURPRISE ME</button>
+    <button class="discover-button" id="randomGame" onclick="window.location.href='/randomGame'">SURPRISE ME</button>
     <button class="discover-button">UPCOMING RELEASES</button>
   </div>
 </div>
 
 
 
-<section class="popular">
-  <div class="container">
-    <div class="popular-header">
-      <h2 class="popular-title">Popular This Week</h2>
-    </div>
-    <div class="slider_popular">
-      <div class="slider-wrapper">
-        <div class="slide slide-active">
-          <figure>
-            <img src="https://picsum.photos/id/777/1920/1080" width="1920" height="1080" alt="Image">
-          </figure>
-          <div class="slider-content">
-            <h2>Lorem ipsum</h2>
-            <div class="paragraph-wrapper">
-              <div class="paragraphs">
-                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
-              </div>
-            </div>
-            <a href="#test" class="primary">Lorem ipsum</a>
-          </div>
-        </div>
-        <div class="slide">
-          <figure>
-            <img src="https://picsum.photos/id/654/1920/1080" width="1920" height="1080" alt="Image">
-            <figcaption>The Lorem Ipsum for photos.</figcaption>
-          </figure>
-          <div class="slider-content">
-            <h2>Lorem ipsum</h2>
-            <div class="paragraph-wrapper">
-              <div class="paragraphs">
-                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
-              </div>
-            </div>
-            <a href="#test" class="primary">Lorem ipsum</a>
-          </div>
-        </div>
-        <div class="slide">
-          <figure>
-            <img src="https://picsum.photos/id/523/1920/1080" width="1920" height="1080" alt="Image">
-          </figure>
-          <div class="slider-content">
-            <h2>Lorem ipsum</h2>
-            <div class="paragraph-wrapper">
-              <div class="paragraphs">
-                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
-              </div>
-            </div>
-            <a href="#test" class="primary">Lorem ipsum</a>
-          </div>
-        </div>
-        <div class="slide">
-          <figure>
-            <img src="https://picsum.photos/id/423/1920/1080" width="1920" height="1080" alt="Image">
-          </figure>
-          <div class="slider-content">
-            <h2>Lorem ipsum</h2>
-            <div class="paragraph-wrapper">
-              <div class="paragraphs">
-                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
-              </div>
-            </div>
-            <a href="#test" class="primary">Lorem ipsum</a>
-          </div>
-        </div>
-        <div class="slide">
-          <figure>
-            <img src="https://picsum.photos/id/423/1920/1080" width="1920" height="1080" alt="Image">
-          </figure>
-          <div class="slider-content">
-            <h2>Lorem ipsum</h2>
-            <div class="paragraph-wrapper">
-              <div class="paragraphs">
-                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
-              </div>
-            </div>
-            <a href="#test" class="primary">Lorem ipsum</a>
-          </div>
-        </div>
-        <div class="slide slide-last">
-          <figure>
-            <img src="https://picsum.photos/id/510/1920/1080" width="1920" height="1080" alt="Image">
-          </figure>
-          <div class="slider-content">
-            <h2>MORE</h2>
-          </div>
-        </div>
+<section class="game-section">
+  <h2 class="line-title">trending games</h2>
+  <div class="owl-carousel custom-carousel owl-theme">
+    <div class="item active" style="background-image: url(https://www.yudiz.com/codepen/expandable-animated-card-slider/dota-2.jpg);">
+      <div class="item-desc">
+        <h3>Dota 2</h3>
+        <p>Dota 2 is a multiplayer online battle arena by Valve. The game is a sequel to Defense of the
+          Ancients, which was a community-created mod for Blizzard Entertainment's Warcraft III.</p>
       </div>
-      <div class="slider-controls">
-        <span class="slide-control-left">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff">
-            <path d="m432-480 156 156q11 11 11 28t-11 28q-11 11-28 11t-28-11L348-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l184-184q11-11 28-11t28 11q11 11 11 28t-11 28L432-480Z"></path>
-          </svg>
-        </span>
-        <span class="slide-control-right">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff">
-            <path d="M504-480 348-636q-11-11-11-28t11-28q11-11 28-11t28 11l184 184q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L404-268q-11 11-28 11t-28-11q-11-11-11-28t11-28l156-156Z"></path>
-          </svg>
-        </span>
+    </div>
+    <div class="item" style="background-image: url(https://www.yudiz.com/codepen/expandable-animated-card-slider/winter-3.jpg);">
+      <div class="item-desc">
+        <h3>The Witcher 3</h3>
+        <p>The Witcher 3 is a multiplayer online battle arena by Valve. The game is a sequel to Defense
+          of the Ancients, which was a community-created mod for Blizzard Entertainment's Warcraft III.</p>
+      </div>
+    </div>
+    <div class="item" style="background-image: url(https://www.yudiz.com/codepen/expandable-animated-card-slider/rdr-2.jpg);">
+      <div class="item-desc">
+        <h3>RDR 2</h3>
+        <p>RDR 2 is a multiplayer online battle arena by Valve. The game is a sequel to Defense of the
+          Ancients, which was a community-created mod for Blizzard Entertainment's Warcraft III.</p>
+      </div>
+    </div>
+    <div class="item" style="background-image: url(https://www.yudiz.com/codepen/expandable-animated-card-slider/pubg.jpg);">
+      <div class="item-desc">
+        <h3>PUBG Mobile</h3>
+        <p>PUBG 2 is a multiplayer online battle arena by Valve. The game is a sequel to Defense of the
+          Ancients, which was a community-created mod for Blizzard Entertainment's Warcraft III.</p>
+      </div>
+    </div>
+    <div class="item" style="background-image: url(https://www.yudiz.com/codepen/expandable-animated-card-slider/fortnite.jpg);">
+      <div class="item-desc">
+        <h3>Fortnite</h3>
+        <p>Battle royale where 100 players fight to be the last person standing. which was a community-created mod
+          for Blizzard Entertainment's Warcraft III.</p>
+      </div>
+    </div>
+    <div class="item" style="background-image: url(https://www.yudiz.com/codepen/expandable-animated-card-slider/far-cry-5.jpg);">
+      <div class="item-desc">
+        <h3>Far Cry 5</h3>
+        <p>Far Cry 5 is a 2018 first-person shooter game developed by Ubisoft.
+          which was a community-created mod for Blizzard Entertainment's Warcraft III.</p>
       </div>
     </div>
   </div>
-</section> 
-
+  </div>
+</section>
 
 
 <footer>
@@ -290,6 +239,9 @@
     <p>LOGO © 2011 - 2024</p>
   </div>
 </footer>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js'></script>
 <script src="/js/script.js"></script>
 </body>
 </html>

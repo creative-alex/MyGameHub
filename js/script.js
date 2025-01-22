@@ -296,6 +296,18 @@ main();
 });
 
 
+$(".custom-carousel").owlCarousel({
+  autoWidth: true,
+  loop: false
+});
+$(document).ready(function () {
+  $(".custom-carousel .item").click(function () {
+    $(".custom-carousel .item").not($(this)).removeClass("active");
+    $(this).toggleClass("active");
+  });
+});
+
+
 const slider = document.querySelector('.slider');
 const totalItems = document.querySelectorAll('.slider-item').length;
 let currentAngle = 0;

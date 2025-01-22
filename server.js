@@ -79,7 +79,7 @@ app.get('/randomGame', async (req, res) => {
             // Busca um jogo aleatório da IGDB
             const gameResponse = await axios.post(
                 `${IGDB_BASE_URL}/games`,
-                `fields cover.image_id, created_at, first_release_date, genres, involved_companies, name, platforms, screenshots, similar_games, summary, game_modes, multiplayer_modes;
+                `fields  cover.image_id, created_at, first_release_date, genres, involved_companies, name, platforms, screenshots, similar_games, summary, game_modes, multiplayer_modes;
                  sort created_at desc;
                  where platforms = (6, 9, 12, 14, 34, 37, 39, 41, 48, 49, 130, 162, 163, 167, 169)
                  & involved_companies != null
@@ -163,25 +163,74 @@ app.get('/randomGame', async (req, res) => {
             ? `https://images.igdb.com/igdb/image/upload/t_720p/${game.cover.image_id}.jpg`
             : null;
 
-        const detailedGame = {
-            name: game.name || 'N/A',
-            first_release_date: game.first_release_date
-                ? format(new Date(game.first_release_date * 1000), 'd MMMM yyyy')
-                : 'N/A',
-            summary: game.summary || 'N/A',
-            cover: gameCoverUrl, // A URL do cover do jogo principal
-            genres: genres.map(g => g.name).join(', ') || 'N/A',
-            platforms: platforms.map(p => p.name).join(', ') || 'N/A',
-            screenshots: limitedScreenshots.map(sc =>
-                `https://images.igdb.com/igdb/image/upload/t_720p/${sc.image_id}.jpg`
-            ),
-            developers: developers.join(', ') || 'N/A',
-            publishers: publishers.join(', ') || 'N/A',
-            game_modes: gameModes.map(gm => gm.name).join(', ') || 'N/A',
-            similar_games: similarGames, // Jogos similares filtrados e formatados
+            if (!game || !game.id) {
+                return res.status(500).send('Erro: Jogo não definido ou ID ausente.');
+            }
+            
+            const detailedGame = {
+                gamerId: game.id, // Adiciona o ID do jogo gerado
+                name: game.name || 'N/A',
+                first_release_date: game.first_release_date
+                    ? format(new Date(game.first_release_date * 1000), 'd MMMM yyyy')
+                    : 'N/A',
+                summary: game.summary || 'N/A',
+                cover: gameCoverUrl, // A URL do cover do jogo principal
+                genres: genres.map(g => g.name).join(', ') || 'N/A',
+                platforms: platforms.map(p => p.name).join(', ') || 'N/A',
+                screenshots: limitedScreenshots.map(sc =>
+                    `https://images.igdb.com/igdb/image/upload/t_720p/${sc.image_id}.jpg`
+                ),
+                developers: developers.join(', ') || 'N/A',
+                publishers: publishers.join(', ') || 'N/A',
+                game_modes: gameModes.map(gm => gm.name).join(', ') || 'N/A',
+                similar_games: similarGames, // Jogos similares filtrados e formatados
+            };
+            
+        // Buscar comentários do jogo
+        const buscarComentarios = async (gameId) => {
+            return new Promise((resolve, reject) => {
+                db.query(
+                    'SELECT r.rating, r.review_text, r.is_recommended, u.username FROM reviews r INNER JOIN users u ON r.user_id = u.id WHERE r.game_id = ?',
+                    [gameId],
+                    (err, results) => {
+                        if (err) {
+                            console.error('Erro ao buscar comentários:', err);
+                            return reject(err);
+                        }
+                        resolve(results);
+                    }
+                );
+            });
         };
 
-        res.render('game', { game: detailedGame });
+        // Inserir jogo na base de dados, caso não exista
+        const insertGameIfNotExists = async (igdbId, name, genre, releaseDate, description) => {
+            return new Promise((resolve, reject) => {
+                db.query(
+                    `INSERT INTO games (igdb_id) VALUES (?)
+                     ON DUPLICATE KEY UPDATE id=LAST_INSERT_ID(id);`,
+                    [igdbId, name, genre, releaseDate, description],
+                    (err, result) => {
+                        if (err) {
+                            console.error('Erro ao inserir jogo:', err);
+                            return reject(err);
+                        }
+                        resolve(result.insertId);
+                    }
+                );
+            });
+        };
+
+        const gameId = await insertGameIfNotExists(
+            game.id,
+        );
+
+        const comentarios = await buscarComentarios(gameId).catch(() => []);
+
+        res.render('game', {
+            game: detailedGame,
+            comentarios,
+        });
     } catch (error) {
         console.error('Erro ao buscar jogo:', error.message);
         res.status(error.response?.status || 500).send('Erro ao carregar jogo.');
@@ -189,6 +238,31 @@ app.get('/randomGame', async (req, res) => {
 });
 
 
+app.post('/add-to-list', async (req, res) => {
+    const { userId } = req.body;
+
+    try {
+        // Lógica para adicionar o jogo à lista do usuário
+        await db.promise().query('INSERT INTO user_list (user_id, game_id) VALUES (?, ?)', [userId, gameId]);
+
+        res.status(200).json({ message: 'Jogo adicionado à lista com sucesso!' });
+    } catch (err) {
+        res.status(500).json({ message: 'Erro ao adicionar à lista.' });
+    }
+});
+
+app.post('/add-to-favorites', async (req, res) => {
+    const { userId } = req.body;
+
+    try {
+        // Lógica para adicionar o jogo aos favoritos do usuário
+        await db.promise().query('INSERT INTO user_favorites (user_id, game_id) VALUES (?, ?)', [userId, gameId]);
+
+        res.status(200).json({ message: 'Jogo adicionado aos favoritos com sucesso!' });
+    } catch (err) {
+        res.status(500).json({ message: 'Erro ao adicionar aos favoritos.' });
+    }
+});
 
 
 
@@ -345,14 +419,19 @@ app.post('/login', async (req, res) => {
             return res.status(400).json({ message: 'E-mail ou senha inválidos.' });
         }
 
-        // Gerar um token JWT para o usuário autenticado
-        const token = jwt.sign({ username: foundUser.username, email: foundUser.email }, SECRET_KEY, { expiresIn: '1h' });
+        // Gerar um token JWT com o id do usuário
+        const token = jwt.sign(
+            { id: foundUser.id, username: foundUser.username, email: foundUser.email },
+            SECRET_KEY,
+            { expiresIn: '1h' }
+        );
 
         res.status(200).json({ message: 'Login bem-sucedido!', token });
     } catch (err) {
         res.status(500).json({ message: 'Erro ao realizar login.' });
     }
 });
+
 
 // Inicia o servidor
 app.listen(PORT, () => {
