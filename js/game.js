@@ -23,94 +23,32 @@ similarGames.forEach((similarGame) => {
   });
 });
 
-// Recupera o token do localStorage
-const token = localStorage.getItem('jwtToken');
-
-// Verifica se o token existe
-if (!token) {
-  console.warn('Token JWT não encontrado no localStorage. O usuário pode não estar logado.');
-}
 
 
+});
 
+$(document).on('click', '.add-to-list', function () {
+  const gameId = $(this).data('game-id');
 
-
-
-
-  // Função para verificar se o token JWT está armazenado
-  const isLoggedIn = () => {
-    const token = localStorage.getItem('jwtToken');
-    return token !== null;
-  };
-
-  // Função para obter o token JWT
-  const getToken = () => localStorage.getItem('jwtToken');
-
-  // Evento para "Add to List"
-  document.querySelectorAll('.add-to-list').forEach((button) => {
-    button.addEventListener('click', async () => {
-      if (!isLoggedIn()) {
-        alert('Você precisa estar logado para adicionar jogos à sua lista.');
-        return;
-      }
-
-      const gameId = button.getAttribute('data-game-id');
-      const token = getToken();
-
-      try {
-        const response = await fetch('http://localhost:3000/add-to-list', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, // Adiciona o token no cabeçalho
-          },
-          body: JSON.stringify({ gameId }),
-        });
-
-        const result = await response.json();
-        if (response.ok) {
-          alert(result.message || 'Jogo adicionado à lista com sucesso!');
-        } else {
-          alert(result.message || 'Erro ao adicionar o jogo à lista.');
-        }
-      } catch (error) {
-        console.error('Erro:', error);
-        alert('Ocorreu um erro ao processar sua solicitação.');
-      }
-    });
-  });
-
-  // Evento para "Add to Favorites"
-  document.querySelectorAll('.add-to-favorites').forEach((button) => {
-    button.addEventListener('click', async () => {
-      if (!isLoggedIn()) {
-        alert('Você precisa estar logado para adicionar jogos aos favoritos.');
-        return;
-      }
-
-      const gameId = button.getAttribute('data-game-id');
-      const token = getToken();
-
-      try {
-        const response = await fetch('http://localhost:3000/add-to-favorites', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, // Adiciona o token no cabeçalho
-          },
-          body: JSON.stringify({ gameId }),
-        });
-
-        const result = await response.json();
-        if (response.ok) {
-          alert(result.message || 'Jogo adicionado aos favoritos com sucesso!');
-        } else {
-          alert(result.message || 'Erro ao adicionar o jogo aos favoritos.');
-        }
-      } catch (error) {
-        console.error('Erro:', error);
-        alert('Ocorreu um erro ao processar sua solicitação.');
-      }
-    });
+  $.post('/add-to-list', { gameId }, (response) => {
+      alert(response);
+  }).fail(() => {
+      alert('Erro ao adicionar o jogo à lista.');
   });
 });
+
+$(document).on('click', '.add-to-favorites', function () {
+  const gameId = $(this).data('game-id');
+
+  $.post('/add-to-favorites', { gameId }, (response) => {
+      alert(response);
+  }).fail(() => {
+      alert('Erro ao adicionar o jogo aos favoritos.');
+  });
+});
+
+
+
+
+
+

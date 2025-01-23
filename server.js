@@ -432,6 +432,44 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// Rota para adicionar jogo à lista
+app.post('/add-to-list', (req, res) => {
+  const { gameId } = req.body;
+
+  // Verifica se o usuário está autenticado
+  if (!req.session.userId) {
+      return res.status(401).send('Usuário não autenticado.');
+  }
+
+  // Adiciona o jogo à lista do usuário no banco de dados
+  const query = 'INSERT INTO user_games (user_id, game_id) VALUES (?, ?)';
+  db.query(query, [req.session.userId, gameId], (err) => {
+      if (err) {
+          return res.status(500).send('Erro ao adicionar jogo à lista.');
+      }
+      res.send('Jogo adicionado à lista com sucesso.');
+  });
+});
+
+// Rota para adicionar jogo aos favoritos
+app.post('/add-to-favorites', (req, res) => {
+  const { gameId } = req.body;
+
+  // Verifica se o usuário está autenticado
+  if (!req.session.userId) {
+      return res.status(401).send('Usuário não autenticado.');
+  }
+
+  // Atualiza os jogos favoritos do usuário no banco de dados
+  const query = 'UPDATE users SET fav_games = ? WHERE id = ?';
+  db.query(query, [gameId, req.session.userId], (err) => {
+      if (err) {
+          return res.status(500).send('Erro ao adicionar jogo aos favoritos.');
+      }
+      res.send('Jogo adicionado aos favoritos com sucesso.');
+  });
+});
+
 
 // Inicia o servidor
 app.listen(PORT, () => {

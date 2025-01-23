@@ -2,6 +2,11 @@
 	padding: 2rem;
 }
 
+h2{
+    text-align: center;
+    margin: 2rem 0;
+}
+
 .slider-wrapper {
 	position: relative;
 	max-width: 48rem;
@@ -102,6 +107,10 @@
 .g{
     background-color: pink;
 
+}
+
+.game{
+  margin-bottom: 1rem;
 }
 
 .games-container h2 {
@@ -216,7 +225,7 @@
     gap: 10px;
   }
   
-  .tag {
+  .tag, .class, .storeBtn {
     padding: 8px 16px;
     background-color: transparent; /* Fundo transparente */
     color: #ffffff; /* Texto branco */
@@ -228,10 +237,23 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
+    height: 20px;
   }
   
-  .tag:hover {
+  .tag:hover, .class:hover, .storeBtn:hover {
     background-color: #3f3f6f;
     transform: scale(1.05);
+  }
+
+  .classification {
+    grid-column: 14 / span 4;
+    display: flex;
+    gap: 10px;
+  }
+
+
+  .storeBtn {
+    grid-column: 14 / span 3;
+    grid-row-start: 4;
   }
   
