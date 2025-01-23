@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categoria de Jogos</title>
+  <style>
+    .games-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .game-card {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 15px;
+      width: 300px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .game-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }
+    .screenshots-container, .artworks-container {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      margin-top: 10px;
+    }
+    .screenshots-container img, .artworks-container img {
+      width: 100px;
+      height: auto;
+      border-radius: 5px;
+    }
+    .game-title {
+      font-size: 1.5em;
+      margin: 10px 0;
+    }
+    .game-info {
+      font-size: 0.9em;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Jogos da Categoria</h1>
+  <div class="games-container">
+    <% if (games.length > 0) { %>
+      <% games.forEach(game => { %>
+        <div class="game-card">
+          <img src="<%= game.cover || 'default-image.jpg' %>" alt="<%= game.name %>" />
+          <h2 class="game-title"><%= game.name %></h2>
+          <p class="game-info"><strong>Resumo:</strong> <%= game.summary %></p>
+          <p class="game-info"><strong>Plataformas:</strong> <%= game.platforms.join(', ') %></p>
+
+          <% if (game.artwork) { %>
+            <div class="artworks-container">
+              <strong>Artwork:</strong>
+              <img src="<%= game.artwork %>" alt="Artwork" />
+            </div>
+          <% } %>
+
+          <% if (game.screenshots.length > 0) { %>
+            <div class="screenshots-container">
+              <strong>Screenshots:</strong>
+              <% game.screenshots.forEach(screenshot => { %>
+                <img src="<%= screenshot %>" alt="Screenshot" />
+              <% }) %>
+            </div>
+          <% } %>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p>Nenhum jogo encontrado nesta categoria.</p>
+    <% } %>
+  </div>
+</body>
+</html>

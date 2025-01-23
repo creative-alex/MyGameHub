@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 // Seleciona todas as classes 'similar-game'
 const similarGames = document.querySelectorAll('.similar-game');
+const addToListButtons = document.querySelectorAll('.btn.add-to-list');
+const addToFavoritesButtons = document.querySelectorAll('.btn.add-to-favorites');
   
 // Adiciona os ouvintes de evento
 similarGames.forEach((similarGame) => {
@@ -23,29 +25,56 @@ similarGames.forEach((similarGame) => {
   });
 });
 
+ // Evento para o botão "Add to List"
+ addToListButtons.forEach(button => {
+  button.addEventListener('click', async () => {
+    const gameId = button.getAttribute('data-game-id');
 
+    try {
+      const response = await fetch('/add-to-list', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ gameId })
+      });
 
-});
-
-$(document).on('click', '.add-to-list', function () {
-  const gameId = $(this).data('game-id');
-
-  $.post('/add-to-list', { gameId }, (response) => {
-      alert(response);
-  }).fail(() => {
-      alert('Erro ao adicionar o jogo à lista.');
+      const result = await response.json();
+      if (result.success) {
+        alert('Jogo adicionado à lista!');
+      } else {
+        alert('Erro ao adicionar o jogo à lista.');
+      }
+    } catch (error) {
+      console.error('Erro ao adicionar à lista:', error);
+    }
   });
 });
 
-$(document).on('click', '.add-to-favorites', function () {
-  const gameId = $(this).data('game-id');
+// Evento para o botão "Add to Favorites"
+addToFavoritesButtons.forEach(button => {
+  button.addEventListener('click', async () => {
+    const gameId = button.getAttribute('data-game-id');
 
-  $.post('/add-to-favorites', { gameId }, (response) => {
-      alert(response);
-  }).fail(() => {
-      alert('Erro ao adicionar o jogo aos favoritos.');
+    try {
+      const response = await fetch('/add-to-favorites', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ gameId })
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        alert('Jogo adicionado aos favoritos!');
+      } else {
+        alert('Erro ao adicionar o jogo aos favoritos.');
+      }
+    } catch (error) {
+      console.error('Erro ao adicionar aos favoritos:', error);
+    }
   });
 });
+
+});
+
 
 
 

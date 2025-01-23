@@ -30,6 +30,15 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/js', express.static(path.join(__dirname, 'js')));
 
+// Configuração do banco de dados
+const db = mysql.createConnection({
+    host: 'sql7.freesqldatabase.com',
+    user: 'sql7758514',
+    password: 's9VaqTkalD',
+    database: 'sql7758514',
+});
+
+
 // Função genérica para buscar dados da API IGDB
 // Facilita consultas dinâmicas para diferentes endpoints e parâmetros.
 async function fetchFromIGDB(endpoint, fields, ids) {
@@ -204,12 +213,12 @@ app.get('/randomGame', async (req, res) => {
         };
 
         // Inserir jogo na base de dados, caso não exista
-        const insertGameIfNotExists = async (igdbId, name, genre, releaseDate, description) => {
+        const insertGameIfNotExists = async (igdbId) => {
             return new Promise((resolve, reject) => {
                 db.query(
                     `INSERT INTO games (igdb_id) VALUES (?)
                      ON DUPLICATE KEY UPDATE id=LAST_INSERT_ID(id);`,
-                    [igdbId, name, genre, releaseDate, description],
+                    [igdbId],
                     (err, result) => {
                         if (err) {
                             console.error('Erro ao inserir jogo:', err);
@@ -237,42 +246,119 @@ app.get('/randomGame', async (req, res) => {
     }
 });
 
-
-app.post('/add-to-list', async (req, res) => {
-    const { userId } = req.body;
-
+app.get('/category', async (req, res) => {
+    const genreId = req.query.genre; // Captura o ID da categoria da query string
     try {
-        // Lógica para adicionar o jogo à lista do usuário
-        await db.promise().query('INSERT INTO user_list (user_id, game_id) VALUES (?, ?)', [userId, gameId]);
+        // Gera um número aleatório para o offset (assumindo um máximo de 500 jogos no gênero)
+        const randomOffset = Math.floor(Math.random() * 500);
 
-        res.status(200).json({ message: 'Jogo adicionado à lista com sucesso!' });
-    } catch (err) {
-        res.status(500).json({ message: 'Erro ao adicionar à lista.' });
+        // Consulta à API da IGDB para buscar jogos por gênero com os filtros adicionais
+        const response = await axios.post(
+            `${IGDB_BASE_URL}/games`,
+            `fields name, cover.image_id, summary, platforms.name, genres, artworks.image_id, screenshots.image_id;
+             where genres = ${genreId}
+             & platforms = (6, 9, 12, 14, 34, 37, 39, 41, 48, 49, 130, 162, 163, 167, 169)
+             & involved_companies != null
+             & category != (1,2,3,4,5,6,7,10,11,12,13,14)
+             & cover != null
+             & screenshots != null
+             & artworks != null;
+             limit 20;
+             offset ${randomOffset};`,
+            {
+                headers: {
+                    'Client-ID': CLIENT_ID,
+                    Authorization: `Bearer ${AUTH_TOKEN}`,
+                },
+            }
+        );
+
+        // Processar os jogos e filtrar apenas os válidos
+        const games = response.data
+            .filter(game => 
+                game.name && // Verifica se o nome do jogo está presente
+                game.cover && game.cover.image_id && // Verifica se há uma capa
+                game.screenshots && game.screenshots.length >= 4 && // Verifica se há pelo menos 4 screenshots
+                game.artworks && game.artworks.length > 0 // Verifica se há pelo menos um artwork
+            )
+            .map(game => ({
+                id: game.id,
+                name: game.name,
+                cover: `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`,
+                artwork: `https://images.igdb.com/igdb/image/upload/t_screenshot_big/${game.artworks[0].image_id}.jpg`,
+                screenshots: game.screenshots.map(
+                    screenshot =>
+                        `https://images.igdb.com/igdb/image/upload/t_screenshot_big/${screenshot.image_id}.jpg`
+                ),
+                summary: game.summary || 'Descrição indisponível',
+                platforms: game.platforms
+                    ? game.platforms.map(platform => platform.name)
+                    : [],
+            }));
+
+        // Renderizar a página da categoria
+        if (games.length > 0) {
+            res.render('category', { games });
+        } else {
+            // Caso nenhum jogo seja válido
+            res.status(404).send('Nenhum jogo válido encontrado para esta categoria.');
+        }
+    } catch (error) {
+        console.error('Erro ao buscar jogos por categoria:', error.message);
+        res.status(500).send('Erro ao carregar a categoria.');
     }
 });
 
-app.post('/add-to-favorites', async (req, res) => {
-    const { userId } = req.body;
-
+app.get('/genres-categories', async (req, res) => {
     try {
-        // Lógica para adicionar o jogo aos favoritos do usuário
-        await db.promise().query('INSERT INTO user_favorites (user_id, game_id) VALUES (?, ?)', [userId, gameId]);
+        // Consulta à API da IGDB para buscar todos os gêneros
+        const genresResponse = await axios.post(
+            `${IGDB_BASE_URL}/genres`,
+            `fields id, name;
+             limit 100;`, // Limite de 100 gêneros
+            {
+                headers: {
+                    'Client-ID': CLIENT_ID,
+                    Authorization: `Bearer ${AUTH_TOKEN}`,
+                },
+            }
+        );
 
-        res.status(200).json({ message: 'Jogo adicionado aos favoritos com sucesso!' });
-    } catch (err) {
-        res.status(500).json({ message: 'Erro ao adicionar aos favoritos.' });
+        // Consulta à API da IGDB para buscar todas as categorias
+        const categoriesResponse = await axios.post(
+            `${IGDB_BASE_URL}/game_modes`,
+            `fields id, name;
+             limit 100;`, // Limite de 100 categorias
+            {
+                headers: {
+                    'Client-ID': CLIENT_ID,
+                    Authorization: `Bearer ${AUTH_TOKEN}`,
+                },
+            }
+        );
+
+        // Organizar os dados
+        const genres = genresResponse.data.map(genre => ({
+            id: genre.id,
+            name: genre.name,
+        }));
+
+        const categories = categoriesResponse.data.map(category => ({
+            id: category.id,
+            name: category.name,
+        }));
+
+        // Renderizar a página com os gêneros e categorias
+        res.render('genres-categories', { genres, categories });
+    } catch (error) {
+        console.error('Erro ao buscar gêneros e categorias:', error.message);
+        res.status(500).send('Erro ao carregar os gêneros e categorias.');
     }
 });
 
 
 
-// Configuração do banco de dados
-const db = mysql.createConnection({
-    host: 'sql7.freesqldatabase.com',
-    user: 'sql7758514',
-    password: 's9VaqTkalD',
-    database: 'sql7758514',
-});
+
 
 // Estabelece conexão com o banco de dados e trata erros
 // Verifica se a conexão inicial ao banco é bem-sucedida e exibe mensagens de erro, caso contrário.
@@ -281,129 +367,41 @@ db.connect((err) => {
     else console.log('Banco de dados conectado!');
 });
 
-// Middleware para autenticar o token
-// Valida o token JWT presente no cabeçalho de autorização da requisição.
-// Se válido, o token é decodificado e as informações do usuário são anexadas ao objeto da requisição.
-function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ message: 'Token não fornecido.' });
-    }
-
-    const token = authHeader.split(' ')[1];
-    jwt.verify(token, SECRET_KEY, (err, user) => {
-        if (err) return res.status(403).json({ message: 'Token inválido.' });
-        req.user = user;
-        next();
-    });
-}
-
-// Rota de busca de jogos com filtro por plataforma e validações.
-// Permite buscar jogos no IGDB com base em critérios fornecidos pelo usuário.
-app.get('/search', async (req, res) => {
-    const searchQuery = req.query.q; // Termo de pesquisa
-    const platform = req.query.platform; // Plataforma específica opcional
-  
-    // Verifica se o termo de pesquisa foi fornecido
-    if (!searchQuery) {
-      return res.status(400).json({ message: 'Por favor, insira um termo de pesquisa.' });
-    }
-  
-    // Mapeamento das plataformas para IDs do IGDB
-    const platformMap = {
-      pc: [6, 14, 162, 163], // IDs de PC
-      console: [9, 12, 48, 49, 167, 169, 41, 130, 37], // IDs de consoles
-      mobile: [34, 39], // IDs de Mobile
-    };
-  
-    const platformIds = platform && platformMap[platform] ? platformMap[platform] : null;
-  
-    try {
-      // Constrói o filtro de plataforma, se aplicável
-      const platformFilter = platformIds ? `& platforms = (${platformIds.join(',')})` : '';
-  
-      // Faz a solicitação para o IGDB com filtros e critérios definidos
-      const response = await axios.post(
-        `${IGDB_BASE_URL}/games`,
-        `fields name, cover.image_id, summary, alternative_names.name; 
-         search "${searchQuery}"; 
-         where cover != null & summary != null ${platformFilter}
-           & category != (1,2,3,4,5,6,7,10,11,12,13,14) 
-           & involved_companies != null; 
-         limit 10;`,
-        {
-          headers: {
-            'Client-ID': CLIENT_ID,
-            Authorization: `Bearer ${AUTH_TOKEN}`,
-          },
-        }
-      );
-  
-      // Formata os resultados da API em um formato mais simples para o cliente
-      const games = response.data.map((game) => ({
-        id: game.id,
-        name: game.name,
-        alternativeNames: game.alternative_names?.map((name) => name.name) || [],
-        summary: game.summary,
-        cover: game.cover
-          ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`
-          : '/images/placeholder.png',
-      }));
-  
-      res.json(games);
-    } catch (error) {
-      console.error('Erro ao buscar jogos:', error.message);
-      res.status(500).json({ message: 'Erro ao realizar a pesquisa.' });
-    }
-  });
-  
-
 // Rota de registro de novos usuários
 // Valida os dados recebidos, verifica duplicação de e-mail e registra o usuário no banco de dados.
-// Agora retorna um token JWT após o registro.
 app.post('/register', async (req, res) => {
     const { username, email, password, repeatPassword } = req.body;
 
-    // Validar campos obrigatórios
     if (!username || !email || !password || !repeatPassword) {
         return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
     }
 
-    // Validar se as senhas coincidem
     if (password !== repeatPassword) {
         return res.status(400).json({ message: 'As senhas não coincidem.' });
     }
 
     try {
-        // Verificar se o e-mail já está registrado
         const [existingUser] = await db.promise().query('SELECT * FROM users WHERE email = ?', [email]);
         if (existingUser.length > 0) {
             return res.status(400).json({ message: 'E-mail já está registrado.' });
         }
 
-        // Criar hash da senha para armazenamento seguro
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Inserir o usuário no banco de dados
         await db.promise().query('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', [
             username,
             email,
             hashedPassword,
         ]);
 
-        // Gerar um token JWT para o usuário registrado
-        const token = jwt.sign({ username, email }, SECRET_KEY, { expiresIn: '1h' });
-
-        return res.status(201).json({ message: 'Registro bem-sucedido! Você já pode fazer login.', token });
+        res.status(201).json({ message: 'Registro bem-sucedido! Você já pode fazer login.' });
     } catch (error) {
         console.error('Erro no registro:', error.message);
-        return res.status(500).json({ message: 'Erro no servidor. Tente novamente mais tarde.' });
+        res.status(500).json({ message: 'Erro no servidor. Tente novamente mais tarde.' });
     }
 });
 
 // Rota de login
 // Verifica credenciais do usuário e autentica se as informações forem válidas.
-// Agora retorna um token JWT após o login bem-sucedido.
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -419,56 +417,67 @@ app.post('/login', async (req, res) => {
             return res.status(400).json({ message: 'E-mail ou senha inválidos.' });
         }
 
-        // Gerar um token JWT com o id do usuário
         const token = jwt.sign(
-            { id: foundUser.id, username: foundUser.username, email: foundUser.email },
+            { id: foundUser.id, username: foundUser.username },
             SECRET_KEY,
             { expiresIn: '1h' }
         );
 
-        res.status(200).json({ message: 'Login bem-sucedido!', token });
+        res.status(200).json({ message: 'Login bem-sucedido!', token, username: foundUser.username });
     } catch (err) {
         res.status(500).json({ message: 'Erro ao realizar login.' });
     }
 });
 
-// Rota para adicionar jogo à lista
+
+
+app.get('/check-auth', (req, res) => {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+        return res.status(401).json({ message: 'Token não fornecido.' });
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    try {
+        const user = jwt.verify(token, SECRET_KEY);
+        res.status(200).json({ username: user.username });
+    } catch (err) {
+        res.status(401).json({ message: 'Token inválido ou expirado.' });
+    }
+});
+
+// Endpoint para adicionar à lista
 app.post('/add-to-list', (req, res) => {
-  const { gameId } = req.body;
-
-  // Verifica se o usuário está autenticado
-  if (!req.session.userId) {
-      return res.status(401).send('Usuário não autenticado.');
-  }
-
-  // Adiciona o jogo à lista do usuário no banco de dados
-  const query = 'INSERT INTO user_games (user_id, game_id) VALUES (?, ?)';
-  db.query(query, [req.session.userId, gameId], (err) => {
-      if (err) {
-          return res.status(500).send('Erro ao adicionar jogo à lista.');
+    const { gameId } = req.body;
+    const query = 'INSERT INTO user_games (game_id) VALUES (?)';
+  
+    db.query(query, [gameId], (error, results) => {
+      if (error) {
+        console.error('Erro ao inserir na lista:', error);
+        return res.json({ success: false, message: 'Erro ao adicionar à lista.' });
       }
-      res.send('Jogo adicionado à lista com sucesso.');
+      res.json({ success: true, message: 'Jogo adicionado à lista com sucesso.' });
+    });
   });
-});
-
-// Rota para adicionar jogo aos favoritos
-app.post('/add-to-favorites', (req, res) => {
-  const { gameId } = req.body;
-
-  // Verifica se o usuário está autenticado
-  if (!req.session.userId) {
-      return res.status(401).send('Usuário não autenticado.');
-  }
-
-  // Atualiza os jogos favoritos do usuário no banco de dados
-  const query = 'UPDATE users SET fav_games = ? WHERE id = ?';
-  db.query(query, [gameId, req.session.userId], (err) => {
-      if (err) {
-          return res.status(500).send('Erro ao adicionar jogo aos favoritos.');
+  
+  // Endpoint para adicionar aos favoritos
+  app.post('/add-to-favorites', (req, res) => {
+    const { gameId } = req.body;
+    const query = 'INSERT INTO fav_games (game_id) VALUES (?)';
+  
+    db.query(query, [gameId], (error, results) => {
+      if (error) {
+        console.error('Erro ao inserir nos favoritos:', error);
+        return res.json({ success: false, message: 'Erro ao adicionar aos favoritos.' });
       }
-      res.send('Jogo adicionado aos favoritos com sucesso.');
+      res.json({ success: true, message: 'Jogo adicionado aos favoritos com sucesso.' });
+    });
   });
-});
+
+
+
 
 
 // Inicia o servidor
