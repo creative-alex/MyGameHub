@@ -167,23 +167,24 @@
 <section class="games-container">        
   <div class="games-grid">
       <h2>SIMILAR GAMES</h2>
-      <% if (game.similar_games && game.similar_games.length > 0) { %>
-        <% game.similar_games.slice(0, 8).forEach(function(similarGame) { %>
-          <div class="g similar-game">
+     <% if (game.similar_games && game.similar_games.length > 0) { %>
+    <% game.similar_games.slice(0, 8).forEach(function(similarGame, index) { %>
+        <div class="g similar-game" data-game-id="<%= game.similar_game_ids[index] %>" onclick="fetchByCategory('<%= game.similar_game_ids[index] %>')">
             <h3 class="similar-title hidden"><%= similarGame.name %></h3>
             <p class="similar-description hidden">
-              <%= similarGame.summary && similarGame.summary.length > 150 
-                  ? similarGame.summary.substring(0, 147) + '...' 
-                  : (similarGame.summary || 'No description available.') %>
+                <%= similarGame.summary && similarGame.summary.length > 150 
+                    ? similarGame.summary.substring(0, 147) + '...' 
+                    : (similarGame.summary || 'No description available.') %>
             </p>
             <% if (similarGame.cover) { %>
-              <img class="similar-cover" src="<%= similarGame.cover %>" alt="<%= similarGame.name %> Cover">
+                <img class="similar-cover" src="<%= similarGame.cover %>" alt="<%= similarGame.name %> Cover">
             <% } %>
-          </div>
-        <% }); %>
-      <% } else { %>
-        <p>No similar games available.</p>
-      <% } %>
+        </div>
+    <% }); %>
+<% } else { %>
+    <p>No similar games available.</p>
+<% } %>
+
       
 
   </div>

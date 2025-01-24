@@ -48,7 +48,7 @@
   <div class="games-container">
     <% if (games.length > 0) { %>
       <% games.forEach(game => { %>
-        <div class="game-card">
+        <div class="game-card" data-game-id="<%= game.id %>" onclick="fetchByCategory('<%- game.id %>')">
           <img src="<%= game.cover || 'default-image.jpg' %>" alt="<%= game.name %>" />
           <h2 class="game-title"><%= game.name %></h2>
           <p class="game-info"><strong>Resumo:</strong> <%= game.summary %></p>
@@ -75,5 +75,11 @@
       <p>Nenhum jogo encontrado nesta categoria.</p>
     <% } %>
   </div>
+  <script>
+    function fetchByCategory(gameId) {
+      window.location.href = `/game-details/${gameId}`;
+    }
+  </script>
+  
 </body>
 </html>

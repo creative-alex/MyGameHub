@@ -76,6 +76,10 @@ addToFavoritesButtons.forEach(button => {
 });
 
 
+function fetchByCategory(gameId) {
+  window.location.href = `/game-details/${gameId}`;
+}
+
 
 
 
