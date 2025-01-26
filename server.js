@@ -32,10 +32,10 @@ app.use('/js', express.static(path.join(__dirname, 'js')));
 
 // Configuração do banco de dados
 const db = mysql.createConnection({
-    host: 'sql7.freesqldatabase.com',
-    user: 'sql7758514',
-    password: 's9VaqTkalD',
-    database: 'sql7758514',
+    host: 'sql.freedb.tech',
+    user: 'freedb_gamer',
+    password: '54SvnP%AzT!Sr&2',
+    database: 'freedb_my_game_hub',
 });
 
 
@@ -63,11 +63,6 @@ async function fetchFromIGDB(endpoint, fields, ids) {
 // Rota base
 app.get('/', (req, res) => {
     res.render('index');
-});
-
-// Renderiza a página do jogo
-app.get('/game', (req, res) => {
-    res.render('game'); // game.ejs será procurado dentro da pasta 'views'
 });
 
 // Rota para buscar um jogo aleatório
@@ -250,179 +245,324 @@ let cachedGames = []; // Variável global para armazenar os jogos temporariament
 
 app.get('/category', async (req, res) => {
     const genreId = req.query.genre;
+    const platformIds = req.query.platforms ? req.query.platforms.split(',').map(id => parseInt(id)) : [];
     try {
-        const randomOffset = Math.floor(Math.random() * 5000);
-
-        const response = await axios.post(
-            `${IGDB_BASE_URL}/games`,
-            `fields name, cover.image_id, summary, platforms.name, genres, artworks.image_id, screenshots.image_id, similar_games;
-             where genres = ${genreId}
-             & platforms = (6, 9, 12, 14, 34, 37, 39, 41, 48, 49, 130, 162, 163, 167, 169)
-             & involved_companies != null
-             & category != (1,2,3,4,5,6,7,10,11,12,13,14)
-             & cover != null
-             & screenshots != null
-             & artworks != null;
-             limit 20;
-             offset ${randomOffset};`,
-            {
-                headers: {
-                    'Client-ID': CLIENT_ID,
-                    Authorization: `Bearer ${AUTH_TOKEN}`,
-                },
-            }
-        );
-
-        const games = response.data
-            .filter(game => 
-                game.name &&
-                game.cover &&
-                game.cover.image_id &&
-                game.screenshots && game.screenshots.length >= 4 &&
-                game.artworks && game.artworks.length > 0
-            )
-            .map(game => ({
-                id: game.id,
-                name: game.name,
-                cover: `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`,
-                artwork: `https://images.igdb.com/igdb/image/upload/t_screenshot_big/${game.artworks[0].image_id}.jpg`,
-                screenshots: game.screenshots.map(
-                    screenshot =>
-                        `https://images.igdb.com/igdb/image/upload/t_screenshot_big/${screenshot.image_id}.jpg`
-                ),
-                summary: game.summary || 'Descrição indisponível',
-                platforms: game.platforms
-                    ? game.platforms.map(platform => platform.name)
-                    : [],
-                similarGames: game.similar_games || [], // Salva os IDs dos jogos similares
-            }));
-
-            console.log('Jogos com similarGames:', games); // Log dos jogos para ver os IDs similares
-
-
-        cachedGames = games; // Salva os jogos no cache global
-
-        if (games.length > 0) {
-            res.render('category', { games });
-        } else {
-            res.status(404).send('Nenhum jogo válido encontrado para esta categoria.');
+      const randomOffset = Math.floor(Math.random() * 5000);
+  
+      // Buscar os gêneros para obter os nomes
+      const genresResponse = await axios.post(
+        `${IGDB_BASE_URL}/genres`,
+        `fields id, name; limit 500;`,
+        {
+          headers: {
+            'Client-ID': CLIENT_ID,
+            Authorization: `Bearer ${AUTH_TOKEN}`,
+          },
         }
+      );
+      const genresMap = genresResponse.data.reduce((map, genre) => {
+        map[genre.id] = genre.name;
+        return map;
+      }, {});
+  
+      // Buscar os jogos
+      const response = await axios.post(
+        `${IGDB_BASE_URL}/games`,
+        `fields name, cover.image_id, summary, platforms.name, genres, artworks.image_id, screenshots.image_id, similar_games;
+         where genres = ${genreId}
+         & platforms = (${platformIds.join(',') || '6, 9, 12, 14, 34, 37, 39, 41, 48, 49, 130, 162, 163, 167, 169'})
+         & involved_companies != null
+         & category != (1,2,3,4,5,6,7,10,11,12,13,14)
+         & cover != null
+         & screenshots != null
+         & artworks != null;
+         limit 30;`,
+        {
+          headers: {
+            'Client-ID': CLIENT_ID,
+            Authorization: `Bearer ${AUTH_TOKEN}`,
+          },
+        }
+      );
+  
+      // Processar os dados dos jogos
+      const games = response.data
+        .filter(game =>
+          game.name &&
+          game.cover &&
+          game.cover.image_id &&
+          game.screenshots && game.screenshots.length >= 4 &&
+          game.artworks && game.artworks.length > 0
+        )
+        .map(game => ({
+          id: game.id,
+          name: game.name,
+          cover: `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`,
+          artwork: `https://images.igdb.com/igdb/image/upload/t_screenshot_big/${game.artworks[0].image_id}.jpg`,
+          screenshots: game.screenshots.map(
+            screenshot =>
+              `https://images.igdb.com/igdb/image/upload/t_screenshot_big/${screenshot.image_id}.jpg`
+          ),
+          summary: game.summary || 'Descrição indisponível',
+          platforms: game.platforms
+            ? game.platforms.map(platform => ({ id: platform.id, name: platform.name }))
+            : [],
+          genres: game.genres ? game.genres.map(genreId => genresMap[genreId]) : [], // Substituir IDs pelos nomes
+          similarGames: game.similar_games || [],
+        }));
+  
+      // Remover duplicados e dividir os jogos
+      const uniqueGames = games.filter((game, index, self) =>
+        index === self.findIndex(g => g.id === game.id)
+      );
+  
+      const popularGames = uniqueGames.slice(0, 14); // Primeiros 14 jogos
+      const allGames = uniqueGames.slice(14); // Restantes, sem incluir os populares
+  
+      res.render('category', { popularGames, allGames });
     } catch (error) {
-        console.error('Erro ao buscar jogos por categoria:', error.message);
-        res.status(500).send('Erro ao carregar a categoria.');
+      console.error('Erro ao buscar jogos por categoria:', error.message);
+      res.status(500).send('Erro ao carregar a categoria.');
     }
 });
 
+app.get('/game-details/:id', async (req, res) => {
+  try {
+      const gameId = req.params.id; // ID do jogo vindo da URL
+
+      if (!gameId) {
+          return res.status(400).send('ID do jogo não fornecido.');
+      }
+
+      // Busca os detalhes do jogo específico pela API da IGDB
+      const gameResponse = await axios.post(
+          `${IGDB_BASE_URL}/games`,
+          `fields cover.image_id, created_at, first_release_date, genres, involved_companies, name, platforms, screenshots, similar_games, summary, game_modes, multiplayer_modes;
+           where id = ${gameId};`,
+          {
+              headers: {
+                  'Client-ID': CLIENT_ID,
+                  Authorization: `Bearer ${AUTH_TOKEN}`,
+              },
+          }
+      );
+
+      const game = gameResponse.data?.[0];
+      const similarGamesIds = game.similar_games ;
+
+      if (!game || !game.id) {
+          return res.status(404).send('Jogo não encontrado.');
+      }
+
+      // Buscar detalhes dos jogos similares
+      const similarGamesDetails = await fetchFromIGDB(
+        'games',
+        'id, name, summary, cover.image_id', // Inclua o 'id' aqui
+        game.similar_games
+    );
+    
+
+      const similarGames = similarGamesDetails
+    .filter(similarGame => similarGame.cover?.image_id) 
+    .map(similarGame => ({
+        id: similarGame.id, // Adiciona o ID do jogo similar
+        name: similarGame.name || 'N/A',
+        summary: similarGame.summary || 'Resumo indisponível',
+        cover: `https://images.igdb.com/igdb/image/upload/t_cover_big/${similarGame.cover.image_id}.jpg`,
+    }));
+
+
+      // Buscar detalhes de empresas envolvidas
+      const involvedCompaniesDetails = await fetchFromIGDB(
+          'involved_companies',
+          'company,developer,publisher',
+          game.involved_companies
+      );
+
+      const companyIds = involvedCompaniesDetails.map(ic => ic.company);
+      const companyDetails = await fetchFromIGDB('companies', 'name', companyIds);
+
+      const companies = involvedCompaniesDetails.map(ic => {
+          const company = companyDetails.find(c => c.id === ic.company);
+          return {
+              name: company?.name || 'N/A',
+              developer: ic.developer || false,
+              publisher: ic.publisher || false,
+          };
+      });
+
+      const developers = companies.filter(c => c.developer).map(c => c.name);
+      const publishers = companies.filter(c => c.publisher).map(c => c.name);
+
+      const [genres, platforms, screenshots, gameModes] = await Promise.all([
+          game.genres ? fetchFromIGDB('genres', 'name', game.genres).catch(() => []) : [],
+          game.platforms ? fetchFromIGDB('platforms', 'name', game.platforms).catch(() => []) : [],
+          game.screenshots ? fetchFromIGDB('screenshots', 'image_id', game.screenshots).catch(() => []) : [],
+          game.game_modes ? fetchFromIGDB('game_modes', 'name', game.game_modes).catch(() => []) : [],
+      ]);
+
+      const limitedScreenshots = screenshots.slice(0, 3);
+
+      // Gerar a URL do cover do jogo principal
+      const gameCoverUrl = game.cover?.image_id
+          ? `https://images.igdb.com/igdb/image/upload/t_720p/${game.cover.image_id}.jpg`
+          : null;
+
+      const detailedGame = {
+          gameId: game.id,
+          name: game.name || 'N/A',
+          first_release_date: game.first_release_date
+              ? format(new Date(game.first_release_date * 1000), 'd MMMM yyyy')
+              : 'N/A',
+          summary: game.summary || 'N/A',
+          cover: gameCoverUrl,
+          genres: genres.map(g => g.name).join(', ') || 'N/A',
+          platforms: platforms.map(p => p.name).join(', ') || 'N/A',
+          screenshots: limitedScreenshots.map(sc =>
+              `https://images.igdb.com/igdb/image/upload/t_720p/${sc.image_id}.jpg`
+          ),
+          developers: developers.join(', ') || 'N/A',
+          publishers: publishers.join(', ') || 'N/A',
+          game_modes: gameModes.map(gm => gm.name).join(', ') || 'N/A',
+          similar_games: similarGames,
+          similar_games_ids: similarGamesIds,
+      };
+
+      res.render('game', {
+          game: detailedGame,
+      });
+  } catch (error) {
+      console.error('Erro ao buscar detalhes do jogo:', error.message);
+      res.status(error.response?.status || 500).send('Erro ao carregar detalhes do jogo.');
+  }
+});
 
 // Rota para renderizar os detalhes do jogo
-app.get('/game-details/:id', async (req, res) => {
-    try {
-        const gameId = req.params.id; // ID do jogo vindo da URL
+app.get('/platform-games/:platformId', async (req, res) => {
+  const platformId = parseInt(req.params.platformId); // Obter o ID da plataforma da URL
+  try {
+    const randomOffset = Math.floor(Math.random() * 5000);
 
-        if (!gameId) {
-            return res.status(400).send('ID do jogo não fornecido.');
-        }
+    // Buscar os jogos por plataforma
+    const response = await axios.post(
+      `${IGDB_BASE_URL}/games`,
+      `fields name, cover.image_id, summary, platforms.name, genres, artworks.image_id, screenshots.image_id, similar_games;
+       where platforms = (${platformId})
+       & involved_companies != null
+       & category != (1,2,3,4,5,6,7,10,11,12,13,14)
+       & cover != null
+       & screenshots != null
+       & artworks != null;
+       limit 30;`,
+      {
+        headers: {
+          'Client-ID': CLIENT_ID,
+          Authorization: `Bearer ${AUTH_TOKEN}`,
+        },
+      }
+    );
 
-        // Busca os detalhes do jogo específico pela API da IGDB
-        const gameResponse = await axios.post(
-            `${IGDB_BASE_URL}/games`,
-            `fields cover.image_id, created_at, first_release_date, genres, involved_companies, name, platforms, screenshots, similar_games, summary, game_modes, multiplayer_modes;
-             where id = ${gameId};`,
-            {
-                headers: {
-                    'Client-ID': CLIENT_ID,
-                    Authorization: `Bearer ${AUTH_TOKEN}`,
-                },
-            }
-        );
+    // Processar os dados dos jogos
+    const games = response.data
+      .filter(game =>
+        game.name &&
+        game.cover &&
+        game.cover.image_id &&
+        game.screenshots && game.screenshots.length >= 4 &&
+        game.artworks && game.artworks.length > 0
+      )
+      .map(game => ({
+        id: game.id,
+        name: game.name,
+        cover: `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`,
+        artwork: `https://images.igdb.com/igdb/image/upload/t_screenshot_big/${game.artworks[0].image_id}.jpg`,
+        screenshots: game.screenshots.map(
+          screenshot =>
+            `https://images.igdb.com/igdb/image/upload/t_screenshot_big/${screenshot.image_id}.jpg`
+        ),
+        summary: game.summary || 'Descrição indisponível',
+        platforms: game.platforms
+          ? game.platforms.map(platform => ({ id: platform.id, name: platform.name }))
+          : [],
+        genres: game.genres || [], // IDs dos gêneros
+        similarGames: game.similar_games || [],
+      }));
 
-        const game = gameResponse.data?.[0];
-        const similarGamesIds = game.similar_games ;
+    // Remover duplicados
+    const uniqueGames = games.filter((game, index, self) =>
+      index === self.findIndex(g => g.id === game.id)
+    );
 
-        if (!game || !game.id) {
-            return res.status(404).send('Jogo não encontrado.');
-        }
+    // Dividir jogos em populares e restantes
+    const popularGames = uniqueGames.slice(0, 14); // Primeiros 14 jogos
+    const allGames = uniqueGames.slice(14); // Restantes
 
-        // Buscar detalhes dos jogos similares
-        const similarGamesDetails = await fetchFromIGDB(
-            'games',
-            'name, summary, cover.image_id',
-            game.similar_games
-        );
-
-        const similarGames = similarGamesDetails
-            .filter(similarGame => similarGame.cover?.image_id) 
-            .map(similarGame => ({
-                name: similarGame.name || 'N/A',
-                summary: similarGame.summary || 'Resumo indisponível',
-                cover: `https://images.igdb.com/igdb/image/upload/t_cover_big/${similarGame.cover.image_id}.jpg`,
-            }));
-
-        // Buscar detalhes de empresas envolvidas
-        const involvedCompaniesDetails = await fetchFromIGDB(
-            'involved_companies',
-            'company,developer,publisher',
-            game.involved_companies
-        );
-
-        const companyIds = involvedCompaniesDetails.map(ic => ic.company);
-        const companyDetails = await fetchFromIGDB('companies', 'name', companyIds);
-
-        const companies = involvedCompaniesDetails.map(ic => {
-            const company = companyDetails.find(c => c.id === ic.company);
-            return {
-                name: company?.name || 'N/A',
-                developer: ic.developer || false,
-                publisher: ic.publisher || false,
-            };
-        });
-
-        const developers = companies.filter(c => c.developer).map(c => c.name);
-        const publishers = companies.filter(c => c.publisher).map(c => c.name);
-
-        const [genres, platforms, screenshots, gameModes] = await Promise.all([
-            game.genres ? fetchFromIGDB('genres', 'name', game.genres).catch(() => []) : [],
-            game.platforms ? fetchFromIGDB('platforms', 'name', game.platforms).catch(() => []) : [],
-            game.screenshots ? fetchFromIGDB('screenshots', 'image_id', game.screenshots).catch(() => []) : [],
-            game.game_modes ? fetchFromIGDB('game_modes', 'name', game.game_modes).catch(() => []) : [],
-        ]);
-
-        const limitedScreenshots = screenshots.slice(0, 3);
-
-        // Gerar a URL do cover do jogo principal
-        const gameCoverUrl = game.cover?.image_id
-            ? `https://images.igdb.com/igdb/image/upload/t_720p/${game.cover.image_id}.jpg`
-            : null;
-
-        const detailedGame = {
-            gameId: game.id,
-            name: game.name || 'N/A',
-            first_release_date: game.first_release_date
-                ? format(new Date(game.first_release_date * 1000), 'd MMMM yyyy')
-                : 'N/A',
-            summary: game.summary || 'N/A',
-            cover: gameCoverUrl,
-            genres: genres.map(g => g.name).join(', ') || 'N/A',
-            platforms: platforms.map(p => p.name).join(', ') || 'N/A',
-            screenshots: limitedScreenshots.map(sc =>
-                `https://images.igdb.com/igdb/image/upload/t_720p/${sc.image_id}.jpg`
-            ),
-            developers: developers.join(', ') || 'N/A',
-            publishers: publishers.join(', ') || 'N/A',
-            game_modes: gameModes.map(gm => gm.name).join(', ') || 'N/A',
-            similar_games: similarGames,
-            similar_games_ids: similarGamesIds,
-        };
-
-        res.render('game', {
-            game: detailedGame,
-        });
-    } catch (error) {
-        console.error('Erro ao buscar detalhes do jogo:', error.message);
-        res.status(error.response?.status || 500).send('Erro ao carregar detalhes do jogo.');
-    }
+    // Renderizar a página com os jogos divididos
+    res.render('category', { platformId, popularGames, allGames });
+  } catch (error) {
+    console.error('Erro ao buscar jogos por plataforma:', error.message);
+    res.status(500).send('Erro ao carregar os jogos da plataforma.');
+  }
 });
 
+app.get('/top-rated-games', async (req, res) => {
+  try {
+    const allGames = [];
+    let offset = 0;
+    const limit = 500; // Número de jogos buscados por requisição (máximo permitido pela IGDB)
+
+    // Busca paginada para acessar todos os jogos na base da IGDB
+    while (true) {
+      const response = await axios.post(
+        `${IGDB_BASE_URL}/games`,
+        `fields name, rating, rating_count, first_release_date, platforms.name, cover.image_id;
+         where rating_count >= 1000 & rating != null;
+         limit ${limit};
+         offset ${offset};`,
+        {
+          headers: {
+            'Client-ID': CLIENT_ID,
+            Authorization: `Bearer ${AUTH_TOKEN}`,
+          },
+        }
+      );
+
+      const games = response.data;
+
+      if (games.length === 0) break; // Para o loop quando não há mais jogos para buscar
+
+      allGames.push(...games);
+      offset += limit; // Incrementa o offset para a próxima página
+    }
+
+    // Ordenar os jogos por rating em ordem decrescente
+    const sortedGames = allGames.sort((a, b) => b.rating - a.rating);
+
+    // Mapear apenas os dados necessários
+    const detailedGames = sortedGames.map(game => ({
+      name: game.name || 'N/A',
+      rating: game.rating ? game.rating.toFixed(1) : 'N/A',
+      rating_count: game.rating_count || 0,
+      first_release_date: game.first_release_date
+        ? format(new Date(game.first_release_date * 1000), 'd MMMM yyyy')
+        : 'N/A',
+      platforms: game.platforms
+        ? game.platforms.map(p => p.name).join(', ')
+        : 'N/A',
+      cover: game.cover?.image_id
+        ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`
+        : 'https://via.placeholder.com/120x170?text=Sem+Capa',
+    }));
+
+    // Renderizar os dados no template "top.ejs"
+    res.render('top-games', {
+      games: detailedGames,
+    });
+  } catch (error) {
+    console.error('Erro ao buscar os jogos:', error.message);
+    res.status(error.response?.status || 500).send('Erro ao carregar os jogos.');
+  }
+});
 
 
 
@@ -495,8 +635,6 @@ app.post('/login', async (req, res) => {
     }
 });
 
-
-
 app.get('/check-auth', (req, res) => {
     const authHeader = req.headers.authorization;
 
@@ -526,10 +664,10 @@ app.post('/add-to-list', (req, res) => {
       }
       res.json({ success: true, message: 'Jogo adicionado à lista com sucesso.' });
     });
-  });
+});
   
   // Endpoint para adicionar aos favoritos
-  app.post('/add-to-favorites', (req, res) => {
+app.post('/add-to-favorites', (req, res) => {
     const { gameId } = req.body;
     const query = 'INSERT INTO fav_games (game_id) VALUES (?)';
   
@@ -540,11 +678,7 @@ app.post('/add-to-list', (req, res) => {
       }
       res.json({ success: true, message: 'Jogo adicionado aos favoritos com sucesso.' });
     });
-  });
-
-
-
-
+});
 
 // Inicia o servidor
 app.listen(PORT, () => {

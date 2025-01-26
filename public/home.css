@@ -135,35 +135,35 @@
 }  
 
 .slider-item:nth-child(1) {
-  transform: rotateY(0deg) translateZ(25vw);
+  transform: rotateY(0deg) translateZ(30vw);
   background-image: url('https://images.igdb.com/igdb/image/upload/t_720p/ar7u5.webp'); /* Celeste - Platform */
   background-size: cover;
   background-position: center;
 }
 
 .slider-item:nth-child(2) {
-  transform: rotateY(72deg) translateZ(25vw);
+  transform: rotateY(72deg) translateZ(30vw);
   background-image: url('https://images.igdb.com/igdb/image/upload/t_720p/tlmn8xicoz0j7j2ahxvy.webp'); /* The Witcher 3 - Adventure */
   background-size: cover;
   background-position: center;
 }
 
 .slider-item:nth-child(3) {
-  transform: rotateY(144deg) translateZ(25vw);
+  transform: rotateY(144deg) translateZ(30vw);
   background-image: url('https://images.igdb.com/igdb/image/upload/t_720p/ar6pr.webp'); /* Final Fantasy VII Remake - RPG */
   background-size: cover;
   background-position: center;
 }
 
 .slider-item:nth-child(4) {
-  transform: rotateY(216deg) translateZ(25vw);
+  transform: rotateY(216deg) translateZ(30vw);
   background-image: url('https://images.igdb.com/igdb/image/upload/t_720p/scjtt3.webp'); /* Undertale - Indie */
   background-size: cover;
   background-position: center;
 }
 
 .slider-item:nth-child(5) {
-  transform: rotateY(288deg) translateZ(25vw);
+  transform: rotateY(288deg) translateZ(30vw);
   background-image: url('https://images.igdb.com/igdb/image/upload/t_720p/dcsuiiy1xcbf5tnamajp.webp'); /* Imperium Galactica - Strategy */
   background-size: cover;
   background-position: center;

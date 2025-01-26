@@ -1,85 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Categoria de Jogos</title>
-  <style>
-    .games-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-    .game-card {
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 15px;
-      width: 300px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    .game-card img {
-      width: 100%;
-      height: auto;
-      border-radius: 5px;
-    }
-    .screenshots-container, .artworks-container {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      margin-top: 10px;
-    }
-    .screenshots-container img, .artworks-container img {
-      width: 100px;
-      height: auto;
-      border-radius: 5px;
-    }
-    .game-title {
-      font-size: 1.5em;
-      margin: 10px 0;
-    }
-    .game-info {
-      font-size: 0.9em;
-      color: #555;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>*Category*</title>
+    <!--CSS Global-->
+    <link rel="stylesheet" href="/public/style.css">
+    <!--CSS Especifico-->
+    <link rel="stylesheet" href="/public/category.css">
 </head>
-<body>
-  <h1>Jogos da Categoria</h1>
-  <div class="games-container">
-    <% if (games.length > 0) { %>
-      <% games.forEach(game => { %>
-        <div class="game-card" data-game-id="<%= game.id %>" onclick="fetchByCategory('<%- game.id %>')">
-          <img src="<%= game.cover || 'default-image.jpg' %>" alt="<%= game.name %>" />
-          <h2 class="game-title"><%= game.name %></h2>
-          <p class="game-info"><strong>Resumo:</strong> <%= game.summary %></p>
-          <p class="game-info"><strong>Plataformas:</strong> <%= game.platforms.join(', ') %></p>
+<main>
+    <header class="header">
+        <div class="logo" onclick="window.location.href='/'"><img src="/images/logo.png" id="logo"></div>
 
-          <% if (game.artwork) { %>
-            <div class="artworks-container">
-              <strong>Artwork:</strong>
-              <img src="<%= game.artwork %>" alt="Artwork" />
+        <nav class="nav">
+            <div class="mini-search-container">
+              <input type="text" class="mini-search-bar" placeholder="Search...">
+              <img src="/images/search.png" alt="Search Icon" class="icon">
             </div>
-          <% } %>
-
-          <% if (game.screenshots.length > 0) { %>
-            <div class="screenshots-container">
-              <strong>Screenshots:</strong>
-              <% game.screenshots.forEach(screenshot => { %>
-                <img src="<%= screenshot %>" alt="Screenshot" />
-              <% }) %>
-            </div>
-          <% } %>
+            <span class="nav-item">PC</span>
+            <span class="nav-item">CONSOLE</span>
+            <span class="nav-item">MOBILE</span>
+          </nav>
+        <div class="account">
+          <img src="/images/profile.png" alt="User Icon" class="icon">
+          <span>Sign in/Sign Up</span>
         </div>
-      <% }) %>
-    <% } else { %>
-      <p>Nenhum jogo encontrado nesta categoria.</p>
-    <% } %>
-  </div>
-  <script>
-    function fetchByCategory(gameId) {
-      window.location.href = `/game-details/${gameId}`;
-    }
-  </script>
-  
+    </header>
+
+    <main>
+      <!-- Popular Titles Section -->
+      <section class="games-container">
+        <div class="games-grid">
+          <h2>POPULAR TITLES</h2>
+          <% popularGames.forEach((game, index) => { %>
+            <div 
+              class="g pop-game-<%= index + 1 %>" 
+              data-game-id="<%= game.id %>" 
+              onclick="fetchByCategory('<%= game.id %>')">
+              <h3 class="game-title"><%= game.name %></h3>
+              <img src="<%= game.cover %>" alt="<%= game.name %>" />              
+            </div>
+          <% }); %>
+        </div>
+      </section>
+    
+      <!-- All Games Section -->
+      <section class="all-games-container">
+        <h2>ALL GAMES</h2>
+        <% allGames.forEach(game => { %>
+            <article class="game">
+                <div class="game-cover">
+                    <img src="<%= game.cover %>" alt="<%= game.name %>" />
+                </div>
+                <% game.screenshots.slice(0, 4).forEach((screenshot, index) => { %>
+                    <div class="screen-shot i<%= index + 2 %>">
+                        <img src="<%= screenshot %>" alt="Screenshot <%= index + 1 %>" />
+                    </div>
+                <% }); %>
+                <h3 class="game-name"><%= game.name %></h3>
+                <div class="tag-container">
+                    <% (game.genres || []).forEach(genre => { %>
+                        <div class="tag"><%= genre %></div>
+                    <% }); %>
+                </div>
+                <div class="category-container">
+                  <% (game.platforms || []).forEach(platform => { %>
+                    <div 
+                        class="tag" 
+                        game-platform-data="<%= platform.id %>" 
+                        onclick="fetchByPlatform('<%- platform.id %>')">
+                        <%= platform.name %>
+                    </div>
+                <% }); %>                
+                </div>
+                <div class="classification">
+                    <div class="class">Ignore</div>
+                    <div class="class">Add to wishlist</div>
+                </div>
+                <div 
+                    class="storeBtn" 
+                    data-game-id="<%= game.id %>" 
+                    onclick="fetchByCategory('<%= game.id %>')">
+                    Visit Game Page
+                </div>
+            </article>
+        <% }); %>
+    </section>
+    </main>    
+  <footer>
+    <div class="footer-container">
+      <div class="social-media">
+        <h4>Social Media</h4>
+        <ul>
+          <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+          <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+          <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+          <li><a href="#"><i class="fab fa-twitch"></i></a></li>
+          <li><a href="#"><i class="fab fa-discord"></i></a></li>
+          <li><a href="#"><i class="fab fa-tiktok"></i></a></li>
+          <li><a href="#"><i class="fab fa-snapchat"></i></a></li>
+        </ul>
+        <div class="language">
+          <label for="language-select">🌐</label>
+          <select id="language-select">
+            <option value="en">English</option>
+            <option value="pt">Português</option>
+            <option value="es">Spanish</option>
+          </select>
+        </div>
+      </div>
+      <div class="institutional">
+        <h4>Institutional</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Career</a></li>
+          <li><a href="#">Your Game with us</a></li>
+          <li><a href="#">Security</a></li>
+        </ul>
+      </div>
+      <div class="help">
+        <h4>Help</h4>
+        <ul>
+          <li><a href="#">Support</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>LOGO © 2011 - 2024</p>
+    </div>
+  </footer>
+
+<!-- Script Global -->
+<script src="/js/script.js"></script>
+<!-- Script de Login -->
+<script src="/js/login.js"></script>
 </body>
 </html>

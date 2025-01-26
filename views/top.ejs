@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 10 Jogos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .game {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .game img {
+            width: 120px;
+            height: 170px;
+            margin-right: 20px;
+            object-fit: cover;
+        }
+        .game-details {
+            flex: 1;
+        }
+        .game-name {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .game-summary {
+            color: #555;
+        }
+        .game-rating {
+            font-size: 1em;
+            color: #333;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Top 10 Jogos Mais Populares</h1>
+
+    <% if (games && games.length > 0) { %>
+        <% games.forEach(game => { %>
+            <div class="game">
+                <% if (game.cover) { %>
+                    <img src="<%= game.cover %>" alt="Capa do jogo">
+                <% } %>
+                <div class="game-details">
+                    <div class="game-name"><%= game.name %></div>
+                    <div class="game-rating">Rating: <%= game.rating %> | Avaliações: <%= game.rating_count %></div>
+                    <div class="game-release-date">Lançado em: <%= game.first_release_date %></div>
+                    <div class="game-platforms">Plataformas: <%= game.platforms %></div>
+                </div>
+            </div>           
+        <% }); %>
+    <% } else { %>
+        <p>Nenhum jogo encontrado.</p>
+    <% } %>
+</body>
+</html>
