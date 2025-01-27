@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Teste</title>
+</head>
+<body>
+    <h1>Perfil de <%= user.username %></h1>
+
+    <h2>Informações do Usuário</h2>
+    <p><strong>Email:</strong> <%= user.email %></p>
+    <p><strong>Biografia:</strong> <%= user.bio || 'Biografia não fornecida' %></p>
+    <p><strong>Favoritos:</strong> <%= user.fav_characters || 'Nenhum personagem favorito' %></p>
+    <p><strong>Jogos Favoritos:</strong> <%= user.fav_games || 'Nenhum jogo favorito' %></p>
+    <p><strong>Avatar:</strong> <img src="<%= user.avatar || '/images/pfile.png' %>" alt="Avatar" width="100"></p>
+
+    <h2>Jogos do Usuário</h2>
+    <h3>Jogos em Andamento</h3>
+    <ul>
+        <% currentGames.forEach(game => { %>
+            <li><%= game.name %> - <%= game.game_status %></li>
+        <% }); %>
+    </ul>
+
+    <h3>Jogos Completados</h3>
+    <ul>
+        <% completedGames.forEach(game => { %>
+            <li><%= game.name %> - <%= game.game_status %></li>
+        <% }); %>
+    </ul>
+
+    <h3>Jogos na Wishlist</h3>
+    <ul>
+        <% wishlistedGames.forEach(game => { %>
+            <li><%= game.name %> - <%= game.game_status %></li>
+        <% }); %>
+    </ul>
+
+    <h3>Jogos Cancelados</h3>
+    <ul>
+        <% droppedGames.forEach(game => { %>
+            <li><%= game.name %> - <%= game.game_status %></li>
+        <% }); %>
+    </ul>
+
+    <h3>Jogos em Espera</h3>
+    <ul>
+        <% onHoldGames.forEach(game => { %>
+            <li><%= game.name %> - <%= game.game_status %></li>
+        <% }); %>
+    </ul>
+
+    <h2>Comentários e Análises</h2>
+    <ul>
+        <% reviewsResult.forEach(review => { %>
+            <li><strong><%= review.game_name %></strong> - <%= review.review_text || 'Sem comentário' %></li>
+        <% }); %>
+    </ul>
+
+    <h2>Classificações de Jogos</h2>
+    <ul>
+        <% ratingsResult.forEach(rating => { %>
+            <li><strong><%= rating.game_name %></strong> - Nota: <%= rating.rating %></li>
+        <% }); %>
+    </ul>
+
+</body>
+</html>

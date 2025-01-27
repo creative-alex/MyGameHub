@@ -38,12 +38,13 @@
 .thumbnails {
   grid-column: 5 /span 4;
   grid-row: 2 / span 6;
-  overflow: hidden;
+  overflow-x: hidden; 
+  overflow-y: scroll; 
 }
 
 .thumbnail{
     width: 100%;
-    height: 190px;
+    height: 250px;
     margin-bottom: 1rem;
 }
 

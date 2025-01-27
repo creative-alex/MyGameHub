@@ -1,5 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const toggleButton = document.getElementById('toggle-button');
+  const toggleButton = document.getElementById('toggle-button');
   const formsWrapper = document.querySelector('.forms-wrapper');
   const switchForms = document.querySelectorAll('.switch-form');
   const loginForm = document.getElementById('loginForm');
@@ -156,4 +155,4 @@ document.addEventListener('DOMContentLoaded', () => {
       loginMessage.style.color = 'red';
     }
   });
-});
+
