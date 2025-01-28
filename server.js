@@ -715,30 +715,7 @@ app.get('/profile/:userId', (req, res) => {
       const droppedGames = userGamesResult.filter(game => game.game_status === 'dropped');
       const onHoldGames = userGamesResult.filter(game => game.game_status === 'on_hold');
 
-      // 3. Consultar as análises feitas pelo usuário (opcional)
-      db.query(`
-        SELECT reviews.*, games.*
-        FROM reviews
-        JOIN games ON reviews.game_id = games.id
-        WHERE reviews.user_id = ?
-      `, [userId], (err, reviewsResult) => {
-        if (err) {
-          console.error(err);
-          return res.status(500).send('Erro ao acessar as análises do usuário.');
-        }
-
-        // 4. Consultar as classificações de jogos (opcional)
-        db.query(`
-          SELECT user_game_rating.*, games.*
-          FROM user_game_rating
-          JOIN games ON user_game_rating.game_id = games.id
-          WHERE user_game_rating.user_id = ?
-        `, [userId], (err, ratingsResult) => {
-          if (err) {
-            console.error(err);
-            return res.status(500).send('Erro ao acessar as classificações dos jogos.');
-          }
-
+       
           // Dados prontos, renderizando a página
           res.render('user/profile-test', { 
             user, 
@@ -747,14 +724,10 @@ app.get('/profile/:userId', (req, res) => {
             wishlistedGames, 
             droppedGames, 
             onHoldGames, 
-            reviewsResult, 
-            ratingsResult
           });
         });
       });
     });
-  });
-});
 
 
 
@@ -839,8 +812,6 @@ app.post('/user/add-to-favorites', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Erro ao adicionar jogo aos favoritos.' });
   }
 });
-
-
 
 // Inicia o servidor
 app.listen(PORT, () => {
