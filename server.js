@@ -937,6 +937,9 @@ const authenticateToken = (req, res, next) => {
 app.get('/check-auth', authenticateToken, (req, res) => {
   res.status(200).json({ username: req.user.username });
 });
+
+
+
 app.post('/user/update-game-status', authenticateToken, async (req, res) => {
   const { gameId, status } = req.body; // `gameId` é o `igdb_id`
   const userId = req.user.id; // ID do usuário autenticado
@@ -970,76 +973,47 @@ app.post('/user/update-game-status', authenticateToken, async (req, res) => {
   }
 });
 
-app.post('/user/update-game-status', authenticateToken, async (req, res) => {
+app.patch('/update-game-status', authenticateToken, async (req, res) => {
+  const userId = req.user.id; // Pegamos o ID do usuário autenticado
   const { gameId, status } = req.body;
-  const userId = req.user.id;
 
-  if (!gameId || !status) {
-      return res.status(400).json({ message: 'gameId e status são obrigatórios' });
+  if (!userId) {
+      return res.status(401).json({ error: "Usuário não autenticado" });
   }
 
-  console.log("Recebido no backend:", { userId, gameId, status });
+  if (!gameId || !status) {
+      return res.status(400).json({ error: "Parâmetros inválidos" });
+  }
 
   try {
-      const connection = await db.getConnection();
-
-      // Força a inserção do jogo na tabela games
-      await connection.query(
-          'INSERT INTO games (igdb_id) VALUES (?) ON DUPLICATE KEY UPDATE igdb_id = igdb_id;',
-          [gameId]
-      );
-
-      // Confirma se o jogo realmente existe
-      const [gameExists] = await connection.query(
-          'SELECT * FROM games WHERE igdb_id = ?',
-          [gameId]
-      );
-
-      if (gameExists.length === 0) {
-          connection.release();
-          return res.status(404).json({ message: 'Jogo não encontrado no banco de dados.' });
-      }
-
-      // Verifica se o jogo já está na lista do usuário
-      const [userGameExists] = await connection.query(
+      // Verifica se o jogo já existe para o usuário
+      const [existingGame] = await db.promise().query(
           'SELECT * FROM user_games WHERE user_id = ? AND igdb_id = ?',
           [userId, gameId]
       );
 
-      if (status === 'remove') {
-          if (userGameExists.length > 0) {
-              await connection.query(
-                  `DELETE FROM user_games WHERE user_id = ? AND igdb_id = ?`,
-                  [userId, gameId]
-              );
-              connection.release();
-              return res.status(200).json({ message: 'Jogo removido da lista.' });
-          } else {
-              connection.release();
-              return res.status(404).json({ message: 'O jogo não está na sua lista.' });
-          }
-      }
-
-      if (userGameExists.length === 0) {
-          await connection.query(
-              `INSERT INTO user_games (user_id, igdb_id, game_status) VALUES (?, ?, ?)`,
-              [userId, gameId, status]
-          );
-          connection.release();
-          return res.status(200).json({ message: 'Jogo adicionado à lista!' });
-      } else {
-          await connection.query(
-              `UPDATE user_games SET game_status = ? WHERE user_id = ? AND igdb_id = ?`,
+      if (existingGame.length > 0) {
+          // Se já existe, atualiza o status
+          await db.promise().query(
+              'UPDATE user_games SET game_status = ? WHERE user_id = ? AND igdb_id = ?',
               [status, userId, gameId]
           );
-          connection.release();
-          return res.status(200).json({ message: 'Status do jogo atualizado!' });
+      } else {
+          // Se não existe, adiciona o jogo à lista do usuário
+          await db.promise().query(
+              'INSERT INTO user_games (user_id, igdb_id, game_status) VALUES (?, ?, ?)',
+              [userId, gameId, status]
+          );
       }
+
+      res.json({ message: "Status atualizado com sucesso!" });
   } catch (error) {
-      console.error('Erro ao atualizar status do jogo:', error);
-      res.status(500).json({ message: 'Erro no servidor', error: error.message });
+      console.error(error);
+      res.status(500).json({ error: "Erro ao atualizar status do jogo" });
   }
 });
+
+
 
 // Inicia o servidor
 app.listen(PORT, () => {

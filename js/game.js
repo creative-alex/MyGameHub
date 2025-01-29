@@ -1,32 +1,19 @@
-async function updateGameStatus(gameId, newStatus) {
-    if (!gameId) {
-        alert("Erro: gameId está indefinido!");
-        console.error("Erro: gameId está indefinido!");
-        return;
-    }
+function handleGameStatusChange(selectElement) {
+    const gameId = selectElement.getAttribute("data-game-id");
+    const status = selectElement.value;
+    const token = localStorage.getItem("authToken"); // Pegamos o token salvo no login
 
-    console.log("Enviando requisição:", { gameId, status: newStatus });
-
-    try {
-        const response = await fetch("/user/update-game-status", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("authToken")}`
-            },
-            body: JSON.stringify({ gameId, status: newStatus })
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Erro ao atualizar status: ${errorText}`);
-        }
-
-        const data = await response.json();
+    fetch('/update-game-status', {
+        method: 'PATCH',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` // Enviamos o token JWT
+        },
+        body: JSON.stringify({ gameId, status })
+    })
+    .then(response => response.json())
+    .then(data => {
         alert(data.message);
-    } catch (error) {
-        console.error("Erro no updateGameStatus:", error);
-        alert("Erro ao atualizar o status do jogo.");
-    }
+    })
+    .catch(error => console.error('Erro:', error));
 }
-
