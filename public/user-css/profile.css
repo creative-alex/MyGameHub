@@ -196,12 +196,14 @@ button:hover {
   height: 20vh;
   width: 15vh;
   border-radius: 5px;
+  background-size: contain;
+  margin-bottom: 1rem;
 }
 
 .favorite-item img{
-  width: 100%;
   height: 100%;
   object-fit: cover;
+  background-size: contain;
 }
 
 .favorite-item-1 { 

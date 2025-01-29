@@ -75,11 +75,9 @@
       <section class="favorites-section">
           <h2>Favorites</h2>
           <% const favorites = games.filter(g => g.is_favorite).slice(0, 6); %>
-          <div class="favorites-grid">
               <% favorites.forEach((favorite, index) => { %>
                   <div class="favorite-item favorite-item-<%= index + 1 %>" aria-label="Favorite Item <%= index + 1 %>" style="background-image: url('<%= favorite.cover %>');"></div>
               <% }) %>
-          </div>
       </section>
   </main>
 

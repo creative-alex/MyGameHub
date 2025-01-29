@@ -680,6 +680,32 @@ app.post('/login', async (req, res) => {
   }
 });
 
+
+app.get('/api/user-games', async (req, res) => {
+  try {
+      const userId = req.query.user_id; // Obtém o ID do utilizador da query string
+
+      if (!userId) {
+          return res.status(400).json({ error: "user_id é obrigatório" });
+      }
+
+      // Buscar todos os jogos do utilizador
+      const gamesQuery = "SELECT igdb_id, game_status FROM user_games WHERE user_id = ?";
+      const gamesResults = await new Promise((resolve, reject) => {
+          db.query(gamesQuery, [userId], (err, results) => {
+              if (err) reject(err);
+              else resolve(results);
+          });
+      });
+
+      res.json(gamesResults); // Retorna a lista de jogos em JSON
+  } catch (err) {
+      console.error("Erro ao buscar jogos do usuário:", err);
+      res.status(500).json({ error: "Erro interno do servidor" });
+  }
+});
+
+
 // Rota para obter os jogos de um utilizador
 app.get('/user/:id', async (req, res) => {
   try {
@@ -805,6 +831,40 @@ app.post('/user/add-to-list', authenticateToken, async (req, res) => {
       res.status(500).json({ message: 'Erro ao adicionar jogo à lista.' });
   }
 });
+
+app.post('/user/update-game-status', authenticateToken, async (req, res) => {
+  const { gameId, status } = req.body; // `gameId` é o `igdb_id`
+  const userId = req.user.id; // ID do usuário autenticado
+
+  const validStatuses = ['current', 'dropped', 'on_hold', 'wishlisted', 'completed'];
+  if (!validStatuses.includes(status)) {
+    return res.status(400).json({ message: 'Status inválido.' });
+  }
+
+  try {
+    // Verifica se o jogo está na tabela `games`
+    const [rows] = await db.promise().query('SELECT igdb_id FROM games WHERE igdb_id = ?', [gameId]);
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Jogo não encontrado.' });
+    }
+
+    // Atualiza o status do jogo na lista do usuário
+    const [result] = await db.promise().query(
+      `UPDATE user_games SET game_status = ? WHERE user_id = ? AND igdb_id = ?`,
+      [status, userId, gameId]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Jogo não encontrado na lista do utilizador.' });
+    }
+
+    res.status(200).json({ message: 'Status atualizado com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao atualizar o status do jogo:', error.message);
+    res.status(500).json({ message: 'Erro ao atualizar o status do jogo.' });
+  }
+});
+
 
 
 app.post('/user/add-to-favorites', authenticateToken, async (req, res) => {
