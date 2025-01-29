@@ -223,12 +223,14 @@ figure{
 
 select {
   font-size: 1rem;
-  border: 1px solid #d1c8e4;
+  border: 1px solid black;
   border-radius: 5px;
-  padding: 5px;
+  padding: 10px;
   margin-top: 5px;
   text-align: center;
   color: #42396c;
+  width: 100%;
+  background-color: transparent;
 }
 
 

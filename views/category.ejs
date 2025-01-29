@@ -37,7 +37,7 @@
             <div 
               class="g pop-game-<%= index + 1 %>" 
               data-game-id="<%= game.id %>" 
-              onclick="fetchByCategory('<%= game.id %>')">
+              onclick="fetchByGameId('<%= game.id %>')">
               <h3 class="game-title"><%= game.name %></h3>
               <img src="<%= game.cover %>" alt="<%= game.name %>" />              
             </div>
@@ -81,7 +81,7 @@
                 <div 
                     class="storeBtn" 
                     data-game-id="<%= game.id %>" 
-                    onclick="fetchByCategory('<%= game.id %>')">
+                    onclick="fetchByGameId('<%= game.id %>')">
                     Visit Game Page
                 </div>
             </article>

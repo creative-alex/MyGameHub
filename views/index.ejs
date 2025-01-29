@@ -117,82 +117,42 @@
 ] -->
 
 <article class="content-section">
-  <h3 class="article-title">Top Rated This Month</h3>
-  <button class="article-button">MORE</button>
+  <h3 class="article-title">Top Rated </h3>
+  <button class="article-button" onclick="window.location.href='/top-rated-games'">MORE</button>
 </article>
 <section class="box-container">
-  <div class="box"></div>
-  <div class="box large"></div>
-  <div class="box"></div>
+  <div class="box" style="background-image: url('<%= topRatedGames[1].cover %>');"></div><!-- TOP 2 -->
+  <div class="box large" style="background-image: url('<%= topRatedGames[0].cover %>');"></div> <!-- TOP 1 -->
+  <div class="box" style="background-image: url('<%= topRatedGames[2].cover %>');"></div><!-- TOP 3 -->
 </section>
-
-
-<article class="centered-box">
-  <p class="box-text">Sign in to view personalized recommendations</p>
-  <button class="box-button">SIGN IN / SIGN UP</button>
-  <p class="box-text">or register for free.</p>
-</article>
-
 
 <div class="discover">
   <h3 class="discover-title">DISCOVER</h3>
   <div class="button-group">
-    <button class="discover-button">RECENTLY ADDED</button>
     <button class="discover-button" id="randomGame" onclick="window.location.href='/randomGame'">SURPRISE ME</button>
-    <button class="discover-button">UPCOMING RELEASES</button>
+    <button class="discover-button" id="randomGame" onclick="window.location.href='/randomGame'">SURPRISE ME</button>
+    <button class="discover-button" id="randomGame" onclick="window.location.href='/randomGame'">SURPRISE ME</button>
   </div>
 </div>
 
 
-
 <section class="game-section">
-  <h2 class="line-title">trending games</h2>
+  <h2 class="line-title">Trending Games</h2>
   <div class="owl-carousel custom-carousel owl-theme">
-    <div class="item active" style="background-image: url(https://www.yudiz.com/codepen/expandable-animated-card-slider/dota-2.jpg);">
-      <div class="item-desc">
-        <h3>Dota 2</h3>
-        <p>Dota 2 is a multiplayer online battle arena by Valve. The game is a sequel to Defense of the
-          Ancients, which was a community-created mod for Blizzard Entertainment's Warcraft III.</p>
+    <% trendingGames.forEach(game => { %>
+      <div class="item" style="background-image: url('<%= game.cover %>');">
+        <div class="item-desc">
+          <h3><%= game.name %></h3>
+          <p onclick="fetchByGameId('<%= game.id %>')">
+            <%= game.summary.length > 150 ? game.summary.substring(0, 150) + '...' : game.summary %>
+          </p>
+        </div>
       </div>
-    </div>
-    <div class="item" style="background-image: url(https://www.yudiz.com/codepen/expandable-animated-card-slider/winter-3.jpg);">
-      <div class="item-desc">
-        <h3>The Witcher 3</h3>
-        <p>The Witcher 3 is a multiplayer online battle arena by Valve. The game is a sequel to Defense
-          of the Ancients, which was a community-created mod for Blizzard Entertainment's Warcraft III.</p>
-      </div>
-    </div>
-    <div class="item" style="background-image: url(https://www.yudiz.com/codepen/expandable-animated-card-slider/rdr-2.jpg);">
-      <div class="item-desc">
-        <h3>RDR 2</h3>
-        <p>RDR 2 is a multiplayer online battle arena by Valve. The game is a sequel to Defense of the
-          Ancients, which was a community-created mod for Blizzard Entertainment's Warcraft III.</p>
-      </div>
-    </div>
-    <div class="item" style="background-image: url(https://www.yudiz.com/codepen/expandable-animated-card-slider/pubg.jpg);">
-      <div class="item-desc">
-        <h3>PUBG Mobile</h3>
-        <p>PUBG 2 is a multiplayer online battle arena by Valve. The game is a sequel to Defense of the
-          Ancients, which was a community-created mod for Blizzard Entertainment's Warcraft III.</p>
-      </div>
-    </div>
-    <div class="item" style="background-image: url(https://www.yudiz.com/codepen/expandable-animated-card-slider/fortnite.jpg);">
-      <div class="item-desc">
-        <h3>Fortnite</h3>
-        <p>Battle royale where 100 players fight to be the last person standing. which was a community-created mod
-          for Blizzard Entertainment's Warcraft III.</p>
-      </div>
-    </div>
-    <div class="item" style="background-image: url(https://www.yudiz.com/codepen/expandable-animated-card-slider/far-cry-5.jpg);">
-      <div class="item-desc">
-        <h3>Far Cry 5</h3>
-        <p>Far Cry 5 is a 2018 first-person shooter game developed by Ubisoft.
-          which was a community-created mod for Blizzard Entertainment's Warcraft III.</p>
-      </div>
-    </div>
-  </div>
+    <% }); %>
   </div>
 </section>
+
+
 
 
 <footer>

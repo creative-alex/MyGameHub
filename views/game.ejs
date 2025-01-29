@@ -103,13 +103,15 @@
       </div>
     </div>
     <div class="button-section"> 
-       <button 
-class="btn add-to-list" 
-data-game-id="<%= game.gamerId %>" 
-onclick="addToList('<%= game.gamerId %>')">
-Add to List
-       </button>
-
+      <select id="game-status" data-game-id="<%= game.gamerId %>" onchange="handleGameStatusChange(this, '{{game.id}}')">
+        <option value="none" selected>Add to List</option>
+        <option value="current">Current</option>
+        <option value="dropped">Dropped</option>
+        <option value="on_hold">On Hold</option>
+        <option value="wishlisted">Wishlisted</option>
+        <option value="completed">Completed</option>
+        <option value="remove">Remove from List</option>
+    </select>
        <button 
 class="btn add-to-favorites" 
 data-game-id="<%= game.gamerId %>" 
@@ -180,7 +182,7 @@ Add to Favorites
       <h2>SIMILAR GAMES</h2>
      <% if (game.similar_games && game.similar_games.length > 0) { %>
         <% game.similar_games.slice(0, 8).forEach(function(similarGame) { %>
-            <div class="g similar-game" data-game-id="<%= similarGame.id %>" onclick="fetchByCategory('<%= similarGame.id %>')">
+            <div class="g similar-game" data-game-id="<%= similarGame.id %>" onclick="fetchByGameId('<%= similarGame.id %>')">
                 <h3 class="similar-title hidden"><%= similarGame.name %></h3>
                 <p class="similar-description hidden">
                     <%= similarGame.summary && similarGame.summary.length > 150 

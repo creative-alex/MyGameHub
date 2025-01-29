@@ -417,43 +417,9 @@
 }
   
 .box.large {
-    width: 375px;
+    width: 340px;
     height: 450px;
-}
-
-.centered-box {
-  max-width: 1170px; 
-  height: 200px;
-  background-color: #1a1036;
-  margin: 100px auto 0 auto; 
-  display: flex;
-  flex-direction: column; 
-  align-items: center; 
-  justify-content: center; 
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-  padding: 20px; 
-} 
-  
-.box-text {
-    color: #fff;
-    font-size: 1.2rem;
-    margin: 10px 0; 
-    text-align: center;
-}
-  
-.box-button {
-    background-color: #2A2263;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 10px 0; 
-}
-  
-.box-button:hover {
-    background-color: #0056b3; 
+    background-size: contain;
 }
 
 

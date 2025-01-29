@@ -2,7 +2,7 @@ function fetchCategory(genreId) {
   window.location.href = `/category?genre=${genreId}`;
 };
 
-function fetchByCategory(gameId) {
+function fetchByGameId(gameId) {
   window.location.href = `/game-details/${gameId}`;
 }
 function fetchByPlatform(platformId) {
@@ -12,6 +12,7 @@ function fetchByPlatform(platformId) {
 function fetchBySearch(searchId) {
   window.location.href = `/game-details/${searchId}`;
 }
+
 
 $(".custom-carousel").owlCarousel({
   autoWidth: true,

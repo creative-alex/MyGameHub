@@ -60,10 +60,80 @@ async function fetchFromIGDB(endpoint, fields, ids) {
 }
 
 // Rota base
-app.get('/', (req, res) => {
-    res.render('index');
-});
+app.get('/', async (req, res) => {
+  try {
+    // Buscar os jogos mais bem avaliados
+    const topRatedResponse = await axios.post(
+      `${IGDB_BASE_URL}/games`,
+      `fields id, name, rating, cover.image_id, summary;
+       where rating_count >= 1000 & rating != null;
+       sort rating desc;
+       limit 3;`,
+      {
+        headers: {
+          'Client-ID': CLIENT_ID,
+          Authorization: `Bearer ${AUTH_TOKEN}`,
+        },
+      }
+    );
 
+    const topRatedGames = topRatedResponse.data.map(game => ({
+      id: game.id,
+      name: game.name || 'N/A',
+      rating: game.rating ? game.rating.toFixed(1) : 'N/A',
+      summary: game.summary || 'Sem descrição disponível.',
+      cover: game.cover?.image_id
+        ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`
+        : 'https://via.placeholder.com/120x170?text=Sem+Capa',
+    }));
+
+    // Buscar os jogos populares/trending
+    const trendingResponse = await axios.post(
+      `${IGDB_BASE_URL}/popularity_primitives`,
+      `fields game_id, value;
+       sort value desc;
+       limit 10;`,
+      {
+        headers: {
+          'Client-ID': CLIENT_ID,
+          Authorization: `Bearer ${AUTH_TOKEN}`,
+        },
+      }
+    );
+
+    const trendingGamesIds = trendingResponse.data.map(game => game.game_id);
+
+    const trendingGamesResponse = await axios.post(
+      `${IGDB_BASE_URL}/games`,
+      `fields id, name, cover.image_id, summary;
+       where id = (${trendingGamesIds.join(',')});`,
+      {
+        headers: {
+          'Client-ID': CLIENT_ID,
+          Authorization: `Bearer ${AUTH_TOKEN}`,
+        },
+      }
+    );
+
+    const trendingGames = trendingGamesResponse.data.map(game => ({
+      id: game.id,
+      name: game.name || 'N/A',
+      summary: game.summary || 'Sem descrição disponível.',
+      cover: game.cover?.image_id
+        ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`
+        : 'https://via.placeholder.com/120x170?text=Sem+Capa',
+    }));
+
+    // Renderizar os dados no index
+    res.render('index', {
+      topRatedGames,
+      trendingGames,
+    });
+  } catch (error) {
+    console.error('Erro ao buscar os jogos:', error.message);
+    res.status(error.response?.status || 500).send('Erro ao carregar os jogos.');
+  }
+});
 // Rota para buscar um jogo aleatório
 app.get('/randomGame', async (req, res) => {
   try {
@@ -706,12 +776,12 @@ app.get('/api/user-games', async (req, res) => {
 });
 
 
-// Rota para obter os jogos de um utilizador
+// Rota para obter os jogos de um utilizador// Rota para obter os jogos de um utilizador
 app.get('/user/:id', async (req, res) => {
   try {
       const userId = req.params.id;
-      
-      // Buscar nome e bio do utilizador
+
+      // Buscar nome e bio do usuário
       const userQuery = "SELECT username, bio FROM users WHERE id = ?";
       const userResults = await new Promise((resolve, reject) => {
           db.query(userQuery, [userId], (err, results) => {
@@ -719,66 +789,130 @@ app.get('/user/:id', async (req, res) => {
               else resolve(results);
           });
       });
-      
+
       if (userResults.length === 0) {
           return res.status(404).send('Usuário não encontrado');
       }
-      
+
       const user = userResults[0];
-      
-      // Buscar os 6 jogos favoritos do utilizador
-      const gamesQuery = "SELECT igdb_id, game_status, is_favorite, rating FROM user_games WHERE user_id = ? AND is_favorite = 1 ORDER BY FIELD(game_status, 'current', 'dropped', 'on_hold', 'wishlisted', 'completed') LIMIT 6";
+
+      // Buscar todos os jogos do utilizador (sem limitação)
+      const gamesQuery = `
+          SELECT igdb_id, game_status, is_favorite
+          FROM user_games
+          WHERE user_id = ?
+      `;
       const gamesResults = await new Promise((resolve, reject) => {
           db.query(gamesQuery, [userId], (err, results) => {
               if (err) reject(err);
               else resolve(results);
           });
       });
-      
-      if (gamesResults.length === 0) {
-          return res.render('user_games', { user, games: [] });
+
+      // Categorizar os jogos
+      const favoriteGames = gamesResults.filter(game => game.is_favorite === 1);
+      const currentGames = gamesResults.filter(game => game.game_status === 'current');
+      const onHoldGames = gamesResults.filter(game => game.game_status === 'on_hold');
+      const droppedGames = gamesResults.filter(game => game.game_status === 'dropped');
+      const wishlistedGames = gamesResults.filter(game => game.game_status === 'wishlisted');
+      const completedGames = gamesResults.filter(game => game.game_status === 'completed');
+
+      // Buscar detalhes dos jogos na IGDB
+      const allGameIds = [...new Set([
+          ...favoriteGames.map(g => g.igdb_id),
+          ...currentGames.map(g => g.igdb_id),
+          ...onHoldGames.map(g => g.igdb_id),
+          ...droppedGames.map(g => g.igdb_id),
+          ...wishlistedGames.map(g => g.igdb_id),
+          ...completedGames.map(g => g.igdb_id)
+      ])];
+
+      let igdbGamesData = {};
+      if (allGameIds.length > 0) {
+          const igdbResponse = await axios.post(
+              `${IGDB_BASE_URL}/games`,
+              `fields id, name, cover.image_id; where id = (${allGameIds.join(',')});`,
+              {
+                  headers: {
+                      'Client-ID': CLIENT_ID,
+                      Authorization: `Bearer ${AUTH_TOKEN}`,
+                  },
+              }
+          );
+
+          igdbGamesData = igdbResponse.data.reduce((acc, game) => {
+              acc[game.id] = {
+                  id: game.id,
+                  name: game.name || 'Nome desconhecido',
+                  cover: game.cover ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg` : null,
+              };
+              return acc;
+          }, {});
       }
-      
-      // Buscar detalhes dos jogos na IGDB, incluindo plataformas e rating
-      const igdbIds = gamesResults.map(game => game.igdb_id);
-      const igdbResponse = await axios.post(
-          `${IGDB_BASE_URL}/games`,
-          `fields name, rating, rating_count, platforms.name, cover.image_id; where id = (${igdbIds.join(',')});`,
-          {
-              headers: {
-                  'Client-ID': CLIENT_ID,
-                  Authorization: `Bearer ${AUTH_TOKEN}`,
-              },
-          }
-      );
-      
-      const igdbGames = igdbResponse.data.reduce((acc, game) => {
-          acc[game.id] = {
-              name: game.name,
-              rating: game.rating || 'N/A',
-              rating_count: game.rating_count || 0,
-              platforms: game.platforms ? game.platforms.map(p => p.name).join(', ') : 'Desconhecido',
-              cover: game.cover ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg` : null,
-          };
-          return acc;
-      }, {});
-      
-      // Mesclar dados do banco com detalhes da IGDB
-      const games = gamesResults.map(game => ({
-          ...game,
-          name: igdbGames[game.igdb_id]?.name || 'Nome desconhecido',
-          cover: igdbGames[game.igdb_id]?.cover || null,
-          rating: igdbGames[game.igdb_id]?.rating || 'N/A',
-          rating_count: igdbGames[game.igdb_id]?.rating_count || 0,
-          platforms: igdbGames[game.igdb_id]?.platforms || 'Desconhecido',
+
+      // Formatar os dados dos jogos
+      const formattedFavoriteGames = favoriteGames.map(game => ({
+          id: game.igdb_id,
+          name: igdbGamesData[game.igdb_id]?.name || 'Nome desconhecido',
+          cover: igdbGamesData[game.igdb_id]?.cover || null,
       }));
-      
-      res.render('user/profile', { user, games });
+
+      const formattedCurrentGames = currentGames.map(game => ({
+          id: game.igdb_id,
+          cover: igdbGamesData[game.igdb_id]?.cover || null,
+      }));
+
+      const formattedOnHoldGames = onHoldGames.map(game => ({
+          id: game.igdb_id,
+          cover: igdbGamesData[game.igdb_id]?.cover || null,
+      }));
+
+      const formattedDroppedGames = droppedGames.map(game => ({
+          id: game.igdb_id,
+          cover: igdbGamesData[game.igdb_id]?.cover || null,
+      }));
+
+      const formattedWishlistedGames = wishlistedGames.map(game => ({
+          id: game.igdb_id,
+          cover: igdbGamesData[game.igdb_id]?.cover || null,
+      }));
+
+      const formattedCompletedGames = completedGames.map(game => ({
+          id: game.igdb_id,
+          cover: igdbGamesData[game.igdb_id]?.cover || null,
+      }));
+
+      // Contagem dos status dos jogos
+      const gameStatusCounts = {
+          playing: currentGames.length,
+          completed: completedGames.length,
+          on_hold: onHoldGames.length,
+          dropped: droppedGames.length,
+          wishlisted: wishlistedGames.length,
+      };
+
+      const totalEntries = gamesResults.length; // Contagem total de jogos do usuário
+
+      res.render('user/profile', { 
+          user, 
+          favoriteGames: formattedFavoriteGames,
+          currentGames: formattedCurrentGames,
+          onHoldGames: formattedOnHoldGames,
+          droppedGames: formattedDroppedGames,
+          wishlistedGames: formattedWishlistedGames,
+          completedGames: formattedCompletedGames,
+          gameStatusCounts, 
+          totalEntries
+      });
+
   } catch (err) {
       console.error(err);
       res.status(500).send('Erro ao buscar dados do usuário e jogos');
   }
 });
+
+
+
 
 // Middleware para verificar autenticação
 const authenticateToken = (req, res, next) => {
@@ -803,35 +937,6 @@ const authenticateToken = (req, res, next) => {
 app.get('/check-auth', authenticateToken, (req, res) => {
   res.status(200).json({ username: req.user.username });
 });
-
-app.post('/user/add-to-list', authenticateToken, async (req, res) => {
-  const { gameId } = req.body; // Esse gameId corresponde ao igdb_id
-  const userId = req.user.id; // ID do usuário autenticado
-
-  try {
-      // Verificar se o jogo existe na tabela games
-      const [rows] = await db.promise().query('SELECT igdb_id FROM games WHERE igdb_id = ?', [gameId]);
-      if (rows.length === 0) {
-          return res.status(404).json({ message: 'Jogo não encontrado.' });
-      }
-
-      const gameDatabaseId = rows[0].igdb_id; // Corrigido para garantir que estamos pegando o igdb_id correto
-
-      // Inserir o jogo na lista do usuário
-      await db.promise().query(
-          `INSERT INTO user_games (user_id, igdb_id, game_status) 
-           VALUES (?, ?, 'current') 
-           ON DUPLICATE KEY UPDATE game_status = 'current'`,
-          [userId, gameDatabaseId]
-      );
-
-      res.status(200).json({ message: 'Jogo adicionado à lista com sucesso!' });
-  } catch (error) {
-      console.error('Erro ao adicionar jogo à lista:', error.message);
-      res.status(500).json({ message: 'Erro ao adicionar jogo à lista.' });
-  }
-});
-
 app.post('/user/update-game-status', authenticateToken, async (req, res) => {
   const { gameId, status } = req.body; // `gameId` é o `igdb_id`
   const userId = req.user.id; // ID do usuário autenticado
@@ -865,35 +970,76 @@ app.post('/user/update-game-status', authenticateToken, async (req, res) => {
   }
 });
 
+app.post('/user/update-game-status', authenticateToken, async (req, res) => {
+  const { gameId, status } = req.body;
+  const userId = req.user.id;
 
+  if (!gameId || !status) {
+      return res.status(400).json({ message: 'gameId e status são obrigatórios' });
+  }
 
-app.post('/user/add-to-favorites', authenticateToken, async (req, res) => {
-  const { gameId } = req.body; // Esse gameId corresponde ao igdb_id
-  const userId = req.user.id; // ID do usuário autenticado
+  console.log("Recebido no backend:", { userId, gameId, status });
 
   try {
-    // Verificar se o jogo existe na tabela games, inserindo se necessário
-    await db.promise().query(
-      'INSERT IGNORE INTO games (igdb_id) VALUES (?)',
-      [gameId]
-    );
+      const connection = await db.getConnection();
 
-    // Inserir ou atualizar o status de favorito para o jogo do usuário
-    await db.promise().query(
-      `INSERT INTO user_games (user_id, igdb_id, game_status, is_favorite) 
-       VALUES (?, ?, 'current', 1) 
-       ON DUPLICATE KEY UPDATE is_favorite = 1`,
-      [userId, gameId] // gameId já é o igdb_id correto
-    );
+      // Força a inserção do jogo na tabela games
+      await connection.query(
+          'INSERT INTO games (igdb_id) VALUES (?) ON DUPLICATE KEY UPDATE igdb_id = igdb_id;',
+          [gameId]
+      );
 
-    res.status(200).json({ message: 'Jogo adicionado aos favoritos com sucesso!' });
+      // Confirma se o jogo realmente existe
+      const [gameExists] = await connection.query(
+          'SELECT * FROM games WHERE igdb_id = ?',
+          [gameId]
+      );
+
+      if (gameExists.length === 0) {
+          connection.release();
+          return res.status(404).json({ message: 'Jogo não encontrado no banco de dados.' });
+      }
+
+      // Verifica se o jogo já está na lista do usuário
+      const [userGameExists] = await connection.query(
+          'SELECT * FROM user_games WHERE user_id = ? AND igdb_id = ?',
+          [userId, gameId]
+      );
+
+      if (status === 'remove') {
+          if (userGameExists.length > 0) {
+              await connection.query(
+                  `DELETE FROM user_games WHERE user_id = ? AND igdb_id = ?`,
+                  [userId, gameId]
+              );
+              connection.release();
+              return res.status(200).json({ message: 'Jogo removido da lista.' });
+          } else {
+              connection.release();
+              return res.status(404).json({ message: 'O jogo não está na sua lista.' });
+          }
+      }
+
+      if (userGameExists.length === 0) {
+          await connection.query(
+              `INSERT INTO user_games (user_id, igdb_id, game_status) VALUES (?, ?, ?)`,
+              [userId, gameId, status]
+          );
+          connection.release();
+          return res.status(200).json({ message: 'Jogo adicionado à lista!' });
+      } else {
+          await connection.query(
+              `UPDATE user_games SET game_status = ? WHERE user_id = ? AND igdb_id = ?`,
+              [status, userId, gameId]
+          );
+          connection.release();
+          return res.status(200).json({ message: 'Status do jogo atualizado!' });
+      }
   } catch (error) {
-    console.error('Erro ao adicionar jogo aos favoritos:', error.message);
-    res.status(500).json({ message: 'Erro ao adicionar jogo aos favoritos.' });
+      console.error('Erro ao atualizar status do jogo:', error);
+      res.status(500).json({ message: 'Erro no servidor', error: error.message });
   }
 });
-
-
 
 // Inicia o servidor
 app.listen(PORT, () => {

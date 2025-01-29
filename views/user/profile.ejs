@@ -44,41 +44,93 @@
           </header>
           <div class="stats-bar"></div>
           <div class="stats-container">
-              <ul class="stats-list">
-                  <li><span class="dot playing"></span> Playing<span class="count"><%= games.filter(g => g.game_status === 'current').length %></span></li>
-                  <li><span class="dot completed"></span> Completed<span class="count"><%= games.filter(g => g.game_status === 'completed').length %></span></li>
-                  <li><span class="dot on-hold"></span> On-Hold<span class="count"><%= games.filter(g => g.game_status === 'on_hold').length %></span></li>
-                  <li><span class="dot dropped"></span> Dropped<span class="count"><%= games.filter(g => g.game_status === 'dropped').length %></span></li>
-                  <li><span class="dot plan-to-play"></span> Plan to Play<span class="count"><%= games.filter(g => g.game_status === 'wishlisted').length %></span></li>
-              </ul>
+            <ul class="stats-list">
+              <li><span class="dot playing"></span> Playing<span class="count"><%= gameStatusCounts.playing %></span></li>
+              <li><span class="dot completed"></span> Completed<span class="count"><%= gameStatusCounts.completed %></span></li>
+              <li><span class="dot on-hold"></span> On-Hold<span class="count"><%= gameStatusCounts.on_hold %></span></li>
+              <li><span class="dot dropped"></span> Dropped<span class="count"><%= gameStatusCounts.dropped %></span></li>
+              <li><span class="dot plan-to-play"></span> Plan to Play<span class="count"><%= gameStatusCounts.wishlisted %></span></li>
+          </ul>
+          
               <ul class="stats-summary">
-                  <li>Total Entries: <span class="count"><%= games.length %></span></li>
+                <li>Total Entries: <span class="count"><%= totalEntries %></span></li>
               </ul>
           </div>
       </section>
   
       <section class="last-completed">
-          <h2>Last Completed Games</h2>
-          <% const lastCompleted = games.filter(g => g.game_status === 'completed').slice(0, 3); %>
-          <% lastCompleted.forEach(game => { %>
-              <article class="completed-game">
-                  <figure class="recent-game-card" style="background-image: url('<%= game.cover %>');"></figure>
-                  <div>
-                      <p><%= game.name %></p>
-                      <small>Score: <%= game.rating || 'N/A' %></small>
-                      <small>Platform: <%= game.platforms || 'N/A' %></small>
-                  </div>
-              </article>
-          <% }) %>
-      </section>
+        <h2>Last Completed Games</h2>
+        <% completedGames.forEach((game, index) => { %>
+            <div class="last-game l<%= index + 1 %>">
+                <% if (game.cover) { %>
+                    <img src="<%= game.cover %>" alt="Completed Game Cover">
+                <% } else { %>
+                    <div class="no-cover">No Cover</div>
+                <% } %>
+            </div>
+        <% }); %>
+    </section>
+    
   
       <section class="favorites-section">
           <h2>Favorites</h2>
-          <% const favorites = games.filter(g => g.is_favorite).slice(0, 6); %>
-              <% favorites.forEach((favorite, index) => { %>
+          <% const favorites = favoriteGames.slice(0, 9); %>
+          <% favorites.forEach((favorite, index) => { %>
                   <div class="favorite-item favorite-item-<%= index + 1 %>" aria-label="Favorite Item <%= index + 1 %>" style="background-image: url('<%= favorite.cover %>');"></div>
               <% }) %>
       </section>
+
+
+      <section class="all-games">
+        <h2>All Games</h2>
+    
+        <h3 class="cur">Current Games</h3>
+        <% currentGames.slice(0, 6).forEach((game, index) => { %>
+            <% if (game.cover) { %>
+                <div class="current c<%= index + 1 %>" onclick="fetchByGameId('<%= game.id %>')">
+                    <img src="<%= game.cover %>" alt="<%= game.name %>">
+                </div>
+            <% } %>
+        <% }) %>
+    
+        <h3 class="com">Completed Games</h3>
+        <% completedGames.slice(0, 6).forEach((game, index) => { %>
+            <% if (game.cover) { %>
+                <div class="complete t<%= index + 1 %>" onclick="fetchByGameId('<%= game.id %>')">
+                    <img src="<%= game.cover %>" alt="<%= game.name %>">
+                </div>
+            <% } %>
+        <% }) %>
+    
+        <h3 class="on">On-Hold Games</h3>
+        <% onHoldGames.slice(0, 6).forEach((game, index) => { %>
+            <% if (game.cover) { %>
+                <div class="onhold o<%= index + 1 %>" onclick="fetchByGameId('<%= game.id %>')">
+                    <img src="<%= game.cover %>" alt="<%= game.name %>">
+                </div>
+            <% } %>
+        <% }) %>
+    
+        <h3 class="pl">Plan to Play Games</h3>
+        <% wishlistedGames.slice(0, 6).forEach((game, index) => { %>
+            <% if (game.cover) { %>
+                <div class="plantoplay p<%= index + 1 %>" onclick="fetchByGameId('<%= game.id %>')">
+                    <img src="<%= game.cover %>" alt="<%= game.name %>">
+                </div>
+            <% } %>
+        <% }) %>
+    
+        <h3 class="dr">Dropped Games</h3>
+        <% droppedGames.slice(0, 6).forEach((game, index) => { %>
+            <% if (game.cover) { %>
+                <div class="drop d<%= index + 1 %>" onclick="fetchByGameId('<%= game.id %>')">
+                    <img src="<%= game.cover %>" alt="<%= game.name %>">
+                </div>
+            <% } %>
+        <% }) %>
+    </section>
+    
+    
   </main>
 
   <footer>
