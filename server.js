@@ -221,7 +221,7 @@ app.get('/game-details/:id', async (req, res) => {
     }
 
     // Verificar se o jogo já existe na tabela 'games'
-    const checkGameQuery = 'SELECT id FROM games WHERE igdb_id = ?';
+    const checkGameQuery = 'SELECT igdb_id FROM games WHERE igdb_id = ?';
     const insertGameQuery = 'INSERT INTO games (igdb_id) VALUES (?)';
 
     db.query(checkGameQuery, [gameId], (err, results) => {
@@ -680,57 +680,79 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.get('/profile/:userId', (req, res) => {
-  const userId = req.params.userId;
-
-  // 1. Consultar os dados do usuário
-  db.query('SELECT * FROM users WHERE id = ?', [userId], (err, userResult) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send('Erro ao acessar os dados do usuário.');
-    }
-
-    if (!userResult || userResult.length === 0) {
-      return res.status(404).send('Usuário não encontrado.');
-    }
-
-    const user = userResult[0];
-
-    // 2. Obter os jogos do usuário e o status
-    db.query(`
-      SELECT user_games.game_status, games.*
-      FROM user_games
-      JOIN games ON user_games.game_id = games.igdb_id
-      WHERE user_games.user_id = ?
-    `, [userId], (err, userGamesResult) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).send('Erro ao acessar os jogos do usuário.');
-      }
-
-      // Filtrar os jogos por status
-      const currentGames = userGamesResult.filter(game => game.game_status === 'current');
-      const completedGames = userGamesResult.filter(game => game.game_status === 'completed');
-      const wishlistedGames = userGamesResult.filter(game => game.game_status === 'wishlisted');
-      const droppedGames = userGamesResult.filter(game => game.game_status === 'dropped');
-      const onHoldGames = userGamesResult.filter(game => game.game_status === 'on_hold');
-
-       
-          // Dados prontos, renderizando a página
-          res.render('user/profile-test', { 
-            user, 
-            currentGames, 
-            completedGames, 
-            wishlistedGames, 
-            droppedGames, 
-            onHoldGames, 
+// Rota para obter os jogos de um utilizador
+app.get('/user/:id', async (req, res) => {
+  try {
+      const userId = req.params.id;
+      
+      // Buscar nome e bio do utilizador
+      const userQuery = "SELECT username, bio FROM users WHERE id = ?";
+      const userResults = await new Promise((resolve, reject) => {
+          db.query(userQuery, [userId], (err, results) => {
+              if (err) reject(err);
+              else resolve(results);
           });
-        });
       });
-    });
-
-
-
+      
+      if (userResults.length === 0) {
+          return res.status(404).send('Usuário não encontrado');
+      }
+      
+      const user = userResults[0];
+      
+      // Buscar os 6 jogos favoritos do utilizador
+      const gamesQuery = "SELECT igdb_id, game_status, is_favorite, rating FROM user_games WHERE user_id = ? AND is_favorite = 1 ORDER BY FIELD(game_status, 'current', 'dropped', 'on_hold', 'wishlisted', 'completed') LIMIT 6";
+      const gamesResults = await new Promise((resolve, reject) => {
+          db.query(gamesQuery, [userId], (err, results) => {
+              if (err) reject(err);
+              else resolve(results);
+          });
+      });
+      
+      if (gamesResults.length === 0) {
+          return res.render('user_games', { user, games: [] });
+      }
+      
+      // Buscar detalhes dos jogos na IGDB, incluindo plataformas e rating
+      const igdbIds = gamesResults.map(game => game.igdb_id);
+      const igdbResponse = await axios.post(
+          `${IGDB_BASE_URL}/games`,
+          `fields name, rating, rating_count, platforms.name, cover.image_id; where id = (${igdbIds.join(',')});`,
+          {
+              headers: {
+                  'Client-ID': CLIENT_ID,
+                  Authorization: `Bearer ${AUTH_TOKEN}`,
+              },
+          }
+      );
+      
+      const igdbGames = igdbResponse.data.reduce((acc, game) => {
+          acc[game.id] = {
+              name: game.name,
+              rating: game.rating || 'N/A',
+              rating_count: game.rating_count || 0,
+              platforms: game.platforms ? game.platforms.map(p => p.name).join(', ') : 'Desconhecido',
+              cover: game.cover ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg` : null,
+          };
+          return acc;
+      }, {});
+      
+      // Mesclar dados do banco com detalhes da IGDB
+      const games = gamesResults.map(game => ({
+          ...game,
+          name: igdbGames[game.igdb_id]?.name || 'Nome desconhecido',
+          cover: igdbGames[game.igdb_id]?.cover || null,
+          rating: igdbGames[game.igdb_id]?.rating || 'N/A',
+          rating_count: igdbGames[game.igdb_id]?.rating_count || 0,
+          platforms: igdbGames[game.igdb_id]?.platforms || 'Desconhecido',
+      }));
+      
+      res.render('user/profile', { user, games });
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Erro ao buscar dados do usuário e jogos');
+  }
+});
 
 // Middleware para verificar autenticação
 const authenticateToken = (req, res, next) => {
@@ -761,17 +783,17 @@ app.post('/user/add-to-list', authenticateToken, async (req, res) => {
   const userId = req.user.id; // ID do usuário autenticado
 
   try {
-      // Buscar o ID correto do jogo (id) na tabela games com base no igdb_id
-      const [rows] = await db.promise().query('SELECT id FROM games WHERE igdb_id = ?', [gameId]);
+      // Verificar se o jogo existe na tabela games
+      const [rows] = await db.promise().query('SELECT igdb_id FROM games WHERE igdb_id = ?', [gameId]);
       if (rows.length === 0) {
           return res.status(404).json({ message: 'Jogo não encontrado.' });
       }
 
-      const gameDatabaseId = rows[0].id; // Pegar o ID correto do banco de dados
+      const gameDatabaseId = rows[0].igdb_id; // Corrigido para garantir que estamos pegando o igdb_id correto
 
       // Inserir o jogo na lista do usuário
       await db.promise().query(
-          `INSERT INTO user_games (user_id, game_id, game_status) 
+          `INSERT INTO user_games (user_id, igdb_id, game_status) 
            VALUES (?, ?, 'current') 
            ON DUPLICATE KEY UPDATE game_status = 'current'`,
           [userId, gameDatabaseId]
@@ -790,20 +812,18 @@ app.post('/user/add-to-favorites', authenticateToken, async (req, res) => {
   const userId = req.user.id; // ID do usuário autenticado
 
   try {
-    // Buscar o ID correto do jogo (id) na tabela games com base no igdb_id
-    const [rows] = await db.promise().query('SELECT id FROM games WHERE igdb_id = ?', [gameId]);
-    if (rows.length === 0) {
-      return res.status(404).json({ message: 'Jogo não encontrado.' });
-    }
-
-    const gameDatabaseId = rows[0].id; // Pegar o ID correto do banco de dados
+    // Verificar se o jogo existe na tabela games, inserindo se necessário
+    await db.promise().query(
+      'INSERT IGNORE INTO games (igdb_id) VALUES (?)',
+      [gameId]
+    );
 
     // Inserir ou atualizar o status de favorito para o jogo do usuário
     await db.promise().query(
-      `INSERT INTO user_games (user_id, game_id, game_status, is_favorite) 
+      `INSERT INTO user_games (user_id, igdb_id, game_status, is_favorite) 
        VALUES (?, ?, 'current', 1) 
        ON DUPLICATE KEY UPDATE is_favorite = 1`,
-      [userId, gameDatabaseId]
+      [userId, gameId] // gameId já é o igdb_id correto
     );
 
     res.status(200).json({ message: 'Jogo adicionado aos favoritos com sucesso!' });
@@ -812,6 +832,8 @@ app.post('/user/add-to-favorites', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Erro ao adicionar jogo aos favoritos.' });
   }
 });
+
+
 
 // Inicia o servidor
 app.listen(PORT, () => {

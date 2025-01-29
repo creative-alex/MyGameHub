@@ -3,67 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil de Teste</title>
+    <title><%= user.name %> - Jogos</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        h1 { text-align: center; }
+        .bio { text-align: center; font-style: italic; color: gray; margin-bottom: 20px; }
+        .game-list { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .game { width: 150px; text-align: center; background: #fff; padding: 10px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); }
+        .game img { width: 100%; border-radius: 5px; }
+        .status { font-size: 14px; color: #666; }
+    </style>
 </head>
 <body>
-    <h1>Perfil de <%= user.username %></h1>
 
-    <h2>Informações do Usuário</h2>
-    <p><strong>Email:</strong> <%= user.email %></p>
-    <p><strong>Biografia:</strong> <%= user.bio || 'Biografia não fornecida' %></p>
-    <p><strong>Favoritos:</strong> <%= user.fav_characters || 'Nenhum personagem favorito' %></p>
-    <p><strong>Jogos Favoritos:</strong> <%= user.fav_games || 'Nenhum jogo favorito' %></p>
-    <p><strong>Avatar:</strong> <img src="<%= user.avatar || '/images/pfile.png' %>" alt="Avatar" width="100"></p>
+    <div class="container">
+        <h1><%= user.username %></h1>
+        <p class="bio"><%= user.bio || "No Biography yet" %></p>
 
-    <h2>Jogos do Usuário</h2>
-    <h3>Jogos em Andamento</h3>
-    <ul>
-        <% currentGames.forEach(game => { %>
-            <li><%= game.name %> - <%= game.game_status %></li>
-        <% }); %>
-    </ul>
-
-    <h3>Jogos Completados</h3>
-    <ul>
-        <% completedGames.forEach(game => { %>
-            <li><%= game.name %> - <%= game.game_status %></li>
-        <% }); %>
-    </ul>
-
-    <h3>Jogos na Wishlist</h3>
-    <ul>
-        <% wishlistedGames.forEach(game => { %>
-            <li><%= game.name %> - <%= game.game_status %></li>
-        <% }); %>
-    </ul>
-
-    <h3>Jogos Cancelados</h3>
-    <ul>
-        <% droppedGames.forEach(game => { %>
-            <li><%= game.name %> - <%= game.game_status %></li>
-        <% }); %>
-    </ul>
-
-    <h3>Jogos em Espera</h3>
-    <ul>
-        <% onHoldGames.forEach(game => { %>
-            <li><%= game.name %> - <%= game.game_status %></li>
-        <% }); %>
-    </ul>
-
-    <h2>Comentários e Análises</h2>
-    <ul>
-        <% reviewsResult.forEach(review => { %>
-            <li><strong><%= review.game_name %></strong> - <%= review.review_text || 'Sem comentário' %></li>
-        <% }); %>
-    </ul>
-
-    <h2>Classificações de Jogos</h2>
-    <ul>
-        <% ratingsResult.forEach(rating => { %>
-            <li><strong><%= rating.game_name %></strong> - Nota: <%= rating.rating %></li>
-        <% }); %>
-    </ul>
+        <h2>Jogos do Utilizador</h2>
+        <div class="game-list">
+            <% if (games.length === 0) { %>
+                <p>Sem jogos adicionados.</p>
+            <% } else { %>
+                <% games.forEach(game => { %>
+                    <div class="game">
+                        <img src="<%= game.cover || 'https://via.placeholder.com/150?text=No+Image' %>" alt="<%= game.name %>">
+                        <p><strong><%= game.name %></strong></p>
+                        <p class="status">Status: <%= game.game_status %></p>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
 
 </body>
 </html>
