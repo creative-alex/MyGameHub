@@ -34,6 +34,11 @@
   height: 100%;
 }
 
+.game h3 {
+  grid-column: 6 / span 2;
+  white-space: nowrap;
+  color: #EDE8EC;
+}
 
 .thumbnails {
   grid-column: 5 /span 4;

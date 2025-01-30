@@ -674,6 +674,206 @@ app.get('/top-rated-games', async (req, res) => {
   }
 });
 
+app.get('/category/mobile', async (req, res) => {
+  try {
+      const randomOffset = Math.floor(Math.random() * 5000);
+
+      // Obter plataformas da query string (exemplo: ?platforms=6,14)
+      const platformIds = req.query.platforms ? req.query.platforms.split(',').map(id => parseInt(id)) : [34, 39]; // Padrão: PC (6) e Mac (14)
+
+      // Buscar os jogos apenas para as plataformas especificadas, incluindo gêneros diretamente
+      const response = await axios.post(
+          `${IGDB_BASE_URL}/games`,
+          `fields name, cover.image_id, summary, platforms.name, genres.name, artworks.image_id, screenshots.image_id, similar_games;
+           where platforms = (${platformIds.join(',')})  
+           & involved_companies != null
+           & category != (1,2,3,4,5,6,7,10,11,12,13,14)
+           & cover != null
+           & screenshots != null
+           & artworks != null;
+           limit 30;`,
+          {
+              headers: {
+                  'Client-ID': CLIENT_ID,
+                  Authorization: `Bearer ${AUTH_TOKEN}`,
+              },
+          }
+      );
+
+      // Processar os dados dos jogos
+      const games = response.data
+          .filter(game =>
+              game.name &&
+              game.cover &&
+              game.cover.image_id &&
+              game.screenshots && game.screenshots.length >= 4 &&
+              game.artworks && game.artworks.length > 0
+          )
+          .map(game => ({
+              id: game.id,
+              name: game.name,
+              cover: `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`,
+              artwork: `https://images.igdb.com/igdb/image/upload/t_screenshot_big/${game.artworks[0].image_id}.jpg`,
+              screenshots: game.screenshots.map(
+                  screenshot =>
+                      `https://images.igdb.com/igdb/image/upload/t_screenshot_big/${screenshot.image_id}.jpg`
+              ),
+              summary: game.summary || 'Descrição indisponível',
+              platforms: game.platforms
+                  ? game.platforms.map(platform => ({ id: platform.id, name: platform.name }))
+                  : [],
+              genres: game.genres ? game.genres.map(genre => genre.name) : [],
+              similarGames: game.similar_games || [],
+          }));
+
+      // Remover duplicatas de forma eficiente
+      const uniqueGames = Array.from(new Map(games.map(game => [game.id, game])).values());
+
+      // Separar em populares e todos os jogos
+      const popularGames = uniqueGames.slice(0, 14);
+      const allGames = uniqueGames.slice(14);
+
+      res.render('category', { popularGames, allGames });
+  } catch (error) {
+      console.error('Erro ao buscar jogos para PC:', error.response?.data || error.message);
+      res.status(500).send('Erro ao carregar a categoria PC.');
+  }
+});
+
+
+app.get('/category/pc', async (req, res) => {
+  try {
+      const randomOffset = Math.floor(Math.random() * 5000);
+
+      // Obter plataformas da query string (exemplo: ?platforms=6,14)
+      const platformIds = req.query.platforms ? req.query.platforms.split(',').map(id => parseInt(id)) : [6, 14]; // Padrão: PC (6) e Mac (14)
+
+      // Buscar os jogos apenas para as plataformas especificadas, incluindo gêneros diretamente
+      const response = await axios.post(
+          `${IGDB_BASE_URL}/games`,
+          `fields name, cover.image_id, summary, platforms.name, genres.name, artworks.image_id, screenshots.image_id, similar_games;
+           where platforms = (${platformIds.join(',')})  
+           & involved_companies != null
+           & category != (1,2,3,4,5,6,7,10,11,12,13,14)
+           & cover != null
+           & screenshots != null
+           & artworks != null;
+           limit 30;`,
+          {
+              headers: {
+                  'Client-ID': CLIENT_ID,
+                  Authorization: `Bearer ${AUTH_TOKEN}`,
+              },
+          }
+      );
+
+      // Processar os dados dos jogos
+      const games = response.data
+          .filter(game =>
+              game.name &&
+              game.cover &&
+              game.cover.image_id &&
+              game.screenshots && game.screenshots.length >= 4 &&
+              game.artworks && game.artworks.length > 0
+          )
+          .map(game => ({
+              id: game.id,
+              name: game.name,
+              cover: `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`,
+              artwork: `https://images.igdb.com/igdb/image/upload/t_screenshot_big/${game.artworks[0].image_id}.jpg`,
+              screenshots: game.screenshots.map(
+                  screenshot =>
+                      `https://images.igdb.com/igdb/image/upload/t_screenshot_big/${screenshot.image_id}.jpg`
+              ),
+              summary: game.summary || 'Descrição indisponível',
+              platforms: game.platforms
+                  ? game.platforms.map(platform => ({ id: platform.id, name: platform.name }))
+                  : [],
+              genres: game.genres ? game.genres.map(genre => genre.name) : [],
+              similarGames: game.similar_games || [],
+          }));
+
+      // Remover duplicatas de forma eficiente
+      const uniqueGames = Array.from(new Map(games.map(game => [game.id, game])).values());
+
+      // Separar em populares e todos os jogos
+      const popularGames = uniqueGames.slice(0, 14);
+      const allGames = uniqueGames.slice(14);
+
+      res.render('category', { popularGames, allGames });
+  } catch (error) {
+      console.error('Erro ao buscar jogos para PC:', error.response?.data || error.message);
+      res.status(500).send('Erro ao carregar a categoria PC.');
+  }
+});
+
+app.get('/category/console', async (req, res) => {
+  try {
+      const randomOffset = Math.floor(Math.random() * 5000);
+
+      // Obter plataformas da query string 
+      const platformIds = req.query.platforms ? req.query.platforms.split(',').map(id => parseInt(id)) :  [9, 12, 37, 41, 48, 49, 130, 167, 169];  // PlayStation 3 (9), Xbox 360 (12), Nintendo 3DS (37), Wii U (41), PlayStation 4 (48), Xbox One (49), Nintendo Switch (130), PlayStation 5 (167), Xbox Series X|S (169)
+
+      // Buscar os jogos apenas para as plataformas especificadas, incluindo gêneros diretamente
+      const response = await axios.post(
+          `${IGDB_BASE_URL}/games`,
+          `fields name, cover.image_id, summary, platforms.name, genres.name, artworks.image_id, screenshots.image_id, similar_games;
+           where platforms = (${platformIds.join(',')})  
+           & involved_companies != null
+           & category != (1,2,3,4,5,6,7,10,11,12,13,14)
+           & cover != null
+           & screenshots != null
+           & artworks != null;
+           limit 30;`,
+          {
+              headers: {
+                  'Client-ID': CLIENT_ID,
+                  Authorization: `Bearer ${AUTH_TOKEN}`,
+              },
+          }
+      );
+
+      // Processar os dados dos jogos
+      const games = response.data
+          .filter(game =>
+              game.name &&
+              game.cover &&
+              game.cover.image_id &&
+              game.screenshots && game.screenshots.length >= 4 &&
+              game.artworks && game.artworks.length > 0
+          )
+          .map(game => ({
+              id: game.id,
+              name: game.name,
+              cover: `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`,
+              artwork: `https://images.igdb.com/igdb/image/upload/t_screenshot_big/${game.artworks[0].image_id}.jpg`,
+              screenshots: game.screenshots.map(
+                  screenshot =>
+                      `https://images.igdb.com/igdb/image/upload/t_screenshot_big/${screenshot.image_id}.jpg`
+              ),
+              summary: game.summary || 'Descrição indisponível',
+              platforms: game.platforms
+                  ? game.platforms.map(platform => ({ id: platform.id, name: platform.name }))
+                  : [],
+              genres: game.genres ? game.genres.map(genre => genre.name) : [],
+              similarGames: game.similar_games || [],
+          }));
+
+      // Remover duplicatas de forma eficiente
+      const uniqueGames = Array.from(new Map(games.map(game => [game.id, game])).values());
+
+      // Separar em populares e todos os jogos
+      const popularGames = uniqueGames.slice(0, 14);
+      const allGames = uniqueGames.slice(14);
+
+      res.render('category', { popularGames, allGames });
+  } catch (error) {
+      console.error('Erro ao buscar jogos para PC:', error.response?.data || error.message);
+      res.status(500).send('Erro ao carregar a categoria PC.');
+  }
+});
+
+
 // Estabelece conexão com o banco de dados e trata erros
 // Verifica se a conexão inicial ao banco é bem-sucedida e exibe mensagens de erro, caso contrário.
 db.connect((err) => {
@@ -958,39 +1158,6 @@ app.get('/check-auth', authenticateToken, (req, res) => {
 });
 
 
-
-app.post('/user/update-game-status', authenticateToken, async (req, res) => {
-  const { gameId, status } = req.body; // `gameId` é o `igdb_id`
-  const userId = req.user.id; // ID do usuário autenticado
-
-  const validStatuses = ['current', 'dropped', 'on_hold', 'wishlisted', 'completed'];
-  if (!validStatuses.includes(status)) {
-    return res.status(400).json({ message: 'Status inválido.' });
-  }
-
-  try {
-    // Verifica se o jogo está na tabela `games`
-    const [rows] = await db.promise().query('SELECT igdb_id FROM games WHERE igdb_id = ?', [gameId]);
-    if (rows.length === 0) {
-      return res.status(404).json({ message: 'Jogo não encontrado.' });
-    }
-
-    // Atualiza o status do jogo na lista do usuário
-    const [result] = await db.promise().query(
-      `UPDATE user_games SET game_status = ? WHERE user_id = ? AND igdb_id = ?`,
-      [status, userId, gameId]
-    );
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: 'Jogo não encontrado na lista do utilizador.' });
-    }
-
-    res.status(200).json({ message: 'Status atualizado com sucesso!' });
-  } catch (error) {
-    console.error('Erro ao atualizar o status do jogo:', error.message);
-    res.status(500).json({ message: 'Erro ao atualizar o status do jogo.' });
-  }
-});
 
 app.patch('/update-game-status', authenticateToken, async (req, res) => {
   const userId = req.user.id; // Pegamos o ID do usuário autenticado
