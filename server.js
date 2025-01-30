@@ -841,79 +841,96 @@ app.get('/user/:id', async (req, res) => {
           );
 
           igdbGamesData = igdbResponse.data.reduce((acc, game) => {
-            console.log(game);
-            acc[game.id] = {
-                id: game.id,
-                name: game.name || 'Nome desconhecido',
-                cover: game.cover ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg` : null,
-            };
-            return acc;
-        }, {});
+              acc[game.id] = {
+                  id: game.id,
+                  name: game.name || 'Nome desconhecido',
+                  cover: game.cover ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg` : null,
+              };
+              return acc;
+          }, {});
       }
-        
 
-      // Formatar os dados dos jogos
-      const formattedFavoriteGames = favoriteGames.map(game => ({
-          id: game.igdb_id,
-          name: igdbGamesData[game.igdb_id]?.name || 'Nome desconhecido',
-          cover: igdbGamesData[game.igdb_id]?.cover || null,
-      }));
+      // Formatar os dados dos jogos com capa
+      const formattedFavoriteGames = favoriteGames
+    .filter(game => igdbGamesData[game.igdb_id]?.cover) // Filtra apenas jogos com cover
+    .map(game => ({
+        id: game.igdb_id,
+        name: igdbGamesData[game.igdb_id]?.name || 'Nome desconhecido',
+        cover: igdbGamesData[game.igdb_id]?.cover,
+    }));
 
-      const formattedCurrentGames = currentGames.map(game => ({
-          id: game.igdb_id,
-          cover: igdbGamesData[game.igdb_id]?.cover || null,
-      }));
+    const formattedCurrentGames = currentGames
+    .filter(game => igdbGamesData[game.igdb_id]?.cover)
+    .map(game => ({
+        id: game.igdb_id,
+        cover: igdbGamesData[game.igdb_id].cover,
+    }));
 
-      const formattedOnHoldGames = onHoldGames.map(game => ({
-          id: game.igdb_id,
-          cover: igdbGamesData[game.igdb_id]?.cover || null,
-      }));
+const formattedOnHoldGames = onHoldGames
+    .filter(game => igdbGamesData[game.igdb_id]?.cover)
+    .map(game => ({
+        id: game.igdb_id,
+        cover: igdbGamesData[game.igdb_id].cover,
+    }));
 
-      const formattedDroppedGames = droppedGames.map(game => ({
-          id: game.igdb_id,
-          cover: igdbGamesData[game.igdb_id]?.cover || null,
-      }));
+const formattedDroppedGames = droppedGames
+    .filter(game => igdbGamesData[game.igdb_id]?.cover)
+    .map(game => ({
+        id: game.igdb_id,
+        cover: igdbGamesData[game.igdb_id].cover,
+    }));
 
-      const formattedWishlistedGames = wishlistedGames.map(game => ({
-          id: game.igdb_id,
-          cover: igdbGamesData[game.igdb_id]?.cover || null,
-      }));
+const formattedWishlistedGames = wishlistedGames
+    .filter(game => igdbGamesData[game.igdb_id]?.cover)
+    .map(game => ({
+        id: game.igdb_id,
+        cover: igdbGamesData[game.igdb_id].cover,
+    }));
 
-      const formattedCompletedGames = completedGames.map(game => ({
-          id: game.igdb_id,
-          cover: igdbGamesData[game.igdb_id]?.cover || null,
-      }));
+const formattedCompletedGames = completedGames
+    .filter(game => igdbGamesData[game.igdb_id]?.cover)
+    .map(game => ({
+        id: game.igdb_id,
+        cover: igdbGamesData[game.igdb_id].cover,
+    }));
 
-      // Contagem dos status dos jogos
+      // Filtrar apenas jogos que possuem cover
+      const currentGamesWithCover = currentGames.filter(game => igdbGamesData[game.igdb_id]?.cover);
+      const completedGamesWithCover = completedGames.filter(game => igdbGamesData[game.igdb_id]?.cover);
+      const onHoldGamesWithCover = onHoldGames.filter(game => igdbGamesData[game.igdb_id]?.cover);
+      const droppedGamesWithCover = droppedGames.filter(game => igdbGamesData[game.igdb_id]?.cover);
+      const wishlistedGamesWithCover = wishlistedGames.filter(game => igdbGamesData[game.igdb_id]?.cover);
+
+      // Contagem dos jogos com cover
       const gameStatusCounts = {
-          playing: currentGames.length,
-          completed: completedGames.length,
-          on_hold: onHoldGames.length,
-          dropped: droppedGames.length,
-          wishlisted: wishlistedGames.length,
+          playing: currentGamesWithCover.length,
+          completed: completedGamesWithCover.length,
+          on_hold: onHoldGamesWithCover.length,
+          dropped: droppedGamesWithCover.length,
+          wishlisted: wishlistedGamesWithCover.length,
       };
 
-      const totalEntries = gamesResults.length; // Contagem total de jogos do usuário
+      // Contagem total de jogos com cover
+      const totalEntriesWithCover = gamesResults.filter(game => igdbGamesData[game.igdb_id]?.cover).length;
 
       res.render('user/profile', { 
-          user, 
-          favoriteGames: formattedFavoriteGames,
-          currentGames: formattedCurrentGames,
-          onHoldGames: formattedOnHoldGames,
-          droppedGames: formattedDroppedGames,
-          wishlistedGames: formattedWishlistedGames,
-          completedGames: formattedCompletedGames,
-          gameStatusCounts, 
-          totalEntries
-      });
+        user, 
+        favoriteGames: formattedFavoriteGames, 
+        currentGames: formattedCurrentGames, 
+        onHoldGames: formattedOnHoldGames, 
+        droppedGames: formattedDroppedGames, 
+        wishlistedGames: formattedWishlistedGames, 
+        completedGames: formattedCompletedGames, 
+        gameStatusCounts, 
+        totalEntriesWithCover
+    });
+    
 
   } catch (err) {
       console.error(err);
       res.status(500).send('Erro ao buscar dados do usuário e jogos');
   }
 });
-
-
 
 
 // Middleware para verificar autenticação
