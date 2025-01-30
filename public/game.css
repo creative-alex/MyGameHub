@@ -506,46 +506,7 @@ select {
   margin-top: 10px;
 }
 
-/* Caixa de fundo para os botões */
-.feedback-options-container {
-  background-color: #362A56;
-  border-radius: 8px;
-  padding: 10px;
-  display: flex;
-  flex-direction: row; /* Adicionei isso, pois normalmente o valor padrão é row */
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  height: 100px;  
-}
 
-.feedback-options-container button {
-  background: transparent;
-  border: 1px solid #0F0D23;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  height: 40px;
-  display: flex;
-  align-items: center;
-}
-
-.feedback-options button:hover {
-  background: #40407a;
-}
-
-.feedback-options span {
-  margin-left: 5px;
-}
-
-.review-score strong {
-  font-size: 32px;
-}
-
-.review-score .out-of {
-  font-size: 16px;
-}
 
 
 @media (max-width: 425px) {

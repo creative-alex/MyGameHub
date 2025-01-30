@@ -841,14 +841,16 @@ app.get('/user/:id', async (req, res) => {
           );
 
           igdbGamesData = igdbResponse.data.reduce((acc, game) => {
-              acc[game.id] = {
-                  id: game.id,
-                  name: game.name || 'Nome desconhecido',
-                  cover: game.cover ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg` : null,
-              };
-              return acc;
-          }, {});
+            console.log(game);
+            acc[game.id] = {
+                id: game.id,
+                name: game.name || 'Nome desconhecido',
+                cover: game.cover ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg` : null,
+            };
+            return acc;
+        }, {});
       }
+        
 
       // Formatar os dados dos jogos
       const formattedFavoriteGames = favoriteGames.map(game => ({

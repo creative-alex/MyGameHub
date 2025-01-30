@@ -11,11 +11,11 @@
 
 
       // Configuração do menu dropdown
-  dropdownMenu.className = 'dropdown-menu hidden';
+  dropdownMenu.className = 'dropdown hidden';
+  dropdownMenu.id = 'men';
   dropdownMenu.innerHTML = `
     <ul>
-      <li><a href="/user/profile">Profile</a></li>
-      <li><a href="/account-settings">Account Settings</a></li>
+      <li><a href="/user/1">Profile</a></li>
       <li id="logoutButton">Logout</li>
     </ul>
   `;

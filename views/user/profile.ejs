@@ -72,63 +72,83 @@
     </section>
     
   
-      <section class="favorites-section">
-          <h2>Favorites</h2>
-          <% const favorites = favoriteGames.slice(0, 9); %>
-          <% favorites.forEach((favorite, index) => { %>
-                  <div class="favorite-item favorite-item-<%= index + 1 %>" aria-label="Favorite Item <%= index + 1 %>" style="background-image: url('<%= favorite.cover %>');"></div>
-              <% }) %>
-      </section>
+    <section class="favorites-section">
+      <h2>Favorites</h2>
+      <% const favorites = favoriteGames.slice(0, 9); %>
+      <% let visibleIndex = 1; %> <!-- Contador para itens válidos -->
+      <% favorites.forEach((favorite) => { %>
+          <% if (favorite.cover) { %> 
+              <div class="favorite-item favorite-item-<%= visibleIndex %>" 
+                   aria-label="Favorite Item <%= visibleIndex %>" 
+                   style="background-image: url('<%= favorite.cover %>');">
+              </div>
+              <% visibleIndex++; %> <!-- Incrementa apenas para os válidos -->
+          <% } %>
+      <% }) %>
+  </section>
+  
+  
 
 
-      <section class="all-games">
-        <h2>All Games</h2>
-    
-        <h3 class="cur">Current Games</h3>
-        <% currentGames.slice(0, 6).forEach((game, index) => { %>
-            <% if (game.cover) { %>
-                <div class="current c<%= index + 1 %>" onclick="fetchByGameId('<%= game.id %>')">
-                    <img src="<%= game.cover %>" alt="<%= game.name %>">
-                </div>
-            <% } %>
-        <% }) %>
-    
-        <h3 class="com">Completed Games</h3>
-        <% completedGames.slice(0, 6).forEach((game, index) => { %>
-            <% if (game.cover) { %>
-                <div class="complete t<%= index + 1 %>" onclick="fetchByGameId('<%= game.id %>')">
-                    <img src="<%= game.cover %>" alt="<%= game.name %>">
-                </div>
-            <% } %>
-        <% }) %>
-    
-        <h3 class="on">On-Hold Games</h3>
-        <% onHoldGames.slice(0, 6).forEach((game, index) => { %>
-            <% if (game.cover) { %>
-                <div class="onhold o<%= index + 1 %>" onclick="fetchByGameId('<%= game.id %>')">
-                    <img src="<%= game.cover %>" alt="<%= game.name %>">
-                </div>
-            <% } %>
-        <% }) %>
-    
-        <h3 class="pl">Plan to Play Games</h3>
-        <% wishlistedGames.slice(0, 6).forEach((game, index) => { %>
-            <% if (game.cover) { %>
-                <div class="plantoplay p<%= index + 1 %>" onclick="fetchByGameId('<%= game.id %>')">
-                    <img src="<%= game.cover %>" alt="<%= game.name %>">
-                </div>
-            <% } %>
-        <% }) %>
-    
-        <h3 class="dr">Dropped Games</h3>
-        <% droppedGames.slice(0, 6).forEach((game, index) => { %>
-            <% if (game.cover) { %>
-                <div class="drop d<%= index + 1 %>" onclick="fetchByGameId('<%= game.id %>')">
-                    <img src="<%= game.cover %>" alt="<%= game.name %>">
-                </div>
-            <% } %>
-        <% }) %>
-    </section>
+  <section class="all-games">
+    <h2>All Games</h2>
+
+    <h3 class="cur">Current Games</h3>
+    <% let currentIndex = 1; %>
+    <% currentGames.slice(0, 6).forEach((game) => { %>
+        <% if (game.cover) { %>
+            <div class="current c<%= currentIndex %>" onclick="fetchByGameId('<%= game.id %>')">
+                <img src="<%= game.cover %>" alt="<%= game.name %>">
+            </div>
+            <% currentIndex++; %>
+        <% } %>
+    <% }) %>
+
+    <h3 class="com">Completed Games</h3>
+    <% let completedIndex = 1; %>
+    <% completedGames.slice(0, 6).forEach((game) => { %>
+        <% if (game.cover) { %>
+            <div class="complete t<%= completedIndex %>" onclick="fetchByGameId('<%= game.id %>')">
+                <img src="<%= game.cover %>" alt="<%= game.name %>">
+            </div>
+            <% completedIndex++; %>
+        <% } %>
+    <% }) %>
+
+    <h3 class="on">On-Hold Games</h3>
+    <% let onHoldIndex = 1; %>
+    <% onHoldGames.slice(0, 6).forEach((game) => { %>
+        <% if (game.cover) { %>
+            <div class="onhold o<%= onHoldIndex %>" onclick="fetchByGameId('<%= game.id %>')">
+                <img src="<%= game.cover %>" alt="<%= game.name %>">
+            </div>
+            <% onHoldIndex++; %>
+        <% } %>
+    <% }) %>
+
+    <h3 class="pl">Plan to Play Games</h3>
+    <% let wishlistIndex = 1; %>
+    <% wishlistedGames.slice(0, 6).forEach((game) => { %>
+        <% if (game.cover) { %>
+            <div class="plantoplay p<%= wishlistIndex %>" onclick="fetchByGameId('<%= game.id %>')">
+                <img src="<%= game.cover %>" alt="<%= game.name %>">
+            </div>
+            <% wishlistIndex++; %>
+        <% } %>
+    <% }) %>
+
+    <h3 class="dr">Dropped Games</h3>
+    <% let droppedIndex = 1; %>
+    <% droppedGames.slice(0, 6).forEach((game) => { %>
+        <% if (game.cover) { %>
+            <div class="drop d<%= droppedIndex %>" onclick="fetchByGameId('<%= game.id %>')">
+                <img src="<%= game.cover %>" alt="<%= game.name %>">
+            </div>
+            <% droppedIndex++; %>
+        <% } %>
+    <% }) %>
+</section>
+
     
     
   </main>
